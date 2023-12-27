@@ -4,6 +4,12 @@ namespace Library.Data.interfaces
 {
     public interface IPublicsher
     {
-        public IEnumerable<Publisher> Allpublicshers { get; set; }
+        ///<summary>
+        ///интерфейс для работы с данными типа IPublicsher
+        /// </summary>
+        public IEnumerable<Publisher> Allpublicshers { get;}
+        ///<summary>
+        ///перебор всех обьектов Allpublicshers
+        /// </summary>
     }
 }

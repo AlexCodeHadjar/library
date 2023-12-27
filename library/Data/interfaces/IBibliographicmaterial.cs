@@ -4,6 +4,12 @@ namespace Library.Data.interfaces
 {
     public interface IBibliographicmaterial
     {
-        public IEnumerable<Bibliographicmaterial> Allbibliographicmaterial { get; set; }
+        ///<summary>
+        ///интерфейс для работы с данными типа Bibliographicmaterial
+        /// </summary>
+        public IEnumerable<Bibliographicmaterial> Allbibliographicmaterial { get; }
+        ///<summary>
+        ///перебор всех обьектов Bibliographicmaterial
+        /// </summary>
     }
 }

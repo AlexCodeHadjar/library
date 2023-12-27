@@ -4,6 +4,13 @@ namespace Library.Data.interfaces
 {
    public  interface IAuthor
     {
-        public IEnumerable<Author> Alluthors { get; set; }
+        ///<summary>
+        ///интерфейс для работы с данными типа IAuthor
+        /// </summary>
+        public IEnumerable<Author> AllAuthors { get; }
+        ///<summary>
+        ///перебор всех обьектов Author
+        /// </summary>
+
     }
 }
