@@ -11,6 +11,10 @@
         ///<summary>
         ///получение name для Bibliographicmaterial
         /// </summary>
+        public string date { get; set; }
+        ///<summary>
+        ///получение date для Publisher
+        /// </summary>
         public Author author { get; set; }
         ///<summary>
         ///получение author для Bibliographicmaterial

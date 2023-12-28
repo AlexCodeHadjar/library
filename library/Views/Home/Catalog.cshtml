@@ -8,22 +8,42 @@
 <head>
     <title>Cotalog</title>
     <meta charset="utf-8" />
-    <meta name = "viewport" content="width-device-width"/>
+    <meta name="viewport" content="width-device-width" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <h2>Все книги</h2>
-    @foreach(var name in Model.getallauthors){
-    <div>Имя: @name.fullName , Контакты: @name.contacts , Информация: @name.information</div>
-    }
-    @foreach (var name in Model.getallpublishers)
-    {
-        <div>Название: @name.name ,Адрес:  @name.address , Контакты: @name.contacts</div>
-    }
-    @foreach (var name in Model.getallBibliographicmaterial)
-    {
-        <div>Название: @name.name ,Автор:  @name.author , Издательство: @name.publisher.name</div>
-    }
-   
- 
+    <div class="content">
+        <div class="container">
+            <h2 class="mb-5">Каталог</h2>
+            <div class="table-responsive custom-table-responsive">
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Название</th>
+                            <th scope="col">Автор</th>
+                            <th scope="col">Издательство</th>
+                            <th scope="col">Дата</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var material in Model.getallBibliographicmaterial)
+                        {
+                            
+                            <tr scope="row">
+                                <td>@material.name</td>
+                                <td>@material.author.fullName</td>
+                                <td>@material.publisher.name</td>
+                                <td>@material.date</td>
+                            </tr>
+                            
+                            <tr class="spacer"><td colspan="100"></td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/bootstrap.min.js"></script>
 </body>
 </html>

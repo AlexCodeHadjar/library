@@ -15,10 +15,10 @@ namespace Library.Data.mocks
             {
                 return new List<Author>()
                 {
-                    new Author{id=101,fullName="Dadasdas",contacts="+123123123",information="популярный автор1" },
-                    new Author{id=102,fullName="Dadasdasasd",contacts="+123123124",information="популярный автор2" },
-                    new Author{id=103,fullName="Dadasdasdasdas",contacts="+123123125",information="популярный автор3" },
-                    new Author{id=104,fullName="Dadassadsadasddas",contacts="+123123126",information="популярный автор4" },
+                    new Author{id=101,fullName="Виктор Гюго",contacts="+123123123",information="французский писатель, поэт, прозаик и драматург, одна из главных фигур французского романтизма, политический и общественный деятель." },
+                    new Author{id=102,fullName="Марк Твен",contacts="+123123124",information="американский писатель, юморист, журналист и общественный деятель" },
+                    new Author{id=103,fullName="Александр Пушкин",contacts="+123123125",information="русский поэт, драматург и прозаик, заложивший основы русского реалистического направления, литературный критик и теоретик литературы, историк, публицист, журналист." },
+                    new Author{id=104,fullName="Джоан Роулинг",contacts="+123123126",information="британская писательница, сценаристка и кинопродюсер, наиболее известная как автор серии романов о Гарри Поттере" },
                 };
             }
         }

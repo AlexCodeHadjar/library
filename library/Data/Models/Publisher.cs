@@ -8,11 +8,12 @@
         /// </summary>
         public string name { get; set; }
         ///<summary>
-        ///получение nameдля Publisher
+        ///получение name для Publisher
         /// </summary>
+      
         public string contacts { get; set; }
         ///<summary>
-        ///получениеcontacts для Publisher
+        ///получение contacts для Publisher
         /// </summary>
         public string address { get; set; }
         ///<summary>
