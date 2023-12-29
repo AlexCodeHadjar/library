@@ -94,7 +94,10 @@ databaseHelper.AddPublisher(newPublisher);
 ///<summary>
 /// добавляение нового Publisher в таблицу
 /// </summary> 
-
+databaseHelper.SelectBibliographicmaterial();
+databaseHelper.SelectPublisher();
+databaseHelper.SelectAuthor();
+Console.Read();
 app.Run();
 ///<summary>
 /// добавляение обработчика запросов

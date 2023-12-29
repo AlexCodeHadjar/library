@@ -1,5 +1,6 @@
 ﻿using library.Data.Models;
 using Microsoft.Data.Sqlite;
+using System.Security.Cryptography.X509Certificates;
 
 namespace library.DataBase
 {
@@ -82,6 +83,86 @@ namespace library.DataBase
                 command.ExecuteNonQuery();
 
               
+            }
+        }
+       public void SelectBibliographicmaterial()
+        {
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+                string sqlExpression = "SELECT * FROM Bibliographicmaterial";
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                command.Connection = connection;
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows) 
+                    {
+                        while (reader.Read())   
+                        {
+                            var id = reader.GetValue(0);
+                            var name = reader.GetValue(1);
+                            var date = reader.GetValue(2);
+                            var img = reader.GetValue(3);
+                            var Authorid = reader.GetValue(4);
+                            var Publisherid = reader.GetValue(5);
+
+                            Console.WriteLine($"{id} \t {name} \t {date} \t{img} \t{Authorid}\t{Publisherid}");
+                        }
+                    }
+                }
+            }
+        }
+        public void SelectAuthor()
+        {
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+                string sqlExpression = "SELECT * FROM Author";
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                command.Connection = connection;
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows) 
+                    {
+                        while (reader.Read())   
+                        {
+                            var id = reader.GetValue(0);
+                            var fullname = reader.GetValue(1);
+                            var contacts = reader.GetValue(2);
+                            var information = reader.GetValue(3);
+
+                            Console.WriteLine($"{id} \t {fullname} \t {contacts} \t {{information");
+                        }
+                    }
+                }
+            }
+        }
+        public void SelectPublisher()
+        {
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+                string sqlExpression = "SELECT * FROM Publisher";
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                command.Connection = connection;
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows) // если есть данные
+                    {
+                        while (reader.Read())   // построчно считываем данные
+                        {
+                            var id = reader.GetValue(0);
+                            var name = reader.GetValue(1);
+                            var contacts = reader.GetValue(2);
+                            var address = reader.GetValue(3);
+
+                            Console.WriteLine($"{id} \t {name} \t {contacts} \t {address}");
+                        }
+                    }
+                }
             }
         }
     }
