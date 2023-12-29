@@ -1,4 +1,6 @@
-﻿namespace library.Data.Models
+﻿using System.Globalization;
+
+namespace library.Data.Models
 {
     public class Bibliographicmaterial
     {
@@ -14,6 +16,10 @@
         public string date { get; set; }
         ///<summary>
         ///получение date для Publisher
+        /// </summary>
+        public string img { get; set; }
+        ///<summary>
+        ///получение img для Publisher
         /// </summary>
         public Author author { get; set; }
         ///<summary>
