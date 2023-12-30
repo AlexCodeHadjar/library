@@ -7,44 +7,51 @@ using System.Runtime.CompilerServices;
 
 namespace library.Controllers
 {
+    ///<summary>
+    ///контролер для работы с предстваление Catalog 
+    /// </summary>
     public class HomeController : Controller
     {
-        ///<summary>
-        ///контролер для работы с предстваление Catalog 
-        /// </summary>
-        private readonly IAuthor _author ;
+        
         ///<summary>
         ///_author переменнная принимет реализацию интерфейса IAuthor
         /// </summary>
-        private readonly IPublicsher _publicsher;
-        ///<summary>
+        private readonly IAuthor _author ;
+      
+         ///<summary>
         ///_publicsher переменнная принимет реализацию интерфейса IPublicsher
         /// </summary>
-        private readonly IBibliographicmaterial _bibliographicmaterial;
+        private readonly IPublicsher _publicsher;
+      
         ///<summary>
         ///_bibliographicmaterial переменнная принимет реализацию интерфейса IBibliographicmaterial
         /// </summary>
+        private readonly IBibliographicmaterial _bibliographicmaterial;
+        
+  
+        ///<summary>
+        ///IAuthor iauthor передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
+        ///IPublicsher ipublicsher передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
+        /// IBibliographicmaterial ibibliographicmaterial передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
+        /// </summary>
         public HomeController(IAuthor iauthor, IPublicsher ipublicsher, IBibliographicmaterial ibibliographicmaterial)
         {
-            ///<summary>
-            ///IAuthor iauthor передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
-            ///IPublicsher ipublicsher передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
-            /// IBibliographicmaterial ibibliographicmaterial передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
-            /// </summary>
+           
             _author = iauthor;
             _publicsher = ipublicsher;
             _bibliographicmaterial = ibibliographicmaterial;
             
         }
+        ///<summary>
+        ///вызов представления Catalog
+        /// </summary>
         public ViewResult Catalog()
         {
-            ///<summary>
-            ///вызов и передача данных в представление Catalog
-            /// </summary>
+            
         AllLibraryModels libraryobj = new AllLibraryModels();
-            libraryobj.getallauthors = _author.AllAuthors;
-            libraryobj.getallpublishers = _publicsher.Allpublicshers;
-            libraryobj.getallBibliographicmaterial = _bibliographicmaterial.Allbibliographicmaterial;
+            libraryobj.AllAuthors = _author.AllAuthors;
+            libraryobj.AllPublishers = _publicsher.Allpublicshers;
+            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.Allbibliographicmaterial;
             return View(libraryobj);
             
         }

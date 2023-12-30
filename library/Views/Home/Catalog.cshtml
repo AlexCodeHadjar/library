@@ -27,14 +27,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var material in Model.getallBibliographicmaterial)
+                        @foreach (var material in Model.AllBibliographicmaterial)
                         {
                             
                             <tr scope="row">
-                                <td>@material.name</td>
-                                <td>@material.author.fullName</td>
-                                <td>@material.publisher.name</td>
-                                <td>@material.date</td>
+                                <td>@material.Name</td>
+                                <td>@material.Author.FullName</td>
+                                <td>@material.Publisher.Name</td>
+                                <td>@material.Date</td>
                             </tr>
                             
                             <tr class="spacer"><td colspan="100"></td></tr>

@@ -2,22 +2,23 @@
 {
     public class Publisher
     {
-        public int id { get; set; }
         ///<summary>
         ///получение id для Publisher
         /// </summary>
-        public string name { get; set; }
+        public int Id { get; set; }
         ///<summary>
         ///получение name для Publisher
         /// </summary>
-      
-        public string contacts { get; set; }
+        public string Name { get; set; }
+
         ///<summary>
         ///получение contacts для Publisher
         /// </summary>
-        public string address { get; set; }
+        public string Contacts { get; set; }
         ///<summary>
         ///получение address для Publisher
         /// </summary>
+        public string Address { get; set; }
+       
     }
 }

@@ -2,23 +2,23 @@
 
 namespace library.ViewModels
 {
+    ///<summary>
+    ///обьединение всех моделей для передачи предствалению
+    /// </summary>
     public class AllLibraryModels
     {
         ///<summary>
-        ///обьединение всех моделей для передачи предствалению
-        /// </summary>
-        public IEnumerable<Author> getallauthors {  get; set; }
-        ///<summary>
         ///перебор всех обьектов Author
         /// </summary>
-
-        public IEnumerable<Publisher> getallpublishers {  get; set; }
+        public IEnumerable<Author>AllAuthors {  get; set; }
         ///<summary>
         ///перебор всех обьектов Publisher
         /// </summary>
-        public IEnumerable <Bibliographicmaterial> getallBibliographicmaterial {  get; set; }
+        public IEnumerable<Publisher>AllPublishers {  get; set; }
         ///<summary>
         ///перебор всех обьектов Bibliographicmaterial
         /// </summary>
+        public IEnumerable <Bibliographicmaterial> AllBibliographicmaterial {  get; set; }
+        
     }
 }

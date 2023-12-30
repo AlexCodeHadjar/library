@@ -1,26 +1,29 @@
 ﻿using library.Data.Models;
+using Library.Data.interfaces;
 using Microsoft.Data.Sqlite;
-using System.Security.Cryptography.X509Certificates;
 
 namespace library.DataBase
 {
+    ///<summary>
+    ///класс для работы с базой данных CatalogsData
+    /// </summary>// 
     public class DatabaseHelper
     {
-        ///<summary>
-        ///получение строки подключения
-        /// </summary>// 
+        //получение строки подключения
         private string _connectionString;
-
+      
+      
+       
         public DatabaseHelper(string connectionString)
         {
             _connectionString = connectionString;
         }
-
+        ///<summary>
+        ///Вставка новой записи в таблицу "BibliographicMaterial"
+        /// </summary>// 
         public void AddBibliographicMaterial(Bibliographicmaterial material)
         {
-            ///<summary>
-            ///Вставка новой записи в таблицу "BibliographicMaterial"
-            /// </summary>// 
+            
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
@@ -30,22 +33,23 @@ namespace library.DataBase
 
                
                 command.CommandText = "INSERT INTO BibliographicMaterial (Name, Date, Img, AuthorId, PublisherId) VALUES (@Name, @Date, @Img, @AuthorId, @PublisherId)";
-                command.Parameters.AddWithValue("@Name", material.name);
-                command.Parameters.AddWithValue("@Date", material.date);
-                command.Parameters.AddWithValue("@Img", material.img);
-                command.Parameters.AddWithValue("@AuthorId", material.author.id);
-                command.Parameters.AddWithValue("@PublisherId", material.publisher.id);
+                command.Parameters.AddWithValue("@Name", material.Name);
+                command.Parameters.AddWithValue("@Date", material.Date);
+                command.Parameters.AddWithValue("@Img", material.Img);
+                command.Parameters.AddWithValue("@AuthorId", material.Author.Id);
+                command.Parameters.AddWithValue("@PublisherId", material.Publisher.Id);
 
                 command.ExecuteNonQuery();
 
            
             }
         }
+        ///<summary>
+        ///Вставка новой записи в таблицу "Publisher"
+        /// </summary>//  
         public void AddPublisher(Publisher publisher)
         {
-            ///<summary>
-            ///Вставка новой записи в таблицу ""Publisher"
-            /// </summary>//  
+            
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
@@ -54,19 +58,21 @@ namespace library.DataBase
                 command.Connection = connection;
                
                 command.CommandText = "INSERT INTO Publisher (Name, Contacts, Address) VALUES (@Name, @Contacts, @Address)";
-                command.Parameters.AddWithValue("@Name", publisher.name);
-                command.Parameters.AddWithValue("@Contacts", publisher.contacts);
-                command.Parameters.AddWithValue("@Address", publisher.address);
+                command.Parameters.AddWithValue("@Name", publisher.Name);
+                command.Parameters.AddWithValue("@Contacts", publisher.Contacts);
+                command.Parameters.AddWithValue("@Address", publisher.Address);
 
                 command.ExecuteNonQuery();
 
             }
         }
+        ///<summary>
+        ///Вставка новой записи в таблицу "AddAuthor"
+        /// </summary>//  
+
         public void AddAuthor(Author author)
         {
-            ///<summary>
-            ///Вставка новой записи в таблицу ""Author"
-            /// </summary>//  
+            
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
@@ -76,18 +82,22 @@ namespace library.DataBase
 
                
                 command.CommandText = "INSERT INTO Author (FullName, Contacts, Information) VALUES (@FullName, @Contacts, @Information)";
-                command.Parameters.AddWithValue("@FullName", author.fullName);
-                command.Parameters.AddWithValue("@Contacts", author.contacts);
-                command.Parameters.AddWithValue("@Information", author.information);
+                command.Parameters.AddWithValue("@FullName", author.FullName);
+                command.Parameters.AddWithValue("@Contacts", author.Contacts);
+                command.Parameters.AddWithValue("@Information", author.Information);
 
                 command.ExecuteNonQuery();
 
               
             }
         }
-       public void SelectBibliographicmaterial()
+        ///<summary>
+        ///перебор всех обьектов Bibliographicmaterial из базы данных Catalogsdata
+        /// </summary>
+        public IEnumerable<Bibliographicmaterial> SelectBibliographicmaterial()
         {
-
+            List<Bibliographicmaterial> bibliographicmaterialsDatebase = new List<Bibliographicmaterial>();
+           
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
@@ -100,22 +110,40 @@ namespace library.DataBase
                     {
                         while (reader.Read())   
                         {
-                            var id = reader.GetValue(0);
-                            var name = reader.GetValue(1);
-                            var date = reader.GetValue(2);
-                            var img = reader.GetValue(3);
-                            var Authorid = reader.GetValue(4);
-                            var Publisherid = reader.GetValue(5);
+                            var id = reader.GetInt32(0);
+                            var name = reader.GetString(1);
+                            var date = reader.GetString(2);
+                            var img = reader.GetString(3);
+                            var Authorid = reader.GetInt32(4);
+                            var Publisherid = reader.GetInt32(5);
+                            var author = SelectAuthor().FirstOrDefault(a => a.Id == Authorid);
+                            var publisher = SelectPublisher().FirstOrDefault(p => p.Id == Publisherid);
+                            bibliographicmaterialsDatebase.Add(new Bibliographicmaterial()
+                            {
+                                Id = id,
+                                Name = name,
+                                Date = date,
+                                Img = img,
+                                Author = author,
+                                Publisher = publisher
 
-                            Console.WriteLine($"{id} \t {name} \t {date} \t{img} \t{Authorid}\t{Publisherid}");
+                            });
+
+
+
                         }
+                        
                     }
+                    return bibliographicmaterialsDatebase;
                 }
             }
         }
-        public void SelectAuthor()
+        ///<summary>
+        ///перебор всех обьектов Author из базы данных Catalogsdata
+        /// </summary>
+        public IEnumerable<Author> SelectAuthor()
         {
-
+            List<Author> authorList = new List<Author>();
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
@@ -128,19 +156,30 @@ namespace library.DataBase
                     {
                         while (reader.Read())   
                         {
-                            var id = reader.GetValue(0);
-                            var fullname = reader.GetValue(1);
-                            var contacts = reader.GetValue(2);
-                            var information = reader.GetValue(3);
+                            var id = reader.GetInt32(0);
+                            var fullname = reader.GetString(1);
+                            var contacts = reader.GetString(2);
+                            var information = reader.GetString(3);
+                            authorList.Add(new Author()
+                            {
+                                Id = id,
+                                FullName = fullname,
+                                Contacts = contacts,
+                                Information = information
 
-                            Console.WriteLine($"{id} \t {fullname} \t {contacts} \t {{information");
+                            }); 
                         }
                     }
+                    return authorList;
                 }
             }
         }
-        public void SelectPublisher()
+        ///<summary>
+        ///перебор всех обьектов Publisher из базы данных Catalogsdata
+        /// </summary>
+        public IEnumerable<Publisher> SelectPublisher()
         {
+            List<Publisher> publisherList = new List<Publisher>();
 
             using (var connection = new SqliteConnection(_connectionString))
             {
@@ -150,18 +189,24 @@ namespace library.DataBase
                 command.Connection = connection;
                 using (SqliteDataReader reader = command.ExecuteReader())
                 {
-                    if (reader.HasRows) // если есть данные
+                    if (reader.HasRows) 
                     {
-                        while (reader.Read())   // построчно считываем данные
+                        while (reader.Read())   
                         {
-                            var id = reader.GetValue(0);
-                            var name = reader.GetValue(1);
-                            var contacts = reader.GetValue(2);
-                            var address = reader.GetValue(3);
-
-                            Console.WriteLine($"{id} \t {name} \t {contacts} \t {address}");
+                            var id = reader.GetInt32(0);
+                            var name = reader.GetString(1);
+                            var contacts = reader.GetString(2);
+                            var address = reader.GetString(3);
+                            publisherList.Add(new Publisher()
+                            {
+                                Id = id,
+                                Name = name,
+                                Contacts = contacts,
+                                Address = address
+                            });
                         }
                     }
+                    return publisherList;
                 }
             }
         }

@@ -4,31 +4,32 @@ namespace library.Data.Models
 {
     public class Bibliographicmaterial
     {
-        public int id { get; set; }
         ///<summary>
         ///получение id для Bibliographicmaterial
         /// </summary>
+        public int Id { get; set; }
 
-        public string name { get; set; }
         ///<summary>
         ///получение name для Bibliographicmaterial
         /// </summary>
-        public string date { get; set; }
+        public string Name { get; set; }
         ///<summary>
         ///получение date для Publisher
         /// </summary>
-        public string img { get; set; }
+        public string Date { get; set; }
         ///<summary>
         ///получение img для Publisher
         /// </summary>
-        public Author author { get; set; }
+        public string Img { get; set; }
         ///<summary>
         ///получение author для Bibliographicmaterial
         /// </summary>
-        public Publisher publisher { get; set; }
+        public Author Author { get; set; }
         ///<summary>
         ///получение publisher для Bibliographicmaterial
         /// </summary>
+        public Publisher Publisher { get; set; }
+        
 
     }
 }

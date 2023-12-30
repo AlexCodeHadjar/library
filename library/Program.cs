@@ -6,9 +6,8 @@ using library.DataBase;
 using library.Data.Models;
 var builder = WebApplication.CreateBuilder(args);
 ///<summary>
-///создание экземпляра объекта WebApplication
-/// </summary>с
-
+///сервис для обьединения инферфейса IAuthor и класс релизации MockAuthor
+/// </summary>
 builder.Services.AddTransient<IAuthor, MockAuthor>();
 ///<summary>
 ///сервис для обьединения инферфейса IAuthor и класс релизации MockAuthor
@@ -18,87 +17,69 @@ builder.Services.AddTransient<IPublicsher, MockPublicsher>();
 ///сервис для обьединения инферфейса IAuthor и класс релизации MockAuthor
 /// </summary>
 builder.Services.AddTransient<IBibliographicmaterial, MockBibliographicmaterial>();
-///<summary>
-///сервис для обьединения инферфейса IAuthor и класс релизации MockAuthor
-/// </summary>
+
 builder.Services.AddMvc();
-///<summary>
-/// добавляет сервисы MVC
-/// </summary
 var app = builder.Build();
-///<summary>
-/// конфигурированное веб-приложение
-/// </summary>
+
 app.UseStaticFiles();
-///<summary>
-/// обрабатывает запросы к статическим файлам
-/// </summary>
+
 app.MapControllerRoute(
    name:"default",
    pattern: "{controller=Home}/{action=Catalog}");
-///<summary>
-/// маршрут для обработки запросов к действиям контроллеров
-/// </summary> 
+// строка подключения
 string connectionString = "Data Source=Catalogsdata.db";
-///<summary>
-/// строка подключения
-/// </summary> 
 
 
 
 
+
+
+// передача строки подключения
 DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-///<summary>
-/// передача строки подключения
-/// </summary> 
+
 
 Bibliographicmaterial newMaterial = new Bibliographicmaterial()
 {
-    name = "Название книги",
-    date = "2022-01-01",
-    img = "book.jpg",
-    author = new Author()
+    Name = "Название книг",
+    Date = "2022-01-01",
+    Img = "book.jpg",
+    Author = new Author()
     {
-        id = 1
+        Id = 1
     },
-    publisher = new Publisher()
+    Publisher = new Publisher()
     {
-        id = 1
+        Id = 1
     }
 };
-
+// добавляение нового Bibliographicmaterial в таблицу
 databaseHelper.AddBibliographicMaterial(newMaterial);
-///<summary>
-/// добавляение нового Bibliographicmaterial в таблицу
-/// </summary> 
+
 Author newAuthor = new Author()
 {
-    fullName = "Иван Иванов",
-    contacts = "ivan@example.com",
-    information = "Информация об авторе"
+    FullName = "Иван Иванов",
+    Contacts = "ivan@example.com",
+    Information = "Информация об авторе"
 };
-
+// добавляение нового Author в таблицу
 databaseHelper.AddAuthor(newAuthor);
-///<summary>
-/// добавляение нового Author в таблицу
-/// </summary> 
+
 
 Publisher newPublisher = new Publisher()
 {
-    name = "Издательство",
-    contacts = "publisher@example.com",
-    address = "Адрес издательства"
+    Name = "Издательство",
+    Contacts = "publisher@example.com",
+    Address = "Адрес издательства"
 };
 
+// добавляение нового Publisher в таблицу
 databaseHelper.AddPublisher(newPublisher);
-///<summary>
-/// добавляение нового Publisher в таблицу
-/// </summary> 
-databaseHelper.SelectBibliographicmaterial();
-databaseHelper.SelectPublisher();
-databaseHelper.SelectAuthor();
-Console.Read();
+
+
+
+//var obj = databaseHelper.SelectBibliographicmaterial();
+
+//databaseHelper.SelectPublisher();
+//databaseHelper.SelectAuthor();
+//Console.Read();
 app.Run();
-///<summary>
-/// добавляение обработчика запросов
-/// </summary> 

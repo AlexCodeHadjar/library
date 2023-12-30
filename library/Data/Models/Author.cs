@@ -2,23 +2,24 @@
 {
     public class Author
     {
-        public int id { get; set; }
         ///<summary>
         ///получение id для Author
         /// </summary>
-        public string fullName { get; set; }
+        public int Id { get; set; }
         ///<summary>
         ///получение fullName для Author
         /// </summary>
-        public string contacts { get; set; }
+        public string FullName { get; set; }
         ///<summary>
         ///получение contacts для Author
         /// </summary>
-        public string information { get; set; }
+        public string Contacts { get; set; }
         ///<summary>
         ///получение information для Author
         /// </summary>
 
+        public string Information { get; set; }
+        
 
     }
 }
