@@ -1,6 +1,6 @@
 using library.Data.Models;
 using library.ViewModels;
-using Library.Data.interfaces;
+using library.Data.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -50,8 +50,8 @@ namespace library.Controllers
             
         AllLibraryModels libraryobj = new AllLibraryModels();
             libraryobj.AllAuthors = _author.AllAuthors;
-            libraryobj.AllPublishers = _publicsher.Allpublicshers;
-            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.Allbibliographicmaterial;
+            libraryobj.AllPublishers = _publicsher.AllPublicshers;
+            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial;
             return View(libraryobj);
             
         }

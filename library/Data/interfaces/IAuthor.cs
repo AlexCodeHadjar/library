@@ -1,6 +1,6 @@
 ﻿using library.Data.Models;
 
-namespace Library.Data.interfaces
+namespace library.Data.interfaces
 {
     ///<summary>
     ///интерфейс для работы с данными типа IAuthor

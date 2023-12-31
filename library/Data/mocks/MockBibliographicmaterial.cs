@@ -1,9 +1,9 @@
 ﻿using library.Data.Models;
 using library.DataBase;
-using Library.Data.interfaces;
+using library.Data.interfaces;
 using System.Xml.Linq;
 
-namespace Library.Data.mocks
+namespace library.Data.mocks
 {
     ///<summary>
     ///реализация интерфейса IBibliographicmaterial
@@ -23,7 +23,7 @@ namespace Library.Data.mocks
 
 
         DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-        public IEnumerable<Bibliographicmaterial> Allbibliographicmaterial {
+        public IEnumerable<Bibliographicmaterial> AllBibliographicmaterial {
             get
             {
                 return databaseHelper.SelectBibliographicmaterial();

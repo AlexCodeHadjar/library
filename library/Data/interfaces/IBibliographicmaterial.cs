@@ -1,6 +1,6 @@
 ﻿using library.Data.Models;
 
-namespace Library.Data.interfaces
+namespace library.Data.interfaces
 {
     ///<summary>
     ///интерфейс для работы с данными типа Bibliographicmaterial
@@ -11,7 +11,7 @@ namespace Library.Data.interfaces
         ///перебор всех обьектов Bibliographicmaterial
         /// </summary>
 
-        public IEnumerable<Bibliographicmaterial> Allbibliographicmaterial { get; }
+        public IEnumerable<Bibliographicmaterial> AllBibliographicmaterial { get; }
         
     }
 }

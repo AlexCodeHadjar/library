@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace library.Data.Models
+﻿namespace library.Data.Models
 {
     public class Bibliographicmaterial
     {

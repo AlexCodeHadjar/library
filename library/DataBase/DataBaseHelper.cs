@@ -1,5 +1,5 @@
 ﻿using library.Data.Models;
-using Library.Data.interfaces;
+using library.Data.interfaces;
 using Microsoft.Data.Sqlite;
 
 namespace library.DataBase
@@ -92,6 +92,31 @@ namespace library.DataBase
             }
         }
         ///<summary>
+        ///Вставка новой записи в таблицу "AddUser"
+        /// </summary>//
+        public void AddUser(User material)
+        {
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+
+                command.CommandText = "INSERT INTO User (Login, Password,Admin) VALUES (@login, @password,@Admin)";
+                command.Parameters.AddWithValue("@login", material.Login);
+                command.Parameters.AddWithValue("@password", material.Password);
+                command.Parameters.AddWithValue("@Admin", material.Admin);
+
+
+                command.ExecuteNonQuery();
+
+
+            }
+        }
+        ///<summary>
         ///перебор всех обьектов Bibliographicmaterial из базы данных Catalogsdata
         /// </summary>
         public IEnumerable<Bibliographicmaterial> SelectBibliographicmaterial()
@@ -135,6 +160,44 @@ namespace library.DataBase
                         
                     }
                     return bibliographicmaterialsDatebase;
+                }
+            }
+        }
+        ///<summary>
+        ///перебор всех обьектов User из базы данных Catalogsdata
+        /// </summary>
+        public IEnumerable<User> SelectUser()
+        {
+            List<User> userList = new List<User>();
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+                string sqlExpression = "SELECT * FROM Users";
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                command.Connection = connection;
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var id= reader.GetInt32(0);
+                            var login = reader.GetString(1);
+                            var password = reader.GetString(2);
+                            var admin = reader.GetString(3);
+
+                            userList.Add(new User()
+                            {
+                                Id = id,
+                                Login = login,
+                                Password = password,
+                                Admin = admin
+                              
+
+                            });
+                        }
+                    }
+                    return userList;
                 }
             }
         }
@@ -210,6 +273,7 @@ namespace library.DataBase
                 }
             }
         }
+
     }
 
 }

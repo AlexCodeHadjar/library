@@ -5,20 +5,27 @@ using library.Data.interfaces;
 namespace library.Data.mocks
 {
     ///<summary>
-    ///реализация интерфейса IAuthor
+    ///реализация интерфейса IUser
     /// </summary>
-    public class MockAuthor : IAuthor
+    public class MockUser :IUser
     {
         // строка подключения
         static string connectionString = "Data Source=Catalogsdata.db";
 
+
+
+
+
+
+
+
         DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-        public IEnumerable<Author> AllAuthors
+
+        public IEnumerable<User> AllUsers
         {
-        
             get
             {
-                return databaseHelper.SelectAuthor();
+                return databaseHelper.SelectUser();
             }
         }
     }

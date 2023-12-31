@@ -1,8 +1,8 @@
 ﻿using library.Data.Models;
-using Library.Data.interfaces;
+using library.Data.interfaces;
 using library.DataBase;
 
-namespace Library.Data.mocks
+namespace library.Data.mocks
 {
     ///<summary>
     ///реализация интерфейса IPublicsher
@@ -22,7 +22,7 @@ namespace Library.Data.mocks
 
         DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
   
-        public IEnumerable<Publisher> Allpublicshers {
+        public IEnumerable<Publisher> AllPublicshers {
             get 
             {
                 return databaseHelper.SelectPublisher();
