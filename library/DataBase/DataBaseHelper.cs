@@ -172,7 +172,7 @@ namespace library.DataBase
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
-                string sqlExpression = "SELECT * FROM Users";
+                string sqlExpression = "SELECT * FROM User";
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
                 command.Connection = connection;
                 using (SqliteDataReader reader = command.ExecuteReader())

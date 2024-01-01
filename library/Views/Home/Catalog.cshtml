@@ -1,6 +1,5 @@
 ﻿@model AllLibraryModels
 @{
-
     Layout = null;
 }
 <!DOCTYPE html>
@@ -8,9 +7,21 @@
 <head>
     <title>Cotalog</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width-device-width" />
-    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
+    <style>
+        .custom-table-responsive {
+            height: 600px;
+            overflow-y: scroll;
+        }
+
+        .table-header {
+            position: sticky;
+            top: 0;
+            background-color: white;
+        }
+    </style>
 </head>
 <body>
     <div class="content">
@@ -19,24 +30,22 @@
             <div class="table-responsive custom-table-responsive">
                 <table class="table custom-table">
                     <thead>
-                        <tr>
+                        <tr class="table-header">
                             <th scope="col">Название</th>
                             <th scope="col">Автор</th>
                             <th scope="col">Издательство</th>
-                            <th scope="col">Дата</th>
+                            <th scope="col">Год издания </th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var material in Model.AllBibliographicmaterial)
                         {
-                            
                             <tr scope="row">
                                 <td>@material.Name</td>
                                 <td>@material.Author.FullName</td>
                                 <td>@material.Publisher.Name</td>
                                 <td>@material.Date</td>
                             </tr>
-                            
                             <tr class="spacer"><td colspan="100"></td></tr>
                         }
                     </tbody>

@@ -2,13 +2,12 @@
 using library.DataBase;
 using library.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Policy;
+using System.Diagnostics.Eventing.Reader;
 
 
 namespace library.Controllers
 {
-    ///<summary>
-    ///контролер для работы с предстваление Regist 
-    /// </summary>
     public class RegistrationController:Controller
     {
          static string connectionString = "Data Source=Catalogsdata.db";
@@ -16,34 +15,89 @@ namespace library.Controllers
             
         [HttpGet]
         ///<summary>
-        ///для работы с предстваление CataRegistlog вывод информации 
+        ///для работы с предстваление Authorization(регистрация) вывод информации 
         /// </summary>
-        public ViewResult Regist()
+        public ViewResult Authorization()
         {
 
             return View();
         }
         [HttpPost]
         ///<summary>
-        ///для работы с предстваление CataRegistlog получения данных
+        ///для работы с предстваление Authorization(регистрация) получения данных
+        /// </summary>
+        public IActionResult Authorization(User user)
+        {
+            if (ModelState.IsValid)
+            {
+                User newUser = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login
+                                           && p.Password == user.Password && p.Admin == user.Admin);
+
+                if (newUser == null)
+                {
+                    newUser = new User
+                    {
+
+                        Login = user.Login,
+                        Password = user.Password,
+                        Admin = user.Admin,
+
+                    };
+
+
+
+                    // добавление пользователя(user)
+                    _databaseHelper.AddUser(newUser);
+                    return RedirectToAction("Regist", "Registration");
+                }
+            }
+            return View();
+
+        }
+        [HttpGet]
+        ///<summary>
+        ///для работы с предстваление Regist(авторизация) вывод информации 
+        /// </summary>
+        public ViewResult Regist()
+        {
+            return View();
+        }
+        [HttpPost]
+        ///<summary>
+        ///для работы с предстваление Regist(авторизация) получение информации 
         /// </summary>
         public IActionResult Regist(User user)
         {
             if (ModelState.IsValid)
             {
+                User login = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login
+                                            && p.Password == user.Password && p.Admin == user.Admin);
 
-                User newUser = new User
+                if (login != null)
                 {
-                    Login = user.Login,
-                    Password = user.Password,
-                    Admin = user.Admin,
                     
-                };
-                // добавление пользователя(user)
-                _databaseHelper.AddUser(newUser);
-                return RedirectToAction("Catalog", "Home");
+                    return RedirectToAction("Catalog", "Home");
+                }
+
             }
             return View();
         }
+        [HttpPost]
+        ///<summary>
+        ///переходит к представлению Regist
+        /// </summary>
+        public IActionResult Next()
+        {
+            return RedirectToAction("Regist", "Registration");
+        }
+        [HttpPost]
+        public IActionResult Return()
+        ///<summary>
+        ///возвращает к представлению Authorization
+        /// </summary>
+        {
+            return RedirectToAction("Authorization", "Registration");
+        }
+
     }
 }

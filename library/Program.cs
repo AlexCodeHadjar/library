@@ -31,7 +31,7 @@ app.UseStaticFiles();
 
 app.MapControllerRoute(
    name:"default",
-   pattern: "{controller=Registration}/{action=Regist}");
+   pattern: "{controller=Registration}/{action=Authorization}");
 // строка подключения
 string connectionString = "Data Source=Catalogsdata.db";
 
@@ -59,7 +59,7 @@ Bibliographicmaterial newMaterial = new Bibliographicmaterial()
     }
 };
 // добавляение нового Bibliographicmaterial в таблицу
-databaseHelper.AddBibliographicMaterial(newMaterial);
+//databaseHelper.AddBibliographicMaterial(newMaterial);
 
 
 Author newAuthor = new Author()
@@ -69,7 +69,7 @@ Author newAuthor = new Author()
     Information = "Информация об авторе"
 };
 // добавляение нового Author в таблицу
-databaseHelper.AddAuthor(newAuthor);
+//databaseHelper.AddAuthor(newAuthor);
 
 
 
@@ -81,7 +81,7 @@ Publisher newPublisher = new Publisher()
 };
 
 // добавляение нового Publisher в таблицу
-databaseHelper.AddPublisher(newPublisher);
+//databaseHelper.AddPublisher(newPublisher);
 /*using (SQLiteConnection connection = new SQLiteConnection(connectionString))
 {
     connection.Open();
