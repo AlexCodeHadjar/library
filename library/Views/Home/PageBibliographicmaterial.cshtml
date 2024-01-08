@@ -1,0 +1,68 @@
+﻿@model AllLibraryModels;
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cotalog</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+    <style>
+        .custom-table {
+            display: flex;
+            flex-direction: column;
+        }
+
+    </style>
+
+    <div class="table-responsive custom-table-responsive">
+        <table class="table custom-table">
+
+         
+
+
+            <tbody>
+                @foreach (var material in Model.AllBibliographicmaterial)
+                {
+                    <tr scope="row" onclick="submitForm('@material.Id')">
+                        <td>
+                            <div class="d-flex align-items-start">
+                                <div >
+                                    <div style=margin:40px;>
+                                        <span>Название:  @material.Name</span>
+                                      
+                                    </div>
+                                    <div style =margin:40px;>
+                                        <span>Автор:  @material.Author.FullName</span>
+                                        </div>
+                                    <div style =margin:40px;>
+                                        <span>Издательство:   @material.Publisher.Name </span>
+                                   </div>
+                                    <div style =margin:40px;>
+                                        <spam>Год издания:   @material.Date</spam>
+                                    </div>
+                                </div>
+                                <div class="ml-auto">
+                                    <img src="~/img/pict1.jpg" alt="Изображение" style="width: 400px; height: auto;" />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+
+
+        </table>
+    </div>
+    <form method="post"action="/Home/Catalog">
+        <input type="submit" value="return" />
+    </form>
+</body>
+</html>

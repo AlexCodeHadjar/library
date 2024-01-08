@@ -4,6 +4,7 @@ using library.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Policy;
 using System.Diagnostics.Eventing.Reader;
+using System.Data;
 
 
 namespace library.Controllers
@@ -11,8 +12,9 @@ namespace library.Controllers
     public class RegistrationController:Controller
     {
          static string connectionString = "Data Source=Catalogsdata.db";
+        
         private DatabaseHelper _databaseHelper = new DatabaseHelper(connectionString);
-            
+          
         [HttpGet]
         ///<summary>
         ///для работы с предстваление Authorization(регистрация) вывод информации 
@@ -30,8 +32,8 @@ namespace library.Controllers
         {
             if (ModelState.IsValid)
             {
-                User newUser = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login
-                                           && p.Password == user.Password && p.Admin == user.Admin);
+               
+                User newUser = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password && p.Admin == user.Admin);
 
                 if (newUser == null)
                 {
@@ -45,7 +47,7 @@ namespace library.Controllers
                     };
 
 
-
+                  
                     // добавление пользователя(user)
                     _databaseHelper.AddUser(newUser);
                     return RedirectToAction("Regist", "Registration");
@@ -66,18 +68,22 @@ namespace library.Controllers
         ///<summary>
         ///для работы с предстваление Regist(авторизация) получение информации 
         /// </summary>
-        public IActionResult Regist(User user)
+        public IActionResult Regist( User user)
         {
             if (ModelState.IsValid)
             {
-                User login = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login
-                                            && p.Password == user.Password && p.Admin == user.Admin);
+
+               User login = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password && p.Admin == user.Admin);
 
                 if (login != null)
                 {
-                    
-                    return RedirectToAction("Catalog", "Home");
+                    if (login.Admin=="true")
+                    {
+                        return RedirectToAction("CatalogAdmin", "Home");
+                    }
+                    else { RedirectToAction("Catalog", "Home"); ; }
                 }
+                
 
             }
             return View();

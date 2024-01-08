@@ -1,0 +1,83 @@
+﻿@model AllLibraryModels;
+@{
+    Layout = null;
+    //public IActionResult PageBibliographicmaterialAdminRedaction(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string Date = null)
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cotalog</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+    <style>
+        .custom-table {
+            display: flex;
+            flex-direction: column;
+        }
+
+    </style>
+
+    <div class="table-responsive custom-table-responsive">
+        <form method="post" action="/Home/PageBibliographicmaterialAdminRedaction">
+            @foreach (var material in Model.AllBibliographicmaterial)
+            {
+                <tr scope="row">
+                    <td>
+                        <div class="d-flex align-items-start">
+                            <div>
+                                <div style="margin:40px;">
+                                    <span>Название: @material.Name</span>
+                                    <input type="text" class="form-control" name="nameBibliographicmaterial" >
+                                </div>
+                                <div style="margin:40px;">
+                                    <span>Автор: @material.Author.FullName</span>
+                                    <p>
+                                        <select name="nameAuthor">
+                                            @foreach (var author in Model.AllAuthors)
+                                            {
+                                                <option value="@author.Id">@author.FullName</option>
+                                            }
+                                        </select>
+                                    </p>
+                                  
+                                </div>
+
+                                <div style="margin:40px;">
+                                    <span>Издательство: @material.Publisher.Name</span>
+                                    <p>
+                                        <select name="namePublisher">
+                                            @foreach (var publisher in Model.AllPublishers)
+                                            {
+                                                <option value="@publisher.Id">@publisher.Name</option>
+                                            }
+                                        </select>
+                                    </p>
+                                </div>
+                                <div style="margin:40px;">
+                                    <span>Год издания: @material.Date</span>
+                                    <input type="text" class="form-control" name="date">
+                                </div>
+                            </div>
+                            <div class="ml-auto">
+                                <img src="~/img/pict1.jpg" alt="Изображение" style="width: 400px; height: auto;" />
+                                <p>
+                                    <input type="file" name="img" accept="image/*">
+                                    <input type="submit" value="Отправить">
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </form>
+    </div>
+    <form method="post" action="/Home/CatalogAdmin">
+        <input type="submit" value="return" />
+    </form>
+</body>
+</html>

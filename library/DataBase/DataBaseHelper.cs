@@ -23,7 +23,11 @@ namespace library.DataBase
         /// </summary>// 
         public void AddBibliographicMaterial(Bibliographicmaterial material)
         {
-            
+            if (material.Author.Id == null || material.Publisher.Id == null || material.Date == null || material.Name == null || material.Img == null)
+            {
+              
+                throw new ArgumentException("Author and Publisher must be set for the Bibliographicmaterial.");
+            }
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
@@ -122,11 +126,15 @@ namespace library.DataBase
         public IEnumerable<Bibliographicmaterial> SelectBibliographicmaterial()
         {
             List<Bibliographicmaterial> bibliographicmaterialsDatebase = new List<Bibliographicmaterial>();
-           
+            string sqlExpression;
+
+
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
-                string sqlExpression = "SELECT * FROM Bibliographicmaterial";
+                sqlExpression = "SELECT * FROM Bibliographicmaterial";
+             
+               
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
                 command.Connection = connection;
                 using (SqliteDataReader reader = command.ExecuteReader())
@@ -204,13 +212,21 @@ namespace library.DataBase
         ///<summary>
         ///перебор всех обьектов Author из базы данных Catalogsdata
         /// </summary>
-        public IEnumerable<Author> SelectAuthor()
+        public IEnumerable<Author> SelectAuthor(string nameAuthor =null)
         {
             List<Author> authorList = new List<Author>();
+            string sqlExpression;
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
-                string sqlExpression = "SELECT * FROM Author";
+                if (nameAuthor == null)
+                {
+                     sqlExpression = "SELECT * FROM Author ";
+                }
+                else
+                {
+                    sqlExpression = $"SELECT * FROM Author WHERE fullname = '{nameAuthor}'";
+                }
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
                 command.Connection = connection;
                 using (SqliteDataReader reader = command.ExecuteReader())
@@ -240,14 +256,23 @@ namespace library.DataBase
         ///<summary>
         ///перебор всех обьектов Publisher из базы данных Catalogsdata
         /// </summary>
-        public IEnumerable<Publisher> SelectPublisher()
+        public IEnumerable<Publisher> SelectPublisher(string namePublisher = null)
         {
             List<Publisher> publisherList = new List<Publisher>();
+            string sqlExpression;
 
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
-                string sqlExpression = "SELECT * FROM Publisher";
+                if (namePublisher == null)
+                {
+                    sqlExpression = "SELECT * FROM Publisher";
+                }
+                else
+                {
+                    sqlExpression = $"SELECT * FROM Publisher WHERE Name = '{namePublisher}'";
+                }
+              
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
                 command.Connection = connection;
                 using (SqliteDataReader reader = command.ExecuteReader())

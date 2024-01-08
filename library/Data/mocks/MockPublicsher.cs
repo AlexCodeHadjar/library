@@ -28,5 +28,15 @@ namespace library.Data.mocks
                 return databaseHelper.SelectPublisher();
             } 
         }
+        public IEnumerable<Publisher> SelectPublisher(string namePublisher)
+        {
+
+            IEnumerable<Publisher> allPublisher = AllPublicshers;
+
+
+            IEnumerable<Publisher> filteredPublisher = allPublisher.Where(a => a.Name == namePublisher);
+
+            return filteredPublisher;
+        }
     }
 }

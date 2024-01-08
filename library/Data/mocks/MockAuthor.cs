@@ -21,5 +21,16 @@ namespace library.Data.mocks
                 return databaseHelper.SelectAuthor();
             }
         }
+        public IEnumerable<Author> SelectAuthor(string nameAuthor)
+        {
+            
+            IEnumerable<Author> allAuthors = AllAuthors;
+
+     
+            IEnumerable<Author> filteredAuthors = allAuthors.Where(a => a.FullName == nameAuthor);
+
+            return filteredAuthors;
+        }
+
     }
 }

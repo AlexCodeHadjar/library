@@ -31,7 +31,9 @@ app.UseStaticFiles();
 
 app.MapControllerRoute(
    name:"default",
-   pattern: "{controller=Registration}/{action=Authorization}");
+pattern: "{controller=Home}/{action=CatalogAdmin}");
+//pattern: "{controller=Registration}/{action=Authorization}");
+//pattern: "{controller=Registration}/{action=Regist}");
 // строка подключения
 string connectionString = "Data Source=Catalogsdata.db";
 
@@ -46,8 +48,8 @@ DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
 
 Bibliographicmaterial newMaterial = new Bibliographicmaterial()
 {
-    Name = "Название книг",
-    Date = "2022-01-01",
+    Name = "The Hobbit",
+    Date = "1937",
     Img = "book.jpg",
     Author = new Author()
     {
@@ -59,12 +61,12 @@ Bibliographicmaterial newMaterial = new Bibliographicmaterial()
     }
 };
 // добавляение нового Bibliographicmaterial в таблицу
-//databaseHelper.AddBibliographicMaterial(newMaterial);
+ //databaseHelper.AddBibliographicMaterial(newMaterial);
 
 
 Author newAuthor = new Author()
 {
-    FullName = "Иван Иванов",
+    FullName = "HJ.R.R. Tolkien",
     Contacts = "ivan@example.com",
     Information = "Информация об авторе"
 };
@@ -75,7 +77,7 @@ Author newAuthor = new Author()
 
 Publisher newPublisher = new Publisher()
 {
-    Name = "Издательство",
+    Name = "Unwin",
     Contacts = "publisher@example.com",
     Address = "Адрес издательства"
 };

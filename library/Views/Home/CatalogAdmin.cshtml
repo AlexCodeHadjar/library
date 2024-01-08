@@ -27,51 +27,52 @@
     <div class="content">
         <div class="container">
             <h2 class="mb-5">Каталог</h2>
-            <form method="post" action="/Home/Catalog">
-            <div class="table-responsive custom-table-responsive">
-                <table class="table custom-table">
-                    
+            <form method="post" action="/Home/CatalogAdmin">
+                <div class="table-responsive custom-table-responsive">
+                    <table class="table custom-table">
+
                         <thead>
-                        <tr class="table-header">
+                            <tr class="table-header">
                                 <th scope="col">Название <input type="text" class="form-control" name="nameBibliographicmaterial"></th>
                                 <th scope="col">Автор<input type="text" class="form-control" name="nameAuthor"></th>
                                 <th scope="col">Издательство<input type="text" class="form-control" name="namePublisher"></th>
-                                <th scope="col">Год издания<input type="text" class="form-control" name="Date"> </th>
+                                <th scope="col">Год издания<input type="text" class="form-control" name="date"> </th>
 
-                        </tr>
-                    </thead>
-                  
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        @foreach (var material in Model.AllBibliographicmaterial)
-                        {
+
+                        <tbody>
+                            @foreach (var material in Model.AllBibliographicmaterial)
+                            {
 
                                 <tr scope="row" onclick="submitForm('@material.Id')">
-                                <td>@material.Name</td>
-                                <td>@material.Author.FullName</td>
-                                <td>@material.Publisher.Name</td>
-                                <td>@material.Date</td>
-                              
-                            </tr>
-                            <tr class="spacer"><td colspan="100"></td></tr>
-                        }
-                    </tbody>
-                        
+                                    <td>@material.Name</td>
+                                    <td>@material.Author.FullName</td>
+                                    <td>@material.Publisher.Name</td>
+                                    <td>@material.Date</td>
 
-                       
-                </table>
-            </div>
+                                </tr>
+                                <tr class="spacer"><td colspan="100"></td></tr>
+                            }
+                        </tbody>
+
+
+
+                    </table>
+                </div>
                 <input type="submit" value="search" />
             </form>
         </div>
-        <form id="myForm" method="post" action="/Home/PageBibliographicmaterial">
+        <form id="myForm" method="post" action="/Home/PageBibliographicmaterialAdmin">
             <input type="hidden" id="materialId" name="materialId" value="" />
         </form>
         @if (false)
         {
             <form method="post" action="/Registration/Next">
                 <input type="submit" value="Add" />
-        </form>}
+            </form>
+        }
 
     </div>
     <script src="~/js/bootstrap.min.js"></script>

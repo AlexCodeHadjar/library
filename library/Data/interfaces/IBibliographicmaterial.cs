@@ -12,6 +12,8 @@ namespace library.Data.interfaces
         /// </summary>
 
         public IEnumerable<Bibliographicmaterial> AllBibliographicmaterial { get; }
-        
+        public IEnumerable<Bibliographicmaterial> SelectBibliographicmaterial(string nameBibliographicmaterial, string date, string nameAuthor, string namePublisher);
+
+
     }
 }
