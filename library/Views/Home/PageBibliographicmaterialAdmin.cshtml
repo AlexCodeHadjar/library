@@ -1,7 +1,7 @@
 ﻿@model AllLibraryModels;
 @{
     Layout = null;
-    //public IActionResult PageBibliographicmaterialAdminRedaction(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string Date = null)
+   
 }
 <!DOCTYPE html>
 <html>
@@ -23,7 +23,7 @@
     </style>
 
     <div class="table-responsive custom-table-responsive">
-        <form method="post" action="/Home/PageBibliographicmaterialAdminRedaction">
+        <form  method="post" action="/Home/PageBibliographicmaterialAdminRedaction">
             @foreach (var material in Model.AllBibliographicmaterial)
             {
                 <tr scope="row">
@@ -32,25 +32,27 @@
                             <div>
                                 <div style="margin:40px;">
                                     <span>Название: @material.Name</span>
-                                    <input type="text" class="form-control" name="nameBibliographicmaterial" >
+                                    <input type="text" class="form-control" name="nameBibliographicmaterial">
                                 </div>
                                 <div style="margin:40px;">
                                     <span>Автор: @material.Author.FullName</span>
                                     <p>
-                                        <select name="nameAuthor">
+                                        <select name="nameAuthor" >
+                                            <option value="">Выберите автора</option>
                                             @foreach (var author in Model.AllAuthors)
                                             {
                                                 <option value="@author.Id">@author.FullName</option>
                                             }
                                         </select>
                                     </p>
-                                  
+
                                 </div>
 
                                 <div style="margin:40px;">
                                     <span>Издательство: @material.Publisher.Name</span>
                                     <p>
                                         <select name="namePublisher">
+                                            <option value="">Выберите издательство</option>
                                             @foreach (var publisher in Model.AllPublishers)
                                             {
                                                 <option value="@publisher.Id">@publisher.Name</option>
@@ -62,22 +64,123 @@
                                     <span>Год издания: @material.Date</span>
                                     <input type="text" class="form-control" name="date">
                                 </div>
+                                <div style="margin:40px;">
+                                    <span>ID: @material.Id</span>
+                                    <input type="hidden" name="idBibliographicmaterial" value="@material.Id">
+                                </div>
                             </div>
                             <div class="ml-auto">
                                 <img src="~/img/pict1.jpg" alt="Изображение" style="width: 400px; height: auto;" />
                                 <p>
                                     <input type="file" name="img" accept="image/*">
-                                    <input type="submit" value="Отправить">
+                                    
                                 </p>
                             </div>
                         </div>
                     </td>
                 </tr>
             }
+            <input  type="submit" value=" Отправить">
         </form>
+        <form method="get" action="/Home/AddPublisher">
+            <input type="submit" value="Добавить Издательство" />
+        </form>
+        <form method="get" action="/Home/AddAuthor">
+            <input type="submit" value="Добавить Автора" />
+        </form>
+        <form method="post" action="/Home/DeleteBibliographicmaterial">
+              @foreach (var material in Model.AllBibliographicmaterial)
+            {
+                <input type="hidden" name="idBibliographicmaterial" value="@material.Id">
+            }
+            <input type="submit" value="Удалить запись" />
+        </form>
+       
+       
+
+        <button onclick="openPublisherModal()">Изменить Издательство</button>
+
+        <div id="publisherModal" class="modal">
+            @foreach (var material in Model.AllBibliographicmaterial)
+            {
+                <form class="modal-content" method="post" action="/Home/PageBibliographicmaterialAdminRedactionPublisher">
+                <input type="hidden" name="idPublisher" value="@material.Publisher.Id">
+                <div class="container">
+                    <label for="namePublisher"><b>Название Издательства</b></label>
+                    <input type="text" placeholder="Название Издательства" name="namePublisher" >
+                    <label for="contactsPublisher"><b>Контакты</b></label>
+                    <input type="text" placeholder="Контакты" name="contactsPublisher" >
+                    <label for="addressPublisher"><b>Адрес</b></label>
+                    <input type="text" placeholder="Адрес" name="addressPublisher" >
+
+                    <button type="submit">Отправить</button>
+                </div>
+                <div class="container" style="background-color:#f1f1f1">
+                    <button type="button" onclick="closePublisherModal()" class="cancelbtn">Отмена</button>
+                </div>
+            </form>
+            }
+        </div>
+   
+        <button onclick="openAuthorModal()">Изменить Автора</button>
+
+        <div id="authorModal" class="modal">
+              @foreach (var material in Model.AllBibliographicmaterial)
+            {
+            <form class="modal-content" method="post" action="/Home/PageBibliographicmaterialAdminRedactionAuthor">
+                <input type="hidden" name="idAuthor" value="@material.Author.Id">
+                <div class="container">
+                    <label for="nameAuthor"><b>Имя Автора</b></label>
+                    <input type="text" placeholder="Имя Автора" name="nameAuthor" >
+                    <label for="contactsAuthor"><b>Контакты</b></label>
+                    <input type="text" placeholder="Контакты" name="contactsAuthor">
+                    <label for="informationdAuthor"><b>Информация</b></label>
+                    <input type="text" placeholder="Информация" name="informationAuthor" >
+
+                    <button type="submit">Отправить</button>
+                </div>
+                <div class="container" style="background-color:#f1f1f1">
+                    <button type="button" onclick="closeAuthorModal()" class="cancelbtn">Отмена</button>
+                </div>
+            </form>
+            }
+        </div>
+       
     </div>
+
     <form method="post" action="/Home/CatalogAdmin">
         <input type="submit" value="return" />
     </form>
+    <script>
+        function openAuthorModal() {
+            document.getElementById("authorModal").style.display = "block";
+        }
+
+        function closeAuthorModal() {
+            document.getElementById("authorModal").style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target === document.getElementById("authorModal")) {
+                document.getElementById("authorModal").style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        function openPublisherModal() {
+            document.getElementById("publisherModal").style.display = "block";
+        }
+
+        function closePublisherModal() {
+            document.getElementById("publisherModal").style.display = "none";
+        }
+
+   
+        window.onclick = function (event) {
+            if (event.target === document.getElementById("publisherModal")) {
+                document.getElementById("publisherModal").style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>

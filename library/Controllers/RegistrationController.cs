@@ -77,11 +77,12 @@ namespace library.Controllers
 
                 if (login != null)
                 {
-                    if (login.Admin=="true")
-                    {
+                    if (login.Admin == "false")
+                    { return RedirectToAction("Catalog", "Home"); }
+                    else 
                         return RedirectToAction("CatalogAdmin", "Home");
-                    }
-                    else { RedirectToAction("Catalog", "Home"); ; }
+                    
+                   
                 }
                 
 

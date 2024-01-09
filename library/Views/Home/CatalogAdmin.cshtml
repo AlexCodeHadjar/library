@@ -67,12 +67,56 @@
         <form id="myForm" method="post" action="/Home/PageBibliographicmaterialAdmin">
             <input type="hidden" id="materialId" name="materialId" value="" />
         </form>
-        @if (false)
-        {
-            <form method="post" action="/Registration/Next">
-                <input type="submit" value="Add" />
+        <form method="post" action="/Home/DeleteBibliographicmaterial">
+ 
+            <input type="button" value="Удалить автора" onclick="openAuthorModal()" />
+        </form>
+
+        <div id="authorModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAuthorModal()">&times;</span>
+                <h2>Выберите автора для удаления</h2>
+                <form id="authorSelectionForm" method="post" action="/Home/DeleteAuthor">
+                    @foreach (var material in Model.AllAuthors)
+                    {
+                        <label>
+                            <input type="radio" name="idAuthor" value="@material.Id"> @material.FullName
+                        </label>
+                    }
+                    <input type="submit" value="Удалить выбранного автора" />
+                </form>
+            </div>
+        </div>
+        <form method="post" action="/Home/DeleteBibliographicmaterial">
+       
+            <input type="button" value="Удалить издательство" onclick="openPublisherModal()" />
+        </form>
+
+        <div id="publisherModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closePublisherModal()">&times;</span>
+                <h2>Выберите издательство для удаления</h2>
+                <form id="publisherSelectionForm" method="post" action="/Home/DeletePublisher">
+                    @foreach (var material in Model.AllPublishers)
+                    {
+                        <label>
+                            <input type="radio" name="idPublisher" value="@material.Id"> @material.Name
+                        </label>
+                    }
+                    <input type="submit" value="Удалить выбранное издательство" />
+                </form>
+            </div>
+        </div>
+        <form method="post" action="/Registration/Next">
+            <input type="submit" value="return" />
+        </form>
+
+            <form method="get" action="/Home/CreatePageBibliographicmaterialAdmin">
+            <input type="submit" value="Add" />
             </form>
-        }
+      
+
+        
 
     </div>
     <script src="~/js/bootstrap.min.js"></script>
@@ -80,6 +124,38 @@
         function submitForm(materialId) {
             document.getElementById('materialId').value = materialId;
             document.getElementById('myForm').submit();
+        }
+    </script>
+    <script>
+function openAuthorModal() {
+  document.getElementById("authorModal").style.display = "block";
+}
+
+function closeAuthorModal() {
+  document.getElementById("authorModal").style.display = "none";
+}
+
+// Закроет модальное окно по клику вне области модального окна
+window.onclick = function(event) {
+  if (event.target === document.getElementById("authorModal")) {
+    document.getElementById("authorModal").style.display = "none";
+  }
+}
+</script>
+    <script>
+        function openPublisherModal() {
+            document.getElementById("publisherModal").style.display = "block";
+        }
+
+        function closePublisherModal() {
+            document.getElementById("publisherModal").style.display = "none";
+        }
+
+        // Закроет модальное окно по клику вне области модального окна
+        window.onclick = function (event) {
+            if (event.target === document.getElementById("publisherModal")) {
+                document.getElementById("publisherModal").style.display = "none";
+            }
         }
     </script>
 </body>

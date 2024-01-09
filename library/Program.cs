@@ -31,77 +31,7 @@ app.UseStaticFiles();
 
 app.MapControllerRoute(
    name:"default",
-pattern: "{controller=Home}/{action=CatalogAdmin}");
+//pattern: "{controller=Home}/{action=CatalogAdmin}");
 //pattern: "{controller=Registration}/{action=Authorization}");
-//pattern: "{controller=Registration}/{action=Regist}");
-// строка подключения
-string connectionString = "Data Source=Catalogsdata.db";
-
-
-
-
-
-
-// передача строки подключения
-DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-
-
-Bibliographicmaterial newMaterial = new Bibliographicmaterial()
-{
-    Name = "The Hobbit",
-    Date = "1937",
-    Img = "book.jpg",
-    Author = new Author()
-    {
-        Id = 1
-    },
-    Publisher = new Publisher()
-    {
-        Id = 1
-    }
-};
-// добавляение нового Bibliographicmaterial в таблицу
- //databaseHelper.AddBibliographicMaterial(newMaterial);
-
-
-Author newAuthor = new Author()
-{
-    FullName = "HJ.R.R. Tolkien",
-    Contacts = "ivan@example.com",
-    Information = "Информация об авторе"
-};
-// добавляение нового Author в таблицу
-//databaseHelper.AddAuthor(newAuthor);
-
-
-
-Publisher newPublisher = new Publisher()
-{
-    Name = "Unwin",
-    Contacts = "publisher@example.com",
-    Address = "Адрес издательства"
-};
-
-// добавляение нового Publisher в таблицу
-//databaseHelper.AddPublisher(newPublisher);
-/*using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-{
-    connection.Open();
-
-    string sqlExpression = "CREATE TABLE IF NOT EXISTS User (id INTEGER PRIMARY KEY, login TEXT, password TEXT,Admin TEXT )";
-    using (SQLiteCommand command = new SQLiteCommand(sqlExpression, connection))
-    {
-        command.ExecuteNonQuery();
-    }
-
-    // Закрытие соединения
-    connection.Close();
-}*/
-
-
-//var obj = databaseHelper.SelectBibliographicmaterial();
-
-//databaseHelper.SelectPublisher();
-//databaseHelper.SelectAuthor();
-//Console.Read();
+pattern: "{controller=Registration}/{action=Regist}");
 app.Run();

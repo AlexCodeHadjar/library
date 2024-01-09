@@ -1,0 +1,66 @@
+﻿@model AllLibraryModels
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cotalog</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
+    <style>
+      
+
+        .table-header {
+            position: sticky;
+            top: 0;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="container">
+            <h2 class="mb-5">Каталог</h2>
+            <form method="post" action="/Home/AddAuthor">
+                <div class="table-responsive custom-table-responsive">
+                    <table class="table custom-table">
+
+                        <thead>
+                            <tr class="table-header">
+                               
+                                <th scope="col">Полное имя <input type="text" class="form-control" name="fullname"></th>
+                                <th scope="col">Контакты<input type="text" class="form-control" name="contacts"></th>
+                                <th scope="col">Информация<input type="text" class="form-control" name="information"></th>
+                              
+
+                            </tr>
+                        </thead>
+
+
+                       
+
+
+                    </table>
+                </div>
+                <input type="submit" value="add" />
+            </form>
+        </div>
+        <form id="myForm" method="post" action="/Home/PageBibliographicmaterialAdmin">
+            <input type="hidden" id="materialId" name="materialId" value="" />
+        </form>
+    </form>
+        }
+
+    </div>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script>
+        function submitForm(materialId) {
+            document.getElementById('materialId').value = materialId;
+            document.getElementById('myForm').submit();
+        }
+    </script>
+</body>
+</html>

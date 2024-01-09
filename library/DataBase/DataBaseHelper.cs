@@ -299,6 +299,177 @@ namespace library.DataBase
             }
         }
 
+        public void UpdateBibliographicmaterial(int idBibliographicmaterial, string nameBibliographicmaterial = null,
+       string nameAuthor = null, string namePublisher = null, string date = null)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+
+
+               
+                string sqlExpression = "UPDATE BibliographicMaterial SET ";
+
+
+                if (nameBibliographicmaterial != null)
+                    sqlExpression += $"`Name` = '{nameBibliographicmaterial}', ";
+
+                if (date != null)
+                    sqlExpression += $"`Date` = '{date}', ";
+
+                if (nameAuthor != null)
+                    sqlExpression += $"`AuthorId` = '{int.Parse(nameAuthor)}', ";
+
+                if (namePublisher != null)
+                    sqlExpression += $"`PublisherId` = '{int.Parse(namePublisher)}', ";
+
+                sqlExpression = sqlExpression.TrimEnd(',', ' ');
+                sqlExpression += $" WHERE Id = '{idBibliographicmaterial}'";
+
+                command.CommandText = sqlExpression;
+                command.ExecuteNonQuery();
+            }
+        }
+        public void UpdateAuthor(int idAuthor, string nameAuthor = null, string contactsAuthor = null, string informationAuthor = null)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+
+
+
+                string sqlExpression = "UPDATE Author SET ";
+
+
+                if (nameAuthor != null)
+                    sqlExpression += $"`FullName` = '{nameAuthor}', ";
+
+                if (contactsAuthor != null)
+                    sqlExpression += $"`Contacts` = '{contactsAuthor}', ";
+
+                if (informationAuthor != null)
+                    sqlExpression += $"`Information` = '{informationAuthor}', ";
+
+                sqlExpression = sqlExpression.TrimEnd(',', ' ');
+                sqlExpression += $" WHERE Id = '{idAuthor}'";
+
+                command.CommandText = sqlExpression;
+                command.ExecuteNonQuery();
+            }
+        }
+        public void UpdatePublisher(int idPublisher, string namePublisher = null, string contactsPublisher = null, string addressPublisher = null)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+
+
+
+                string sqlExpression = "UPDATE Publisher SET ";
+
+
+                if (namePublisher != null)
+                    sqlExpression += $"`Name` = '{namePublisher}', ";
+
+                if (contactsPublisher != null)
+                    sqlExpression += $"`Contacts` = '{contactsPublisher}', ";
+
+                if (addressPublisher != null)
+                    sqlExpression += $"`Address` = '{addressPublisher}', ";
+
+                sqlExpression = sqlExpression.TrimEnd(',', ' ');
+                sqlExpression += $" WHERE Id = '{idPublisher}'";
+
+                command.CommandText = sqlExpression;
+                command.ExecuteNonQuery();
+            }
+        }
+        public void DeleteBibliographicmaterial(int idBibliographicmaterial)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+                string sqlExpression = $"DELETE FROM BibliographicMaterial WHERE Id = {idBibliographicmaterial}";
+                command.CommandText = sqlExpression;
+                command.ExecuteNonQuery();
+            }
+        }
+        public void DeleteAuthor(int idAuthor)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                // Проверяем, используется ли идентификатор автора в таблице BibliographicMaterial
+                string checkUsageQuery = $"SELECT COUNT(*) FROM BibliographicMaterial WHERE AuthorId = {idAuthor}";
+                using (var checkUsageCommand = new SqliteCommand(checkUsageQuery, connection))
+                {
+                    int usageCount = Convert.ToInt32(checkUsageCommand.ExecuteScalar());
+
+                    // Если идентификатор автора используется в таблице BibliographicMaterial, прерываем удаление
+                    if (usageCount > 0)
+                    {
+
+                        return;
+                    }
+
+                }
+                // Если идентификатор автора не используется, выполняем удаление
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+                string sqlExpression = $"DELETE FROM Author WHERE Id = {idAuthor}";
+                command.CommandText = sqlExpression;
+                command.ExecuteNonQuery();
+
+            }
+        }
+        public void DeletePublisher(int idPublisher)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                // Проверяем, используется ли идентификатор автора в таблице BibliographicMaterial
+                string checkUsageQuery = $"SELECT COUNT(*) FROM BibliographicMaterial WHERE PublisherId = {idPublisher}";
+                using (var checkUsageCommand = new SqliteCommand(checkUsageQuery, connection))
+                {
+                    int usageCount = Convert.ToInt32(checkUsageCommand.ExecuteScalar());
+
+                    // Если идентификатор издательства используется в таблице BibliographicMaterial, прерываем удаление
+                    if (usageCount > 0)
+                    {
+
+                        return;
+                    }
+
+                }
+                // Если идентификатор издательства не используется, выполняем удаление
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+                string sqlExpression = $"DELETE FROM Publisher WHERE Id = {idPublisher}";
+                command.CommandText = sqlExpression;
+                command.ExecuteNonQuery();
+
+            }
+        }
     }
 
 }

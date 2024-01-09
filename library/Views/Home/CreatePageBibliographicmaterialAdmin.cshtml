@@ -1,0 +1,94 @@
+﻿@model AllLibraryModels;
+@{
+    Layout = null;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cotalog</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+    <style>
+        .custom-table {
+            display: flex;
+            flex-direction: column;
+        }
+
+    </style>
+
+    <div class="table-responsive custom-table-responsive">
+        <form method="post" action="/Home/CreatePageBibliographicmaterialAdmin">
+            @if (Model.AllBibliographicmaterial.Any())
+            {
+                <tr scope="row">
+                    <td>
+                        <div class="d-flex align-items-start">
+                            <div>
+                                <div style="margin:40px;">
+                                    <span>Название: </span>
+                                    <input type="text" class="form-control" name="nameBibliographicmaterial">
+                                </div>
+                                <div style="margin:40px;">
+                                    <span>Автор:</span>
+                                    <p>
+                                        <select name="nameAuthor">
+                                            <option value="">Выберите автора</option>
+                                            @foreach (var author in Model.AllAuthors)
+                                            {
+                                                <option value="@author.Id">@author.Id</option>
+                                            }
+                                        </select>
+                                    </p>
+
+                                </div>
+
+                                <div style="margin:40px;">
+                                    <span>Издательство: </span>
+                                    <p>
+                                        <select name="namePublisher">
+                                            <option value="">Выберите издательство</option>
+                                            @foreach (var publisher in Model.AllPublishers)
+                                            {
+                                                <option value="@publisher.Id">@publisher.Id</option>
+                                            }
+                                        </select>
+                                    </p>
+                                </div>
+                                <div style="margin:40px;">
+                                    <span>Год издания:</span>
+                                    <input type="text" class="form-control" name="date">
+                                </div>
+                            </div>
+                            <div class="ml-auto">
+                                <img src="~/img/pict1.jpg" alt="Изображение" style="width: 400px; height: auto;" />
+                                <p>
+                                    <input type="file" name="img" accept="image/*">
+
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+            <input type="submit" value=" Отправить">
+        </form>
+        <form method="get" action="/Home/AddPublisher">
+            <input type="submit" value="Добавить Издательство" />
+        </form>
+        <form method="get" action="/Home/AddAuthor">
+            <input type="submit" value="Добавить Автора" />
+        </form>
+    </div>
+
+    <form method="post" action="/Home/CatalogAdmin">
+        <input type="submit" value="return" />
+    </form>
+</body>
+</html>
+
