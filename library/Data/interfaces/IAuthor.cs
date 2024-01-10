@@ -11,7 +11,7 @@ namespace library.Data.interfaces
         ///перебор всех обьектов Author
         /// </summary>
         public IEnumerable<Author> AllAuthors{ get; }
-        public IEnumerable<Author> SelectAuthor(string nameAuthor);
+        public IEnumerable<Author> SelectAuthor();
 
 
 

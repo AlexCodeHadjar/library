@@ -48,9 +48,11 @@ namespace library.DataBase
            
             }
         }
+
         ///<summary>
         ///Вставка новой записи в таблицу "Publisher"
-        /// </summary>//  
+        /// </summary>// 
+        
         public void AddPublisher(Publisher publisher)
         {
             
@@ -70,6 +72,7 @@ namespace library.DataBase
 
             }
         }
+
         ///<summary>
         ///Вставка новой записи в таблицу "AddAuthor"
         /// </summary>//  
@@ -133,6 +136,7 @@ namespace library.DataBase
             {
                 connection.Open();
                 sqlExpression = "SELECT * FROM Bibliographicmaterial";
+
              
                
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
@@ -302,16 +306,21 @@ namespace library.DataBase
         public void UpdateBibliographicmaterial(int idBibliographicmaterial, string nameBibliographicmaterial = null,
        string nameAuthor = null, string namePublisher = null, string date = null)
         {
+            
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
 
                 SqliteCommand command = new SqliteCommand();
                 command.Connection = connection;
+                if (nameBibliographicmaterial == null && date == null && nameAuthor == null && namePublisher == null)
+                {
+                
+                    return;
+                }
 
 
 
-               
                 string sqlExpression = "UPDATE BibliographicMaterial SET ";
 
 
@@ -468,6 +477,21 @@ namespace library.DataBase
                 command.CommandText = sqlExpression;
                 command.ExecuteNonQuery();
 
+            }
+        }
+        
+        public void SortBibliographicmaterial(string nameBibliographicmaterial)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+
+                string sqlExpression  = $"SELECT * FROM BibliographicMaterial ORDER BY {nameBibliographicmaterial} ASC";
+                command.CommandText = sqlExpression;
+                command.ExecuteNonQuery();
             }
         }
     }

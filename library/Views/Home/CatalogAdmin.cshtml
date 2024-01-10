@@ -27,12 +27,61 @@
     <div class="content">
         <div class="container">
             <h2 class="mb-5">Каталог</h2>
+            <form method="post" action="/Home/DeleteBibliographicmaterial">
+
+                <input type="button" value="Удалить автора" onclick="openAuthorModal()" />
+            </form>
+
+            <div id="authorModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeAuthorModal()">&times;</span>
+                    <h2>Выберите автора для удаления</h2>
+                    <form id="authorSelectionForm" method="post" action="/Home/DeleteAuthor">
+                        @foreach (var material in Model.AllAuthors)
+                        {
+                            <label>
+                                <input type="radio" name="idAuthor" value="@material.Id"> @material.FullName
+                            </label>
+                        }
+                        <input type="submit" value="Удалить выбранного автора" />
+                    </form>
+                </div>
+            </div>
+            <form method="post" action="/Home/DeleteBibliographicmaterial">
+
+                <input type="button" value="Удалить издательство" onclick="openPublisherModal()" />
+            </form>
+
+            <div id="publisherModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closePublisherModal()">&times;</span>
+                    <h2>Выберите издательство для удаления</h2>
+                    <form id="publisherSelectionForm" method="post" action="/Home/DeletePublisher">
+                        @foreach (var material in Model.AllPublishers)
+                        {
+                            <label>
+                                <input type="radio" name="idPublisher" value="@material.Id"> @material.Name
+                            </label>
+                        }
+                        <input type="submit" value="Удалить выбранное издательство" />
+                    </form>
+                </div>
+            </div>
+
+
+           
             <form method="post" action="/Home/CatalogAdmin">
                 <div class="table-responsive custom-table-responsive">
+                    <input type="radio" name="sortBy" value="true"> с начала
+                    <input type="radio" name="sortBy" value="false"> с конца
                     <table class="table custom-table">
-
+                        
+                           
+                        
                         <thead>
                             <tr class="table-header">
+                                 <tr class="table-header">
+              
                                 <th scope="col">Название <input type="text" class="form-control" name="nameBibliographicmaterial"></th>
                                 <th scope="col">Автор<input type="text" class="form-control" name="nameAuthor"></th>
                                 <th scope="col">Издательство<input type="text" class="form-control" name="namePublisher"></th>
@@ -67,56 +116,14 @@
         <form id="myForm" method="post" action="/Home/PageBibliographicmaterialAdmin">
             <input type="hidden" id="materialId" name="materialId" value="" />
         </form>
-        <form method="post" action="/Home/DeleteBibliographicmaterial">
- 
-            <input type="button" value="Удалить автора" onclick="openAuthorModal()" />
+
+        <form method="get" action="/Home/CreatePageBibliographicmaterialAdmin">
+            <input type="submit" value="Add" />
         </form>
 
-        <div id="authorModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeAuthorModal()">&times;</span>
-                <h2>Выберите автора для удаления</h2>
-                <form id="authorSelectionForm" method="post" action="/Home/DeleteAuthor">
-                    @foreach (var material in Model.AllAuthors)
-                    {
-                        <label>
-                            <input type="radio" name="idAuthor" value="@material.Id"> @material.FullName
-                        </label>
-                    }
-                    <input type="submit" value="Удалить выбранного автора" />
-                </form>
-            </div>
-        </div>
-        <form method="post" action="/Home/DeleteBibliographicmaterial">
-       
-            <input type="button" value="Удалить издательство" onclick="openPublisherModal()" />
-        </form>
-
-        <div id="publisherModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closePublisherModal()">&times;</span>
-                <h2>Выберите издательство для удаления</h2>
-                <form id="publisherSelectionForm" method="post" action="/Home/DeletePublisher">
-                    @foreach (var material in Model.AllPublishers)
-                    {
-                        <label>
-                            <input type="radio" name="idPublisher" value="@material.Id"> @material.Name
-                        </label>
-                    }
-                    <input type="submit" value="Удалить выбранное издательство" />
-                </form>
-            </div>
-        </div>
         <form method="post" action="/Registration/Next">
             <input type="submit" value="return" />
         </form>
-
-            <form method="get" action="/Home/CreatePageBibliographicmaterialAdmin">
-            <input type="submit" value="Add" />
-            </form>
-      
-
-        
 
     </div>
     <script src="~/js/bootstrap.min.js"></script>

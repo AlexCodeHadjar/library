@@ -23,7 +23,7 @@
     </style>
 
     <div class="table-responsive custom-table-responsive">
-        <form method="post" action="/Home/CreatePageBibliographicmaterialAdmin">
+        <form method="post" action="/Home/CreatePageBibliographicmaterialAdmin" enctype="multipart/form-data">
             @if (Model.AllBibliographicmaterial.Any())
             {
                 <tr scope="row">
@@ -41,7 +41,7 @@
                                             <option value="">Выберите автора</option>
                                             @foreach (var author in Model.AllAuthors)
                                             {
-                                                <option value="@author.Id">@author.Id</option>
+                                                <option value="@author.Id">@author.FullName</option>
                                             }
                                         </select>
                                     </p>
@@ -55,7 +55,7 @@
                                             <option value="">Выберите издательство</option>
                                             @foreach (var publisher in Model.AllPublishers)
                                             {
-                                                <option value="@publisher.Id">@publisher.Id</option>
+                                                <option value="@publisher.Id">@publisher.Name</option>
                                             }
                                         </select>
                                     </p>
@@ -68,7 +68,7 @@
                             <div class="ml-auto">
                                 <img src="~/img/pict1.jpg" alt="Изображение" style="width: 400px; height: auto;" />
                                 <p>
-                                    <input type="file" name="img" accept="image/*">
+                                    <input type="file" name="img" >
 
                                 </p>
                             </div>

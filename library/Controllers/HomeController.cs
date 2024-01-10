@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using library.DataBase;
 using System.Data.Entity;
 using library.Controllers;
+using System.Globalization;
+using System.Runtime.Intrinsics.X86;
+using System.IO;
 
 namespace library.Controllers
 {
@@ -34,6 +37,7 @@ namespace library.Controllers
         /// </summary>
         private readonly IBibliographicmaterial _bibliographicmaterial;
         private readonly IUser _user;
+        private readonly IWebHostEnvironment _appEnvironment;
 
 
         ///<summary>
@@ -41,9 +45,9 @@ namespace library.Controllers
         ///IPublicsher ipublicsher передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
         /// IBibliographicmaterial ibibliographicmaterial передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
         /// </summary>
-        public HomeController(IAuthor iauthor, IPublicsher ipublicsher, IBibliographicmaterial ibibliographicmaterial, IUser iuser)
+        public HomeController(IAuthor iauthor, IPublicsher ipublicsher, IBibliographicmaterial ibibliographicmaterial, IUser iuser, IWebHostEnvironment appEnvironment)
         {
-
+            _appEnvironment = appEnvironment;
             _author = iauthor;
             _publicsher = ipublicsher;
             _bibliographicmaterial = ibibliographicmaterial;
@@ -58,22 +62,31 @@ namespace library.Controllers
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            libraryobj.AllAuthors = _author.AllAuthors;
-            libraryobj.AllPublishers = _publicsher.AllPublicshers;
-            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial;
+            libraryobj.AllAuthors = _author.AllAuthors.OrderBy(a => a.FullName); 
+            libraryobj.AllPublishers = _publicsher.AllPublicshers.OrderBy(a => a.Name); 
+            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial.OrderBy(a => a.Name); 
             return View(libraryobj);
 
         }
         [HttpPost]
-        public IActionResult Catalog(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null)
+        public IActionResult Catalog(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null, string sortBy= null)
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors : _author.SelectAuthor(nameAuthor);
-            libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers : _publicsher.SelectPublisher(namePublisher);
-            libraryobj.AllBibliographicmaterial = string.IsNullOrEmpty(nameBibliographicmaterial) ? _bibliographicmaterial.AllBibliographicmaterial : _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher);
-           
-            // libraryobj.AllUsers = _user.AllUsers;
+            if (sortBy == "true")
+            {
+                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors.OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
+                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers.OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
+            }
+            else
+            {
+                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors.OrderByDescending(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderByDescending(a => a.FullName);
+                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers.OrderByDescending(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderByDescending(a => a.Name);
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderByDescending(a => a.Name);
+            }
+
+         
 
             return View(libraryobj);
 
@@ -83,21 +96,30 @@ namespace library.Controllers
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            libraryobj.AllAuthors = _author.AllAuthors;
-            libraryobj.AllPublishers = _publicsher.AllPublicshers;
-            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial;
+
+            libraryobj.AllAuthors = _author.AllAuthors.OrderBy(a=>a.FullName);
+            libraryobj.AllPublishers = _publicsher.AllPublicshers.OrderBy(a=>a.Name);
+            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial.OrderBy(a=>a.Name);
             return View(libraryobj);
 
         }
         [HttpPost]
-        public IActionResult CatalogAdmin(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null)
+        public IActionResult CatalogAdmin(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null, string sortBy= null)
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors : _author.SelectAuthor(nameAuthor);
-            libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers : _publicsher.SelectPublisher(namePublisher);
-            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial,date,nameAuthor,namePublisher);
-           
+            if (sortBy == "true")
+            {
+                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors.OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
+                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers.OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
+            }
+            else
+            {
+                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors.OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderByDescending(a => a.FullName);
+                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers.OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
+            }
 
             return View(libraryobj);
 
@@ -121,6 +143,7 @@ namespace library.Controllers
             IEnumerable<Bibliographicmaterial> allBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial;
             libraryobj.AllAuthors = _author.AllAuthors;
             libraryobj.AllPublishers = _publicsher.AllPublicshers;
+       
 
             libraryobj.AllBibliographicmaterial = allBibliographicmaterial.Where(a => a.Id == materialId);
             return View(libraryobj);
@@ -295,11 +318,19 @@ namespace library.Controllers
           
         }
         [HttpPost]
-        public IActionResult CreatePageBibliographicmaterialAdmin(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null)
+        public IActionResult CreatePageBibliographicmaterialAdmin(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null,IFormFile img=null)
         {
             string connectionString = "Data Source=Catalogsdata.db";
+           
+           /* if (img != null && img.Length > 0)
+            {
+                var filePath = Path.Combine(_appEnvironment.WebRootPath, "img", img.FileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    img.CopyTo(fileStream);
+                }
 
-
+            }*/
 
 
 
@@ -312,7 +343,7 @@ namespace library.Controllers
                 Name = nameBibliographicmaterial,
                 Date = date,
                 Img = "pict1.jpg",
-                Author = new Author()
+            Author = new Author()
                 {
                     Id = int.Parse(nameAuthor)
                 },
@@ -326,6 +357,21 @@ namespace library.Controllers
             return RedirectToAction("CatalogAdmin", "Home");
 
 
+        }
+        [HttpPost]
+        public IActionResult SortBibliographicmaterial(string nameBibliographicmaterial)
+        {
+            string connectionString = "Data Source=Catalogsdata.db";
+
+
+
+
+
+
+            // передача строки подключения
+            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
+            databaseHelper.SortBibliographicmaterial(nameBibliographicmaterial);
+            return RedirectToAction("CatalogAdmin", "Home");
         }
     }
 }

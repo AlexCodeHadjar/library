@@ -29,14 +29,16 @@
             <h2 class="mb-5">Каталог</h2>
             <form method="post" action="/Home/Catalog">
             <div class="table-responsive custom-table-responsive">
+                    <input type="radio" name="sortBy" value="true"> с начала
+                    <input type="radio" name="sortBy" value="false"> с конца
                 <table class="table custom-table">
-                    
+                      
                         <thead>
                         <tr class="table-header">
                                 <th scope="col">Название <input type="text" class="form-control" name="nameBibliographicmaterial"></th>
                                 <th scope="col">Автор<input type="text" class="form-control" name="nameAuthor"></th>
                                 <th scope="col">Издательство<input type="text" class="form-control" name="namePublisher"></th>
-                                <th scope="col">Год издания<input type="text" class="form-control" name="Date"> </th>
+                                <th scope="col">Год издания<input type="text" class="form-control" name="date"> </th>
 
                         </tr>
                     </thead>

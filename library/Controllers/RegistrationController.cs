@@ -73,11 +73,11 @@ namespace library.Controllers
             if (ModelState.IsValid)
             {
 
-               User login = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password && p.Admin == user.Admin);
+               User login = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password );
 
                 if (login != null)
                 {
-                    if (login.Admin == "false")
+                    if (login.Admin== "false")
                     { return RedirectToAction("Catalog", "Home"); }
                     else 
                         return RedirectToAction("CatalogAdmin", "Home");
