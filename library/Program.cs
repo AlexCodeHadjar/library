@@ -2,26 +2,25 @@ using Microsoft.Data.Sqlite;
 using library.DataBase;
 using library.Data.Models;
 using library.Data.interfaces;
-using library.Data.mocks;
 using System.Data.SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
 ///<summary>
-///сервис для обьединения инферфейса IUser и класс релизации MockUser
+///сервис для обьединения инферфейса IDataBaseHelperAuthor и класс релизации  DatabaseHelper.DataBaseAuthor
 /// </summary>
-builder.Services.AddTransient<IUser, MockUser>();
+builder.Services.AddTransient<IDataBaseHelperAuthor, DatabaseHelper.DataBaseAuthor>();
 ///<summary>
-///сервис для обьединения инферфейса IAuthor и класс релизации MockAuthor
+///сервис для обьединения инферфейса IDataBaseHelperPublisher и класс релизации DatabaseHelper.DataBasePublisher
 /// </summary>
-builder.Services.AddTransient<IAuthor, MockAuthor>();
+builder.Services.AddTransient<IDataBaseHelperPublisher, DatabaseHelper.DataBasePublisher>();
 ///<summary>
-///сервис для обьединения инферфейса IAuthor и класс релизации MockAuthor
+///сервис для обьединения инферфейса IDataBaseHelperBibliographicmaterial и класс релизации DatabaseHelper.DataBaseBibliographicmaterial
 /// </summary>
-builder.Services.AddTransient<IPublicsher, MockPublicsher>();
+builder.Services.AddTransient<IDataBaseHelperBibliographicmaterial,DatabaseHelper.DataBaseBibliographicmaterial>();
 ///<summary>
-///сервис для обьединения инферфейса IAuthor и класс релизации MockAuthor
+///сервис для обьединения инферфейса IDataBaseHelperUser и класс релизации DatabaseHelper.DataBaseUser
 /// </summary>
-builder.Services.AddTransient<IBibliographicmaterial, MockBibliographicmaterial>();
+builder.Services.AddTransient<IDataBaseHelperUser, DatabaseHelper.DataBaseUser>();
 
 
 builder.Services.AddMvc();

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Policy;
 using System.Diagnostics.Eventing.Reader;
 using System.Data;
+using static library.DataBase.DatabaseHelper;
 
 
 namespace library.Controllers
@@ -30,10 +31,11 @@ namespace library.Controllers
         /// </summary>
         public IActionResult Authorization(User user)
         {
+            DatabaseHelper.DataBaseUser dataBaseUser = new();
             if (ModelState.IsValid)
             {
                
-                User newUser = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password && p.Admin == user.Admin);
+                User newUser = dataBaseUser.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password && p.Admin == user.Admin);
 
                 if (newUser == null)
                 {
@@ -47,9 +49,9 @@ namespace library.Controllers
                     };
 
 
-                  
+
                     // добавление пользователя(user)
-                    _databaseHelper.AddUser(newUser);
+                    dataBaseUser.AddUser(newUser);
                     return RedirectToAction("Regist", "Registration");
                 }
             }
@@ -70,10 +72,11 @@ namespace library.Controllers
         /// </summary>
         public IActionResult Regist( User user)
         {
+            DatabaseHelper.DataBaseUser dataBaseUser = new();
             if (ModelState.IsValid)
             {
 
-               User login = _databaseHelper.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password );
+               User login = dataBaseUser.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password );
 
                 if (login != null)
                 {

@@ -19,24 +19,28 @@ namespace library.Controllers
     /// </summary>
     public class HomeController : Controller
     {
-        static string connectionString = "Data Source=Catalogsdata.db";
-        private DatabaseHelper _databaseHelper = new DatabaseHelper(connectionString);
+        const string CONNECTIONSTRING  = "Data Source=Catalogsdata.db";
+        private DatabaseHelper _databaseHelper = new DatabaseHelper(CONNECTIONSTRING);
+
 
         ///<summary>
-        ///_author переменнная принимет реализацию интерфейса IAuthor
+        ///_author переменнная принимет реализацию интерфейса IDataBaseHelperAuthor
         /// </summary>
-        private readonly IAuthor _author;
+        private readonly IDataBaseHelperAuthor _author;
 
         ///<summary>
-        ///_publicsher переменнная принимет реализацию интерфейса IPublicsher
+        ///_publicsher переменнная принимет реализацию интерфейса IDataBaseHelperPublisher
         /// </summary>
-        private readonly IPublicsher _publicsher;
+        private readonly IDataBaseHelperPublisher _publicsher;
 
         ///<summary>
-        ///_bibliographicmaterial переменнная принимет реализацию интерфейса IBibliographicmaterial
+        ///_bibliographicmaterial переменнная принимет реализацию интерфейса IDataBaseHelperBibliographicmaterial
         /// </summary>
-        private readonly IBibliographicmaterial _bibliographicmaterial;
-        private readonly IUser _user;
+        private readonly IDataBaseHelperBibliographicmaterial _bibliographicmaterial;
+        ///<summary>
+        ///_bibliographicmaterial переменнная принимет реализацию интерфейса IDataBaseHelperUser
+        /// </summary>
+        private readonly IDataBaseHelperUser _user;
         private readonly IWebHostEnvironment _appEnvironment;
 
 
@@ -45,7 +49,7 @@ namespace library.Controllers
         ///IPublicsher ipublicsher передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
         /// IBibliographicmaterial ibibliographicmaterial передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
         /// </summary>
-        public HomeController(IAuthor iauthor, IPublicsher ipublicsher, IBibliographicmaterial ibibliographicmaterial, IUser iuser, IWebHostEnvironment appEnvironment)
+        public HomeController(IDataBaseHelperAuthor iauthor, IDataBaseHelperPublisher ipublicsher, IDataBaseHelperBibliographicmaterial ibibliographicmaterial, IDataBaseHelperUser iuser, IWebHostEnvironment appEnvironment)
         {
             _appEnvironment = appEnvironment;
             _author = iauthor;
@@ -62,9 +66,9 @@ namespace library.Controllers
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            libraryobj.AllAuthors = _author.AllAuthors.OrderBy(a => a.FullName); 
-            libraryobj.AllPublishers = _publicsher.AllPublicshers.OrderBy(a => a.Name); 
-            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial.OrderBy(a => a.Name); 
+            libraryobj.AllAuthors = _author.SelectAuthor().OrderBy(a => a.FullName); 
+            libraryobj.AllPublishers = _publicsher.SelectPublisher().OrderBy(a => a.Name); 
+            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial().OrderBy(a => a.Name); 
             return View(libraryobj);
 
         }
@@ -75,14 +79,14 @@ namespace library.Controllers
             AllLibraryModels libraryobj = new AllLibraryModels();
             if (sortBy == "true")
             {
-                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors.OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
-                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers.OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
+                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
                 libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
             }
             else
             {
-                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors.OrderByDescending(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderByDescending(a => a.FullName);
-                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers.OrderByDescending(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderByDescending(a => a.Name);
+                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderByDescending(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderByDescending(a => a.FullName);
+                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderByDescending(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderByDescending(a => a.Name);
                 libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderByDescending(a => a.Name);
             }
 
@@ -97,9 +101,9 @@ namespace library.Controllers
 
             AllLibraryModels libraryobj = new AllLibraryModels();
 
-            libraryobj.AllAuthors = _author.AllAuthors.OrderBy(a=>a.FullName);
-            libraryobj.AllPublishers = _publicsher.AllPublicshers.OrderBy(a=>a.Name);
-            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial.OrderBy(a=>a.Name);
+            libraryobj.AllAuthors = _author.SelectAuthor().OrderBy(a=>a.FullName);
+            libraryobj.AllPublishers = _publicsher.SelectPublisher().OrderBy(a=>a.Name);
+            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial().OrderBy(a=>a.Name);
             return View(libraryobj);
 
         }
@@ -110,14 +114,14 @@ namespace library.Controllers
             AllLibraryModels libraryobj = new AllLibraryModels();
             if (sortBy == "true")
             {
-                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors.OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
-                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers.OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
+                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
                 libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
             }
             else
             {
-                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.AllAuthors.OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderByDescending(a => a.FullName);
-                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.AllPublicshers.OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderByDescending(a => a.FullName);
+                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
                 libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
             }
 
@@ -129,7 +133,7 @@ namespace library.Controllers
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            IEnumerable<Bibliographicmaterial> allBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial;
+            IEnumerable<Bibliographicmaterial> allBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial();
 
 
             libraryobj.AllBibliographicmaterial = allBibliographicmaterial.Where(a => a.Id == materialId);
@@ -140,9 +144,9 @@ namespace library.Controllers
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            IEnumerable<Bibliographicmaterial> allBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial;
-            libraryobj.AllAuthors = _author.AllAuthors;
-            libraryobj.AllPublishers = _publicsher.AllPublicshers;
+            IEnumerable<Bibliographicmaterial> allBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial();
+            libraryobj.AllAuthors = _author.SelectAuthor();
+            libraryobj.AllPublishers = _publicsher.SelectPublisher();
        
 
             libraryobj.AllBibliographicmaterial = allBibliographicmaterial.Where(a => a.Id == materialId);
@@ -152,16 +156,9 @@ namespace library.Controllers
 
         public IActionResult PageBibliographicmaterialAdminRedaction(int idBibliographicmaterial, string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null)
         {
-           string connectionString = "Data Source=Catalogsdata.db";
-
-
-
-
-
-
-            // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-            databaseHelper.UpdateBibliographicmaterial(idBibliographicmaterial,nameBibliographicmaterial, nameAuthor, namePublisher ,  date);
+       
+            DatabaseHelper.DataBaseBibliographicmaterial dataBaseBibliographicmaterial = new();
+            dataBaseBibliographicmaterial.UpdateBibliographicmaterial(idBibliographicmaterial,nameBibliographicmaterial, nameAuthor, namePublisher ,  date);
 
             return RedirectToAction("CatalogAdmin", "Home");
             
@@ -171,16 +168,8 @@ namespace library.Controllers
 
         public IActionResult PageBibliographicmaterialAdminRedactionAuthor(int idAuthor , string nameAuthor = null, string contactsAuthor = null, string informationAuthor = null)
         {
-            string connectionString = "Data Source=Catalogsdata.db";
 
-
-
-
-
-
-            // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-            databaseHelper.UpdateAuthor(idAuthor, nameAuthor, contactsAuthor, informationAuthor);
+            _author.UpdateAuthor(idAuthor, nameAuthor, contactsAuthor, informationAuthor);
           
             return RedirectToAction("CatalogAdmin", "Home");
 
@@ -190,16 +179,9 @@ namespace library.Controllers
 
         public IActionResult PageBibliographicmaterialAdminRedactionPublisher(int idPublisher, string namePublisher = null, string contactsPublisher = null, string addressPublisher = null)
         {
-            string connectionString = "Data Source=Catalogsdata.db";
 
-
-
-
-
-
-            // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-            databaseHelper.UpdatePublisher(idPublisher, namePublisher, contactsPublisher, addressPublisher);
+            DatabaseHelper.DataBasePublisher publisher = new();
+            publisher.UpdatePublisher(idPublisher, namePublisher, contactsPublisher, addressPublisher);
 
             return RedirectToAction("CatalogAdmin", "Home");
 
@@ -208,46 +190,25 @@ namespace library.Controllers
         [HttpPost]
         public IActionResult DeleteBibliographicmaterial(int idBibliographicmaterial)
         {
-            string connectionString = "Data Source=Catalogsdata.db";
 
-
-
-
-
-
-            // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-            databaseHelper.DeleteBibliographicmaterial(idBibliographicmaterial);
+            DatabaseHelper.DataBaseBibliographicmaterial dataBaseBibliographicmaterial= new();
+            dataBaseBibliographicmaterial.DeleteBibliographicmaterial(idBibliographicmaterial);
             return RedirectToAction("CatalogAdmin", "Home");
         }
         [HttpPost]
         public IActionResult DeleteAuthor(int idAuthor)
         {
-            string connectionString = "Data Source=Catalogsdata.db";
 
-
-
-
-
-
-            // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-            databaseHelper.DeleteAuthor(idAuthor);
+            _author.DeleteAuthor(idAuthor);
             return RedirectToAction("CatalogAdmin", "Home");
         }
         [HttpPost]
         public IActionResult DeletePublisher(int idPublisher)
         {
-            string connectionString = "Data Source=Catalogsdata.db";
+            DatabaseHelper.DataBasePublisher publisher = new();
 
+            publisher.DeletePublisher(idPublisher);
 
-
-
-
-
-            // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-            databaseHelper.DeletePublisher(idPublisher);
             return RedirectToAction("CatalogAdmin", "Home");
         }
 
@@ -269,11 +230,9 @@ namespace library.Controllers
                 Contacts = contacts,
                 Information = information
             };
-            string connectionString = "Data Source=Catalogsdata.db";
-            // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
+
             // добавляение нового Author в таблицу
-            databaseHelper.AddAuthor(newAuthor);
+            _author.AddAuthor(newAuthor);
 
 
 
@@ -297,11 +256,8 @@ namespace library.Controllers
                 Contacts = contacts,
                 Address = address
             };
-
-            string connectionString = "Data Source=Catalogsdata.db";
-            // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
-            databaseHelper.AddPublisher(newPublisher);
+            DatabaseHelper.DataBasePublisher publisher = new();
+            publisher.AddPublisher(newPublisher);
 
 
 
@@ -311,16 +267,16 @@ namespace library.Controllers
         public ViewResult CreatePageBibliographicmaterialAdmin()
         {
             AllLibraryModels libraryobj = new AllLibraryModels();
-            libraryobj.AllAuthors = _author.AllAuthors;
-            libraryobj.AllPublishers = _publicsher.AllPublicshers;
-            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.AllBibliographicmaterial;
+            libraryobj.AllAuthors = _author.SelectAuthor();
+            libraryobj.AllPublishers = _publicsher.SelectPublisher();
+            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial();
             return View(libraryobj);
           
         }
         [HttpPost]
         public IActionResult CreatePageBibliographicmaterialAdmin(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null,IFormFile img=null)
         {
-            string connectionString = "Data Source=Catalogsdata.db";
+
            
            /* if (img != null && img.Length > 0)
             {
@@ -335,8 +291,8 @@ namespace library.Controllers
 
 
 
-            // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
+
+            DatabaseHelper.DataBaseBibliographicmaterial dataBaseBibliographicmaterial = new();
 
             Bibliographicmaterial newMaterial = new Bibliographicmaterial()
             {
@@ -353,7 +309,7 @@ namespace library.Controllers
                 }
             };
 
-            databaseHelper.AddBibliographicMaterial(newMaterial);
+            dataBaseBibliographicmaterial.AddBibliographicMaterial(newMaterial);
             return RedirectToAction("CatalogAdmin", "Home");
 
 
@@ -361,7 +317,7 @@ namespace library.Controllers
         [HttpPost]
         public IActionResult SortBibliographicmaterial(string nameBibliographicmaterial)
         {
-            string connectionString = "Data Source=Catalogsdata.db";
+
 
 
 
@@ -369,7 +325,7 @@ namespace library.Controllers
 
 
             // передача строки подключения
-            DatabaseHelper databaseHelper = new DatabaseHelper(connectionString);
+            DatabaseHelper databaseHelper = new DatabaseHelper(CONNECTIONSTRING);
             databaseHelper.SortBibliographicmaterial(nameBibliographicmaterial);
             return RedirectToAction("CatalogAdmin", "Home");
         }

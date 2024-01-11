@@ -11,7 +11,7 @@ namespace library.Data.interfaces
         ///перебор всех обьектов Allpublicshers
         /// </summary>
         public IEnumerable<Publisher> AllPublicshers { get;}
-        public IEnumerable<Publisher> SelectPublisher(string namePublisher);
+
 
 
 
