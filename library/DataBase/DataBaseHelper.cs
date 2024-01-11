@@ -123,6 +123,7 @@ namespace library.DataBase
 
             }
         }
+        {
         ///<summary>
         ///перебор всех обьектов Bibliographicmaterial из базы данных Catalogsdata
         /// </summary>
