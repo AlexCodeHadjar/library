@@ -12,23 +12,24 @@ namespace library.Controllers
 {
     public class RegistrationController:Controller
     {
-         static string connectionString = "Data Source=Catalogsdata.db";
+         const string CONNECTIONSTRING = "Data Source=Catalogsdata.db";
         
-        private DatabaseHelper _databaseHelper = new DatabaseHelper(connectionString);
-          
-        [HttpGet]
+        private DatabaseHelper _databaseHelper = new DatabaseHelper(CONNECTIONSTRING);
         ///<summary>
         ///для работы с предстваление Authorization(регистрация) вывод информации 
         /// </summary>
+        [HttpGet]
+    
         public ViewResult Authorization()
         {
 
             return View();
         }
-        [HttpPost]
         ///<summary>
         ///для работы с предстваление Authorization(регистрация) получения данных
         /// </summary>
+        [HttpPost]
+      
         public IActionResult Authorization(User user)
         {
             DatabaseHelper.DataBaseUser dataBaseUser = new();
@@ -58,18 +59,20 @@ namespace library.Controllers
             return View();
 
         }
-        [HttpGet]
         ///<summary>
         ///для работы с предстваление Regist(авторизация) вывод информации 
         /// </summary>
+        [HttpGet]
+     
         public ViewResult Regist()
         {
             return View();
         }
-        [HttpPost]
         ///<summary>
         ///для работы с предстваление Regist(авторизация) получение информации 
         /// </summary>
+        [HttpPost]
+       
         public IActionResult Regist( User user)
         {
             DatabaseHelper.DataBaseUser dataBaseUser = new();
@@ -92,19 +95,21 @@ namespace library.Controllers
             }
             return View();
         }
-        [HttpPost]
         ///<summary>
         ///переходит к представлению Regist
         /// </summary>
+        [HttpPost]
+   
         public IActionResult Next()
         {
             return RedirectToAction("Regist", "Registration");
         }
-        [HttpPost]
-        public IActionResult Return()
         ///<summary>
         ///возвращает к представлению Authorization
         /// </summary>
+        [HttpPost]
+        public IActionResult Return()
+      
         {
             return RedirectToAction("Authorization", "Registration");
         }

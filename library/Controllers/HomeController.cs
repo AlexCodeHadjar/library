@@ -1,6 +1,5 @@
 using library.Data.Models;
 using library.ViewModels;
-using library.Data.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -21,7 +20,7 @@ namespace library.Controllers
     {
         const string CONNECTIONSTRING  = "Data Source=Catalogsdata.db";
         private DatabaseHelper _databaseHelper = new DatabaseHelper(CONNECTIONSTRING);
-
+       
 
         ///<summary>
         ///_author переменнная принимет реализацию интерфейса IDataBaseHelperAuthor
@@ -40,7 +39,7 @@ namespace library.Controllers
         ///<summary>
         ///_bibliographicmaterial переменнная принимет реализацию интерфейса IDataBaseHelperUser
         /// </summary>
-        private readonly IDataBaseHelperUser _user;
+      
         private readonly IWebHostEnvironment _appEnvironment;
 
 
@@ -49,17 +48,16 @@ namespace library.Controllers
         ///IPublicsher ipublicsher передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
         /// IBibliographicmaterial ibibliographicmaterial передаем интерфейс и класс релизации на него (интерфейс связан сервисом с классом)
         /// </summary>
-        public HomeController(IDataBaseHelperAuthor iauthor, IDataBaseHelperPublisher ipublicsher, IDataBaseHelperBibliographicmaterial ibibliographicmaterial, IDataBaseHelperUser iuser, IWebHostEnvironment appEnvironment)
+        public HomeController(IDataBaseHelperAuthor iauthor, IDataBaseHelperPublisher ipublicsher, IDataBaseHelperBibliographicmaterial ibibliographicmaterial, IWebHostEnvironment appEnvironment)
         {
             _appEnvironment = appEnvironment;
             _author = iauthor;
             _publicsher = ipublicsher;
             _bibliographicmaterial = ibibliographicmaterial;
-            _user = iuser;
-
+        
         }
         ///<summary>
-        ///вызов представления Catalog
+        ///вызов представления Catalog для пользователя
         /// </summary>
         [HttpGet]
         public ViewResult Catalog()
@@ -72,30 +70,49 @@ namespace library.Controllers
             return View(libraryobj);
 
         }
+        ///<summary>
+        ///получения данных из формы  представления 
+        /// </summary>
         [HttpPost]
-        public IActionResult Catalog(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null, string sortBy= null)
+        public IActionResult Catalog(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null, DatabaseHelper.SortBy sortBy= null)
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            if (sortBy == "true")
+            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher);
+            if (sortBy.SortNameAuthor)
             {
-                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
-                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Author.FullName);
+            }
+
+
+            if (sortBy.SortNamePublisher)
+            {
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Publisher.Name);
+
+            }
+
+            if (sortBy.SortNameBibliographicmaterial)
+            {
                 libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
             }
-            else
+
+            if (sortBy.SortDate)
             {
-                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderByDescending(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderByDescending(a => a.FullName);
-                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderByDescending(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderByDescending(a => a.Name);
-                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderByDescending(a => a.Name);
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderByDescending(a => a.Date);
             }
 
-         
+            libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+            libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
 
             return View(libraryobj);
-
         }
-        [HttpGet]
+
+    
+    ///<summary>
+    ///вызов представления CatalogAdmin для админа
+    /// </summary>
+    [HttpGet]
         public ViewResult CatalogAdmin()
         {
 
@@ -107,44 +124,82 @@ namespace library.Controllers
             return View(libraryobj);
 
         }
+        /// <summary>
+        /// получения данных из формы  представления  админа
+        /// </summary>
+        /// <param name="nameBibliographicmaterial"> Название BibliographicMaterial</param>
+        /// <param name="nameAuthor">Имя автора</param>
+        /// <param name="namePublisher">Название Издательства</param>
+        /// <param name="date"> Год издания</param>
+        /// <param name="sortBy"> Сортировка</param>
+        /// <returns></returns>
+
         [HttpPost]
-        public IActionResult CatalogAdmin(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null, string sortBy= null)
+        public IActionResult CatalogAdmin(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null, DatabaseHelper.SortBy sortBy = null)
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            if (sortBy == "true")
+            libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher);
+            if (sortBy.SortNameAuthor)
             {
-                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
-                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Author.FullName);
+            }
+
+
+            if (sortBy.SortNamePublisher)
+            {
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Publisher.Name);
+
+            }
+
+            if (sortBy.SortNameBibliographicmaterial)
+            {
                 libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
             }
-            else
+
+            if (sortBy.SortDate)
             {
-                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderByDescending(a => a.FullName);
-                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
-                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
+                libraryobj.AllBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderByDescending(a => a.Date);
             }
+
+            libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _publicsher.SelectPublisher().OrderBy(a => a.Name) : _publicsher.SelectPublisher(namePublisher).OrderBy(a => a.Name);
+            libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _author.SelectAuthor().OrderBy(a => a.FullName) : _author.SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
 
             return View(libraryobj);
-
         }
+
+
+
+
+
+        /// <summary>
+        /// Вызов представления информации о BibliographicMaterial для пользователя
+        /// </summary>
+        /// <param name="materialId">ID</param>
+        /// <returns></returns>
         [HttpPost]
         public ViewResult PageBibliographicmaterial(int materialId)
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            IEnumerable<Bibliographicmaterial> allBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial();
+            IEnumerable<BibliographicMaterial> allBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial();
 
 
             libraryobj.AllBibliographicmaterial = allBibliographicmaterial.Where(a => a.Id == materialId);
             return View(libraryobj);
         }
+        /// <summary>
+        /// Вызов представления информации о BibliographicMaterial для пользователя
+        /// </summary>
+        /// <param name="materialId">ID</param>
+        /// <returns></returns>
         [HttpPost]
         public ViewResult PageBibliographicmaterialAdmin(int materialId)
         {
 
             AllLibraryModels libraryobj = new AllLibraryModels();
-            IEnumerable<Bibliographicmaterial> allBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial();
+            IEnumerable<BibliographicMaterial> allBibliographicmaterial = _bibliographicmaterial.SelectBibliographicmaterial();
             libraryobj.AllAuthors = _author.SelectAuthor();
             libraryobj.AllPublishers = _publicsher.SelectPublisher();
        
@@ -152,11 +207,33 @@ namespace library.Controllers
             libraryobj.AllBibliographicmaterial = allBibliographicmaterial.Where(a => a.Id == materialId);
             return View(libraryobj);
         }
+        /// <summary>
+        /// Изменяет BibliographicMaterial  информации о BibliographicMaterial для пользователя
+        /// </summary>
+        /// <param name="idBibliographicmaterial">ID</param>
+        /// <param name="nameBibliographicmaterial">Название BibliographicMaterial</param>
+        /// <param name="nameAuthor">Имя автора</param>
+        /// <param name="namePublisher">Название издательства</param>
+        /// <param name="date">Год </param>
+        /// <returns></returns>
         [HttpPost]
 
-        public IActionResult PageBibliographicmaterialAdminRedaction(int idBibliographicmaterial, string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null)
+        public IActionResult PageBibliographicmaterialAdminRedaction(int idBibliographicmaterial, string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null,IFormFile file= null)
         {
-       
+            if (file != null)
+            {
+                var filePath = Path.Combine(_appEnvironment.WebRootPath, "img", file.FileName);
+
+               
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                
+
+            }
+
+
             DatabaseHelper.DataBaseBibliographicmaterial dataBaseBibliographicmaterial = new();
             dataBaseBibliographicmaterial.UpdateBibliographicmaterial(idBibliographicmaterial,nameBibliographicmaterial, nameAuthor, namePublisher ,  date);
 
@@ -164,6 +241,14 @@ namespace library.Controllers
             
 
         }
+        /// <summary>
+        /// Изменяет  информацию о Author 
+        /// </summary>
+        /// <param name="idAuthor">ID</param>
+        /// <param name="nameAuthor">Имя автора</param>
+        /// <param name="contactsAuthor">Контакты </param>
+        /// <param name="informationAuthor">Информация</param>
+        /// <returns></returns>
         [HttpPost]
 
         public IActionResult PageBibliographicmaterialAdminRedactionAuthor(int idAuthor , string nameAuthor = null, string contactsAuthor = null, string informationAuthor = null)
@@ -175,6 +260,14 @@ namespace library.Controllers
 
 
         }
+        /// <summary>
+        /// Изменяет  информацию о Publisher 
+        /// </summary>
+        /// <param name="idPublisher">ID</param>
+        /// <param name="namePublisher">Название</param>
+        /// <param name="contactsPublisher">Контакты</param>
+        /// <param name="addressPublisher">Адрес</param>
+        /// <returns></returns>
         [HttpPost]
 
         public IActionResult PageBibliographicmaterialAdminRedactionPublisher(int idPublisher, string namePublisher = null, string contactsPublisher = null, string addressPublisher = null)
@@ -187,6 +280,11 @@ namespace library.Controllers
 
 
         }
+        /// <summary>
+        /// Удаление BibliographicMaterial из бд
+        /// </summary>
+        /// <param name="idBibliographicmaterial">ID</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult DeleteBibliographicmaterial(int idBibliographicmaterial)
         {
@@ -195,13 +293,24 @@ namespace library.Controllers
             dataBaseBibliographicmaterial.DeleteBibliographicmaterial(idBibliographicmaterial);
             return RedirectToAction("CatalogAdmin", "Home");
         }
+        /// <summary>
+        /// Удаление Author из бд
+        /// </summary>
+        /// <param name="idAuthor">ID</param>
+        /// <returns></returns>
         [HttpPost]
+        
         public IActionResult DeleteAuthor(int idAuthor)
         {
 
             _author.DeleteAuthor(idAuthor);
             return RedirectToAction("CatalogAdmin", "Home");
         }
+        /// <summary>
+        /// удаление Publisher из бд 
+        /// </summary>
+        /// <param name="idPublisher">ID</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult DeletePublisher(int idPublisher)
         {
@@ -211,7 +320,10 @@ namespace library.Controllers
 
             return RedirectToAction("CatalogAdmin", "Home");
         }
-
+        /// <summary>
+        /// Вызывает представление дабавления автора 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ViewResult AddAuthor()
         {
@@ -221,6 +333,13 @@ namespace library.Controllers
 
             return View();
         }
+        /// <summary>
+        /// Добавление автора в бд
+        /// </summary>
+        /// <param name="fullname">Имя</param>
+        /// <param name="contacts">Контакты</param>
+        /// <param name="information">Информация</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult AddAuthor(string fullname, string contacts, string information)
         {
@@ -238,6 +357,10 @@ namespace library.Controllers
 
             return View();
         }
+        /// <summary>
+        /// Вызывает представление дабавления издательства 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ViewResult AddPublisher()
         {
@@ -247,6 +370,13 @@ namespace library.Controllers
 
             return View();
         }
+        /// <summary>
+        /// Добавление издательства в бд
+        /// </summary>
+        /// <param name="name">Название</param>
+        /// <param name="contacts">Контакты</param>
+        /// <param name="address">Адрес</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult AddPublisher(string name, string contacts, string address)
         {
@@ -263,6 +393,10 @@ namespace library.Controllers
 
             return View();
         }
+        /// <summary>
+        /// Открывает страцину для создания BibliographicMaterial
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ViewResult CreatePageBibliographicmaterialAdmin()
         {
@@ -273,6 +407,15 @@ namespace library.Controllers
             return View(libraryobj);
           
         }
+        /// <summary>
+        /// получает форму  для создания BibliographicMaterial
+        /// </summary>
+        /// <param name="nameBibliographicmaterial">Название</param>
+        /// <param name="nameAuthor">Имя автора</param>
+        /// <param name="namePublisher">Название издательства</param>
+        /// <param name="date">Год издания</param>
+        /// <param name="img">Картинка</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult CreatePageBibliographicmaterialAdmin(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null,IFormFile img=null)
         {
@@ -294,7 +437,7 @@ namespace library.Controllers
 
             DatabaseHelper.DataBaseBibliographicmaterial dataBaseBibliographicmaterial = new();
 
-            Bibliographicmaterial newMaterial = new Bibliographicmaterial()
+            BibliographicMaterial newMaterial = new BibliographicMaterial()
             {
                 Name = nameBibliographicmaterial,
                 Date = date,
@@ -326,7 +469,7 @@ namespace library.Controllers
 
             // передача строки подключения
             DatabaseHelper databaseHelper = new DatabaseHelper(CONNECTIONSTRING);
-            databaseHelper.SortBibliographicmaterial(nameBibliographicmaterial);
+           // databaseHelper.SortBibliographicmaterial(nameBibliographicmaterial);
             return RedirectToAction("CatalogAdmin", "Home");
         }
     }

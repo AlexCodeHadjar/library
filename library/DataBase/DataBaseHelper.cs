@@ -1,6 +1,7 @@
 ﻿using library.Data.Models;
-using library.Data.interfaces;
 using Microsoft.Data.Sqlite;
+using static library.Controllers.HomeController;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 //using System.Security.Policy;
 
 namespace library.DataBase
@@ -9,9 +10,15 @@ namespace library.DataBase
     ///<summary>
     ///класс для работы с базой данных CatalogsData
     /// </summary>// 
-    
     public class DatabaseHelper
     {
+        public class SortBy
+        {
+            public bool SortNameBibliographicmaterial { get; set; }
+            public bool SortNameAuthor { get; set; }
+            public bool SortNamePublisher { get; set; }
+            public bool SortDate { get; set; }
+        }
         //получение строки подключения
         private static string _connectionString;
       
@@ -21,6 +28,7 @@ namespace library.DataBase
         {
             _connectionString = connectionString;
         }
+        
         public class DataBaseAuthor : IDataBaseHelperAuthor
         {
             ///<summary>
@@ -298,9 +306,9 @@ namespace library.DataBase
             ///<summary>
             ///перебор всех обьектов Bibliographicmaterial из базы данных Catalogsdata
             /// </summary>
-            public IEnumerable<Bibliographicmaterial> SelectBibliographicmaterial()
+            public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial()
             {
-                List<Bibliographicmaterial> bibliographicmaterialsDatebase = new List<Bibliographicmaterial>();
+                List<BibliographicMaterial> bibliographicmaterialsDatebase = new List<BibliographicMaterial>();
                 string sqlExpression;
 
 
@@ -329,7 +337,7 @@ namespace library.DataBase
                                 var Publisherid = reader.GetInt32(5);
                                 var author = allPuthor.SelectAuthor().FirstOrDefault(a => a.Id == Authorid);
                                 var publisher = allPublisher.SelectPublisher().FirstOrDefault(p => p.Id == Publisherid);
-                                bibliographicmaterialsDatebase.Add(new Bibliographicmaterial()
+                                bibliographicmaterialsDatebase.Add(new BibliographicMaterial()
                                 {
                                     Id = id,
                                     Name = name,
@@ -349,12 +357,12 @@ namespace library.DataBase
                     }
                 }
             }
-            public IEnumerable<Bibliographicmaterial> SelectBibliographicmaterial(string? nameBibliographicmaterial = null, string? date = null, string? nameAuthor = null, string? namePublisher = null)
+            public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string? nameBibliographicmaterial = null, string? date = null, string? nameAuthor = null, string? namePublisher = null)
             {
                 DataBaseAuthor author = new();
                 DataBasePublisher publisher = new();
                 DataBaseBibliographicmaterial bibliographicmaterial = new();
-                IEnumerable<Bibliographicmaterial> filteredBibliographicmaterial = bibliographicmaterial.SelectBibliographicmaterial();
+                IEnumerable<BibliographicMaterial> filteredBibliographicmaterial = bibliographicmaterial.SelectBibliographicmaterial();
 
                 if (!string.IsNullOrEmpty(nameBibliographicmaterial))
                 {
@@ -384,7 +392,7 @@ namespace library.DataBase
             ///<summary>
             ///Вставка новой записи в таблицу "BibliographicMaterial"
             /// </summary>// 
-            public void AddBibliographicMaterial(Bibliographicmaterial? material=null)
+            public void AddBibliographicMaterial(BibliographicMaterial? material=null)
             {
                 if (material.Author.Id == null || material.Publisher.Id == null || material.Date == null || material.Name == null || material.Img == null)
                 {
@@ -537,16 +545,61 @@ namespace library.DataBase
 
 
         }
-        public void SortBibliographicmaterial(string nameBibliographicmaterial)
+
+        public void Sort(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null, SortBy sortBy = null)
         {
+            string sqlExpression = "SELECT * FROM BibliographicMaterial";
             using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
-
                 SqliteCommand command = new SqliteCommand();
                 command.Connection = connection;
 
-                string sqlExpression  = $"SELECT * FROM BibliographicMaterial ORDER BY {nameBibliographicmaterial} ASC";
+                if (!string.IsNullOrEmpty(nameBibliographicmaterial))
+                {
+                    sqlExpression += " WHERE Name LIKE @Name";
+                    command.Parameters.Add(new SqliteParameter("@Name", $"%{nameBibliographicmaterial}%"));
+                }
+
+                if (sortBy != null)
+                {
+                    if (sortBy.SortNameAuthor != null)
+                    {
+                        if (sortBy.SortNameAuthor == true)
+                        {
+                            sqlExpression += " ORDER BY AuthorId ASC";
+                        }
+                        else
+                        {
+                            sqlExpression += " ORDER BY AuthorId DESC";
+                        }
+                    }
+
+                    if (sortBy.SortNamePublisher != null)
+                    {
+                        if (sortBy.SortNamePublisher == true)
+                        {
+                            sqlExpression += " ORDER BY PublisherId ASC";
+                        }
+                        else
+                        {
+                            sqlExpression += " ORDER BY PublisherId DESC";
+                        }
+                    }
+
+                    if (sortBy.SortDate != null)
+                    {
+                        if (sortBy.SortDate == true)
+                        {
+                            sqlExpression += " ORDER BY Date ASC";
+                        }
+                        else
+                        {
+                            sqlExpression += " ORDER BY Date DESC";
+                        }
+                    }
+                }
+
                 command.CommandText = sqlExpression;
                 command.ExecuteNonQuery();
             }

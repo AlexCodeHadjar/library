@@ -1,6 +1,7 @@
 ﻿@model AllLibraryModels
 @{
     Layout = null;
+   
 }
 <!DOCTYPE html>
 <html>
@@ -72,8 +73,7 @@
            
             <form method="post" action="/Home/CatalogAdmin">
                 <div class="table-responsive custom-table-responsive">
-                    <input type="radio" name="sortBy" value="true"> с начала
-                    <input type="radio" name="sortBy" value="false"> с конца
+                  
                     <table class="table custom-table">
                         
                            
@@ -82,10 +82,23 @@
                             <tr class="table-header">
                                  <tr class="table-header">
               
-                                <th scope="col">Название <input type="text" class="form-control" name="nameBibliographicmaterial"></th>
-                                <th scope="col">Автор<input type="text" class="form-control" name="nameAuthor"></th>
-                                <th scope="col">Издательство<input type="text" class="form-control" name="namePublisher"></th>
-                                <th scope="col">Год издания<input type="text" class="form-control" name="date"> </th>
+                                <th scope="col">
+                                    Название <input type="text" class="form-control" name="nameBibliographicmaterial">  
+                                    <input type="radio" name="SortBy.SortNameBibliographicmaterial" value="true"> с начала
+                                    <input type="radio" name="SortBy.SortNameBibliographicmaterial" value="false"> с конца
+                                </th>
+                                <th scope="col">Автор<input type="text" class="form-control" name="nameAuthor">
+                                    <input type="radio" name="SortBy.SortNameAuthor" value="true"> с начала
+                                    <input type="radio" name="SortBy.SortNameAuthor" value="false"> с конца
+                                </th>
+                                <th scope="col">Издательство<input type="text" class="form-control" name="namePublisher">
+                                    <input type="radio" name="SortBy.SortNamePublisher" value="true"> с начала
+                                    <input type="radio" name="SortBy.SortNamePublisher" value="false"> с конца
+                                </th>
+                                <th scope="col">Год издания<input type="text" class="form-control" name="date">
+                                    <input type="radio" name="SortBy.SortDate" value="true"> с начала
+                                    <input type="radio" name="SortBy.SortDate" value="false"> с конца
+                                </th>
 
                             </tr>
                         </thead>

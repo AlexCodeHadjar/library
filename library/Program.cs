@@ -1,25 +1,23 @@
 using Microsoft.Data.Sqlite;
 using library.DataBase;
-using library.Data.Models;
-using library.Data.interfaces;
 using System.Data.SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
-///<summary>
-///сервис для обьединения инферфейса IDataBaseHelperAuthor и класс релизации  DatabaseHelper.DataBaseAuthor
-/// </summary>
+ 
+//СЃРµСЂРІРёСЃ РґР»СЏ РѕР±СЊРµРґРёРЅРµРЅРёСЏ РёРЅС„РµСЂС„РµР№СЃР° IDataBaseHelperAuthor Рё РєР»Р°СЃСЃ СЂРµР»РёР·Р°С†РёРё  DatabaseHelper.DataBaseAuthor
+
 builder.Services.AddTransient<IDataBaseHelperAuthor, DatabaseHelper.DataBaseAuthor>();
-///<summary>
-///сервис для обьединения инферфейса IDataBaseHelperPublisher и класс релизации DatabaseHelper.DataBasePublisher
-/// </summary>
+ 
+//СЃРµСЂРІРёСЃ РґР»СЏ РѕР±СЊРµРґРёРЅРµРЅРёСЏ РёРЅС„РµСЂС„РµР№СЃР° IDataBaseHelperPublisher Рё РєР»Р°СЃСЃ СЂРµР»РёР·Р°С†РёРё DatabaseHelper.DataBasePublisher
+
 builder.Services.AddTransient<IDataBaseHelperPublisher, DatabaseHelper.DataBasePublisher>();
-///<summary>
-///сервис для обьединения инферфейса IDataBaseHelperBibliographicmaterial и класс релизации DatabaseHelper.DataBaseBibliographicmaterial
-/// </summary>
+ 
+//СЃРµСЂРІРёСЃ РґР»СЏ РѕР±СЊРµРґРёРЅРµРЅРёСЏ РёРЅС„РµСЂС„РµР№СЃР° IDataBaseHelperBibliographicmaterial Рё РєР»Р°СЃСЃ СЂРµР»РёР·Р°С†РёРё DatabaseHelper.DataBaseBibliographicmaterial
+
 builder.Services.AddTransient<IDataBaseHelperBibliographicmaterial,DatabaseHelper.DataBaseBibliographicmaterial>();
-///<summary>
-///сервис для обьединения инферфейса IDataBaseHelperUser и класс релизации DatabaseHelper.DataBaseUser
-/// </summary>
+ 
+//СЃРµСЂРІРёСЃ РґР»СЏ РѕР±СЊРµРґРёРЅРµРЅРёСЏ РёРЅС„РµСЂС„РµР№СЃР° IDataBaseHelperUser Рё РєР»Р°СЃСЃ СЂРµР»РёР·Р°С†РёРё DatabaseHelper.DataBaseUser
+
 builder.Services.AddTransient<IDataBaseHelperUser, DatabaseHelper.DataBaseUser>();
 
 
