@@ -12,12 +12,17 @@ namespace library.Controllers
 {
     public class RegistrationController:Controller
     {
-         const string CONNECTIONSTRING = "Data Source=Catalogsdata.db";
+        private readonly IServiceProvider _serviceProvider;
+        const string CONNECTIONSTRING = "Data Source=Catalogsdata.db";
         
         private DatabaseHelper _databaseHelper = new DatabaseHelper(CONNECTIONSTRING);
         ///<summary>
         ///для работы с предстваление Authorization(регистрация) вывод информации 
         /// </summary>
+        public RegistrationController(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
         [HttpGet]
     
         public ViewResult Authorization()
@@ -29,35 +34,19 @@ namespace library.Controllers
         ///для работы с предстваление Authorization(регистрация) получения данных
         /// </summary>
         [HttpPost]
-      
         public IActionResult Authorization(User user)
         {
-            DatabaseHelper.DataBaseUser dataBaseUser = new();
-            if (ModelState.IsValid)
+            bool userExists = _serviceProvider.GetRequiredService<IDataBaseHelperUser>().SelectUser().Any(p => p.Login == user.Login && p.Password == user.Password && p.Admin == user.Admin);
+            if (_serviceProvider.GetRequiredService<IDataBaseHelperUser>().Authorization(user, userExists))
             {
-               
-                User newUser = dataBaseUser.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password && p.Admin == user.Admin);
-
-                if (newUser == null)
-                {
-                    newUser = new User
-                    {
-
-                        Login = user.Login,
-                        Password = user.Password,
-                        Admin = user.Admin,
-
-                    };
-
-
-
-                    // добавление пользователя(user)
-                    dataBaseUser.AddUser(newUser);
-                    return RedirectToAction("Regist", "Registration");
-                }
+                _serviceProvider.GetRequiredService<IDataBaseHelperUser>().AddUser(user);
+                return RedirectToAction("Regist", "Registration");
             }
-            return View();
-
+            else
+            {
+                return View();
+            }
+          
         }
         ///<summary>
         ///для работы с предстваление Regist(авторизация) вывод информации 
@@ -68,6 +57,7 @@ namespace library.Controllers
         {
             return View();
         }
+
         ///<summary>
         ///для работы с предстваление Regist(авторизация) получение информации 
         /// </summary>
@@ -75,26 +65,20 @@ namespace library.Controllers
        
         public IActionResult Regist( User user)
         {
-            DatabaseHelper.DataBaseUser dataBaseUser = new();
-            if (ModelState.IsValid)
+            User login = _serviceProvider.GetRequiredService<IDataBaseHelperUser>().SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password);
+            if (_serviceProvider.GetRequiredService<IDataBaseHelperUser>().Regist(user,login) == "false")
             {
-
-               User login = dataBaseUser.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password );
-
-                if (login != null)
-                {
-                    if (login.Admin== "false")
-                    { return RedirectToAction("Catalog", "Home"); }
-                    else 
-                        return RedirectToAction("CatalogAdmin", "Home");
-                    
-                   
-                }
-                
-
+                return RedirectToAction("Catalog", "Home");
             }
+            if (_serviceProvider.GetRequiredService<IDataBaseHelperUser>().Regist(user,login) == "true")
+            {
+                return RedirectToAction("CatalogAdmin", "Home");
+            }
+           
+      
             return View();
         }
+
         ///<summary>
         ///переходит к представлению Regist
         /// </summary>
@@ -104,6 +88,7 @@ namespace library.Controllers
         {
             return RedirectToAction("Regist", "Registration");
         }
+
         ///<summary>
         ///возвращает к представлению Authorization
         /// </summary>

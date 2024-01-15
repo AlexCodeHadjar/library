@@ -1,7 +1,8 @@
 using Microsoft.Data.Sqlite;
 using library.DataBase;
 using System.Data.SQLite;
-
+using library;
+/*
 var builder = WebApplication.CreateBuilder(args);
  
 //сервис для обьединения инферфейса IDataBaseHelperAuthor и класс релизации  DatabaseHelper.DataBaseAuthor
@@ -19,10 +20,12 @@ builder.Services.AddTransient<IDataBaseHelperBibliographicmaterial,DatabaseHelpe
 //сервис для обьединения инферфейса IDataBaseHelperUser и класс релизации DatabaseHelper.DataBaseUser
 
 builder.Services.AddTransient<IDataBaseHelperUser, DatabaseHelper.DataBaseUser>();
+*/
+AllServices services = new();
+services.Services();
 
 
-builder.Services.AddMvc();
-var app = builder.Build();
+var app = services.builder.Build();
 
 app.UseStaticFiles();
 

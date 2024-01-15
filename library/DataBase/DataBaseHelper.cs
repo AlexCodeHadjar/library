@@ -1,8 +1,11 @@
 ﻿using library.Data.Models;
+using library.ViewModels;
 using Microsoft.Data.Sqlite;
 using static library.Controllers.HomeController;
+using static library.DataBase.DatabaseHelper;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-//using System.Security.Policy;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace library.DataBase
 {
@@ -12,6 +15,8 @@ namespace library.DataBase
     /// </summary>// 
     public class DatabaseHelper
     {
+     
+
         public class SortBy
         {
             public bool SortNameBibliographicmaterial { get; set; }
@@ -22,11 +27,13 @@ namespace library.DataBase
         //получение строки подключения
         private static string _connectionString;
       
-      
-       
+
+
+
         public DatabaseHelper(string connectionString)
         {
             _connectionString = connectionString;
+         
         }
         
         public class DataBaseAuthor : IDataBaseHelperAuthor
@@ -136,6 +143,7 @@ namespace library.DataBase
 
                 }
             }
+
             public void UpdateAuthor(int? idAuthor, string? nameAuthor = null, string? contactsAuthor = null, string? informationAuthor = null)
             {
                 using (var connection = new SqliteConnection(_connectionString))
@@ -212,6 +220,7 @@ namespace library.DataBase
                     }
                 }
             }
+
             ///<summary>
             ///Вставка новой записи в таблицу "Publisher"
             /// </summary>// 
@@ -239,6 +248,7 @@ namespace library.DataBase
 
                 }
             }
+
             public void UpdatePublisher(int? idPublisher, string? namePublisher = null, string? contactsPublisher = null, string? addressPublisher = null)
             {
                 using (var connection = new SqliteConnection(_connectionString))
@@ -270,13 +280,14 @@ namespace library.DataBase
                     command.ExecuteNonQuery();
                 }
             }
+
             public void DeletePublisher(int? idPublisher=null)
             {
                 using (var connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
 
-                    // Проверяем, используется ли идентификатор автора в таблице BibliographicMaterial
+               
                     string checkUsageQuery = $"SELECT COUNT(*) FROM BibliographicMaterial WHERE PublisherId = {idPublisher}";
                     using (var checkUsageCommand = new SqliteCommand(checkUsageQuery, connection))
                     {
@@ -290,7 +301,7 @@ namespace library.DataBase
                         }
 
                     }
-                    // Если идентификатор издательства не используется, выполняем удаление
+                
                     SqliteCommand command = new SqliteCommand();
                     command.Connection = connection;
 
@@ -301,6 +312,7 @@ namespace library.DataBase
                 }
             }
         }
+
         public class DataBaseBibliographicmaterial : IDataBaseHelperBibliographicmaterial
         {
             ///<summary>
@@ -357,6 +369,7 @@ namespace library.DataBase
                     }
                 }
             }
+
             public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string? nameBibliographicmaterial = null, string? date = null, string? nameAuthor = null, string? namePublisher = null)
             {
                 DataBaseAuthor author = new();
@@ -371,7 +384,7 @@ namespace library.DataBase
 
                 if (!string.IsNullOrEmpty(date))
                 {
-                    filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => a.Date == date);
+                    filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => int.Parse(a.Date) >= int.Parse(date));
                 }
 
                 if (!string.IsNullOrEmpty(nameAuthor))
@@ -392,12 +405,13 @@ namespace library.DataBase
             ///<summary>
             ///Вставка новой записи в таблицу "BibliographicMaterial"
             /// </summary>// 
+            
             public void AddBibliographicMaterial(BibliographicMaterial? material=null)
             {
                 if (material.Author.Id == null || material.Publisher.Id == null || material.Date == null || material.Name == null || material.Img == null)
                 {
                     return;
-                    //throw new ArgumentException("Author and Publisher must be set for the Bibliographicmaterial.");
+            
                 }
                 using (var connection = new SqliteConnection(_connectionString))
                 {
@@ -419,6 +433,7 @@ namespace library.DataBase
 
                 }
             }
+
             public void DeleteBibliographicmaterial(int? idBibliographicmaterial=null)
             {
                 using (var connection = new SqliteConnection(_connectionString))
@@ -433,8 +448,9 @@ namespace library.DataBase
                     command.ExecuteNonQuery();
                 }
             }
+
             public void UpdateBibliographicmaterial(int? idBibliographicmaterial=null, string? nameBibliographicmaterial = null,
-         string? nameAuthor = null, string? namePublisher = null, string? date = null)
+                        string? nameAuthor = null, string? namePublisher = null, string? date = null)
             {
 
                 using (var connection = new SqliteConnection(_connectionString))
@@ -476,9 +492,10 @@ namespace library.DataBase
            
 
             }
+
         public class DataBaseUser : IDataBaseHelperUser
         {
-
+            private readonly IServiceProvider _serviceProvider;
             ///<summary>
             ///перебор всех обьектов User из базы данных Catalogsdata
             /// </summary>
@@ -517,12 +534,17 @@ namespace library.DataBase
                     }
                 }
             }
+
             ///<summary>
             ///Вставка новой записи в таблицу "AddUser"
             /// </summary>//
             public void AddUser(User? material = null)
             {
-
+                if (material.Login== null || material.Password == null || material.Admin == null )
+                {
+                    return;
+            
+                }
                 using (var connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
@@ -543,67 +565,126 @@ namespace library.DataBase
                 }
             }
 
-
-        }
-
-        public void Sort(string nameBibliographicmaterial = null, string nameAuthor = null, string namePublisher = null, string date = null, SortBy sortBy = null)
-        {
-            string sqlExpression = "SELECT * FROM BibliographicMaterial";
-            using (var connection = new SqliteConnection(_connectionString))
+            public string Regist(User user, User login)
             {
-                connection.Open();
-                SqliteCommand command = new SqliteCommand();
-                command.Connection = connection;
-
-                if (!string.IsNullOrEmpty(nameBibliographicmaterial))
+               
+               if (user != null && !string.IsNullOrEmpty(user.Login) && !string.IsNullOrEmpty(user.Password))
                 {
-                    sqlExpression += " WHERE Name LIKE @Name";
-                    command.Parameters.Add(new SqliteParameter("@Name", $"%{nameBibliographicmaterial}%"));
+                    // login = _serviceProvider.GetRequiredService<IDataBaseHelperUser>().SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password);
+
+
+                    if (login != null)
+                    {
+                        if (login.Admin == "false")
+                        {
+                            return "false";
+                        }
+                        else
+                        {
+                            return "true";
+                        }
+                            
+
+
+                    }
+
+
+             
                 }
+                return "error";
+               
+            }
 
-                if (sortBy != null)
+            public bool Authorization(User user, bool userExists)
+            {
+                if (user != null && !string.IsNullOrEmpty(user.Login) && !string.IsNullOrEmpty(user.Password))
                 {
-                    if (sortBy.SortNameAuthor != null)
-                    {
-                        if (sortBy.SortNameAuthor == true)
-                        {
-                            sqlExpression += " ORDER BY AuthorId ASC";
-                        }
-                        else
-                        {
-                            sqlExpression += " ORDER BY AuthorId DESC";
-                        }
-                    }
+                    
 
-                    if (sortBy.SortNamePublisher != null)
+                    if (!userExists)
                     {
-                        if (sortBy.SortNamePublisher == true)
-                        {
-                            sqlExpression += " ORDER BY PublisherId ASC";
-                        }
-                        else
-                        {
-                            sqlExpression += " ORDER BY PublisherId DESC";
-                        }
-                    }
+                   
+                        
 
-                    if (sortBy.SortDate != null)
-                    {
-                        if (sortBy.SortDate == true)
-                        {
-                            sqlExpression += " ORDER BY Date ASC";
-                        }
-                        else
-                        {
-                            sqlExpression += " ORDER BY Date DESC";
-                        }
+                        // добавление пользователя(user)
+                        
+                        return true;
                     }
                 }
 
-                command.CommandText = sqlExpression;
-                command.ExecuteNonQuery();
+
+                return false;
             }
         }
+
+        public class DataBaseLibraryCatolog : IDataBaseHelperLibraryCatolog
+        {
+
+            private readonly IServiceProvider _serviceProvider;
+
+            public DataBaseLibraryCatolog(IServiceProvider serviceProvider)
+            {
+                _serviceProvider = serviceProvider;
+            }
+            public AllLibraryModels SortLibraryModels(string? nameBibliographicmaterial = null, string? nameAuthor = null, string? namePublisher = null, string? date = null, SortBy? sortBy = null)
+            {
+                AllLibraryModels libraryobj = new AllLibraryModels();
+                libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher);
+                if (sortBy.SortNameAuthor)
+                {
+
+                    libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Author.FullName);
+                }
+
+
+                if (sortBy.SortNamePublisher)
+                {
+                    libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Publisher.Name);
+                }
+
+                if (sortBy.SortNameBibliographicmaterial)
+                {
+                    libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
+                }
+
+                if (sortBy.SortDate)
+                {
+                    libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderByDescending(a => a.Date);
+                }
+                //libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderByDescending(a => a.Date);
+
+                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _serviceProvider.GetRequiredService<IDataBaseHelperPublisher>().SelectPublisher().OrderBy(a => a.Name) : _serviceProvider.GetRequiredService<IDataBaseHelperPublisher>().SelectPublisher(namePublisher).OrderBy(a => a.Name);
+                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _serviceProvider.GetRequiredService<IDataBaseHelperAuthor>().SelectAuthor().OrderBy(a => a.FullName) : _serviceProvider.GetRequiredService<IDataBaseHelperAuthor>().SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
+
+                return libraryobj;
+            }
+
+            public AllLibraryModels StartLibraryModels()
+            {
+                AllLibraryModels libraryobj = new AllLibraryModels();
+                libraryobj.AllAuthors = _serviceProvider.GetRequiredService<IDataBaseHelperAuthor>().SelectAuthor().OrderBy(a => a.FullName);
+                libraryobj.AllPublishers = _serviceProvider.GetRequiredService<IDataBaseHelperPublisher>().SelectPublisher().OrderBy(a => a.Name);
+                libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial().OrderBy(a => a.Name);
+                return libraryobj;
+            }
+            public AllLibraryModels PageBibliographicmaterial(int materialId)
+            {
+                AllLibraryModels libraryobj = new AllLibraryModels();
+
+                libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial().Where(a => a.Id == materialId);
+                return libraryobj;
+            }
+            public AllLibraryModels PageBibliographicmaterialAdmin(int materialId)
+            {
+                AllLibraryModels libraryobj = new AllLibraryModels();
+                libraryobj = _serviceProvider.GetRequiredService<IDataBaseHelperLibraryCatolog>().StartLibraryModels();
+                libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial().Where(a => a.Id == materialId);
+                return libraryobj;
+            }
+        }
+
+       
+    
     }
 
 }

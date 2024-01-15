@@ -30,6 +30,7 @@ namespace library.DataBase
         /// Удаление BibliographicMaterial из бд
         /// </summary>
         /// <param name="idBibliographicmaterial">ID </param>
+
         public void DeleteBibliographicmaterial(int? idBibliographicmaterial=null);
         /// <summary>
         /// Обновление/изменение BibliographicMaterial в бд 
