@@ -10,6 +10,7 @@ using library.Controllers;
 using System.Globalization;
 using System.Runtime.Intrinsics.X86;
 using System.IO;
+using library.BusinessLogic;
 
 namespace library.Controllers
 {
@@ -18,16 +19,19 @@ namespace library.Controllers
     /// </summary>
     public class HomeController : Controller
     {
-        const string CONNECTIONSTRING  = "Data Source=Catalogsdata.db";
+        private const string CONNECTIONSTRING  = "Data Source=Catalogsdata.db";
 
         private readonly IServiceProvider _serviceProvider;
 
-    
-      
+        private readonly IDataBaseHelperModels<Author> _authorServices;
+     
+        private readonly IDataBaseHelperModels<Publisher> _publisherServices;
+       
+        private readonly IDataBaseHelperModels<BibliographicMaterial> _bibliographicmaterialServices;
         private readonly IWebHostEnvironment _appEnvironment;
 
+        private readonly IBusinessLogicCatalog _libraryServices;
 
-      
         public HomeController(IServiceProvider serviceProvider, IWebHostEnvironment appEnvironment)
         {
             _serviceProvider = serviceProvider;
@@ -36,10 +40,10 @@ namespace library.Controllers
             _authorServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Author>>();
             _publisherServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Publisher>>();
             _bibliographicmaterialServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>();
+  
 
-          
-   
-          
+
+
         }
         ///<summary>
         ///вызов представления Catalog для пользователя
@@ -47,18 +51,18 @@ namespace library.Controllers
         [HttpGet]
         public ViewResult Catalog()
         {
+            return View(_libraryServices.StartLibraryModels());
      
-            return View(_serviceProvider.GetRequiredService<IDataBaseHelperLibraryCatolog>().StartLibraryModels());
 
         }
         ///<summary>
         ///получения данных из формы  представления 
         /// </summary>
         [HttpPost]
-        public IActionResult Catalog(string? nameBibliographicmaterial = null, string? nameAuthor = null, string? namePublisher = null, string? date = null, DatabaseHelper.SortBy? sortBy= null)
+        public IActionResult Catalog(string nameBibliographicmaterial , string nameAuthor, string namePublisher, string date , DatabaseHelper.SortBy sortBy)
         {
-          
-            return View(_serviceProvider.GetRequiredService<IDataBaseHelperLibraryCatolog>().SortLibraryModels(nameBibliographicmaterial,  nameAuthor, namePublisher, date,  sortBy));
+            return View(_libraryServices.SortLibraryModels(nameBibliographicmaterial, nameAuthor, namePublisher, date, sortBy));
+           
         }
 
     
@@ -68,8 +72,8 @@ namespace library.Controllers
     [HttpGet]
         public ViewResult CatalogAdmin()
         {
-          
-            return View(_serviceProvider.GetRequiredService<IDataBaseHelperLibraryCatolog>().StartLibraryModels());
+                return View(_libraryServices.StartLibraryModels());
+           
 
         }
         /// <summary>
@@ -83,10 +87,10 @@ namespace library.Controllers
         /// <returns></returns>
 
         [HttpPost]
-        public IActionResult CatalogAdmin(string? nameBibliographicmaterial = null, string? nameAuthor = null, string? namePublisher = null, string? date = null, DatabaseHelper.SortBy? sortBy = null)
+        public IActionResult CatalogAdmin(string nameBibliographicmaterial , string nameAuthor , string namePublisher , string date, DatabaseHelper.SortBy sortBy )
         {
-            
-            return View(_serviceProvider.GetRequiredService<IDataBaseHelperLibraryCatolog>().SortLibraryModels(nameBibliographicmaterial, nameAuthor, namePublisher, date, sortBy));
+            return View(_libraryServices.SortLibraryModels(nameBibliographicmaterial, nameAuthor, namePublisher, date, sortBy));
+          
         }
 
 
@@ -102,8 +106,8 @@ namespace library.Controllers
         public ViewResult PageBibliographicmaterial(int materialId)
         {
 
-       
-            return View(_serviceProvider.GetRequiredService<IDataBaseHelperLibraryCatolog>().PageBibliographicmaterial(materialId));
+            return View(_libraryServices.PageBibliographicmaterial(materialId));
+   
 
             
         }
@@ -116,8 +120,8 @@ namespace library.Controllers
         public ViewResult PageBibliographicmaterialAdmin(int materialId)
         {
 
-           
-            return View(_serviceProvider.GetRequiredService<IDataBaseHelperLibraryCatolog>().PageBibliographicmaterialAdmin(materialId));
+            return View(_libraryServices.PageBibliographicmaterialAdmin(materialId));
+          
         }
         /// <summary>
         /// Изменяет BibliographicMaterial  информации о BibliographicMaterial для пользователя
@@ -130,7 +134,7 @@ namespace library.Controllers
         /// <returns></returns>
         [HttpPost]
 
-        public IActionResult PageBibliographicmaterialAdminRedaction(int idBibliographicmaterial, string? nameBibliographicmaterial = null, string? nameAuthor = null, string? namePublisher = null, string? date = null,IFormFile? file= null)
+        public IActionResult PageBibliographicmaterialAdminRedaction(BibliographicMaterial material,IFormFile? file= null)
         {
             /*
             if (file != null)
@@ -145,8 +149,9 @@ namespace library.Controllers
                 
 
             }
-            */    
-            _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().UpdateBibliographicmaterial(idBibliographicmaterial, nameBibliographicmaterial, nameAuthor, namePublisher, date);
+            */
+            _bibliographicmaterialServices.Update(material);
+
             return RedirectToAction("CatalogAdmin", "Home");
             
 
@@ -161,9 +166,10 @@ namespace library.Controllers
         /// <returns></returns>
         [HttpPost]
 
-        public IActionResult PageBibliographicmaterialAdminRedactionAuthor(int idAuthor , string? nameAuthor = null, string? contactsAuthor = null, string? informationAuthor = null)
+        public IActionResult PageBibliographicmaterialAdminRedactionAuthor(Author author)
         {
-            _serviceProvider.GetRequiredService<IDataBaseHelperAuthor>().UpdateAuthor(idAuthor, nameAuthor, contactsAuthor, informationAuthor);
+            _authorServices.Update(author);
+
  
             return RedirectToAction("CatalogAdmin", "Home");
         }
@@ -173,14 +179,13 @@ namespace library.Controllers
         /// <param name="idPublisher">ID</param>
         /// <param name="namePublisher">Название</param>
         /// <param name="contactsPublisher">Контакты</param>
-        /// <param name="addressPublisher">Адрес</param>
+        /// <param name="InsertressPublisher">Адрес</param>
         /// <returns></returns>
         [HttpPost]
 
-        public IActionResult PageBibliographicmaterialAdminRedactionPublisher(int idPublisher, string? namePublisher = null, string? contactsPublisher = null, string? addressPublisher = null)
+        public IActionResult PageBibliographicmaterialAdminRedactionPublisher(Publisher publisher)
         {
 
-            _serviceProvider.GetRequiredService<IDataBaseHelperPublisher>().UpdatePublisher(idPublisher, namePublisher, contactsPublisher, addressPublisher);
 
             return RedirectToAction("CatalogAdmin", "Home");
         }
@@ -192,8 +197,8 @@ namespace library.Controllers
         [HttpPost]
         public IActionResult DeleteBibliographicmaterial(int idBibliographicmaterial)
         {
+            _bibliographicmaterialServices.Delete(idBibliographicmaterial); 
 
-            _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().DeleteBibliographicmaterial(idBibliographicmaterial);
 
             return RedirectToAction("CatalogAdmin", "Home");
 
@@ -208,8 +213,8 @@ namespace library.Controllers
         
         public IActionResult DeleteAuthor(int idAuthor)
         {
+            _authorServices.Delete(idAuthor);
 
-            _serviceProvider.GetRequiredService<IDataBaseHelperAuthor>().DeleteAuthor(idAuthor);
 
             return RedirectToAction("CatalogAdmin", "Home");
         }
@@ -221,8 +226,8 @@ namespace library.Controllers
         [HttpPost]
         public IActionResult DeletePublisher(int idPublisher)
         {
+            _publisherServices.Delete(idPublisher);
 
-            _serviceProvider.GetRequiredService<IDataBaseHelperPublisher>().DeletePublisher(idPublisher);
 
             return RedirectToAction("CatalogAdmin", "Home");
         }
@@ -232,7 +237,7 @@ namespace library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ViewResult AddAuthor()
+        public ViewResult InsertAuthor()
         {
 
             return View();
@@ -245,10 +250,10 @@ namespace library.Controllers
        /// <param name="author"> Параметры автора</param>
        /// <returns></returns>
         [HttpPost]
-        public IActionResult AddAuthor(Author author)
+        public IActionResult InsertAuthor(Author author)
         {
+            _authorServices.Insert(author);
 
-            _serviceProvider.GetRequiredService<IDataBaseHelperAuthor>().AddAuthor(author);
 
             return View();
         }
@@ -258,23 +263,21 @@ namespace library.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ViewResult AddPublisher()
+        public ViewResult InsertPublisher()
         {
             return View();
         }
 
         /// <summary>
-        /// Добавление издательства в бд
+        /// получает форму из представление для дабавления издательства 
         /// </summary>
-        /// <param name="name">Название</param>
-        /// <param name="contacts">Контакты</param>
-        /// <param name="address">Адрес</param>
+        /// <param name="newPublisher">Данные издательтсва</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AddPublisher(Publisher newPublisher)
+        public IActionResult InsertPublisher(Publisher newPublisher)
         {
+            _publisherServices.Insert(newPublisher);
 
-            _serviceProvider.GetRequiredService<IDataBaseHelperPublisher>().AddPublisher(newPublisher);
 
             return View();
         }
@@ -286,7 +289,8 @@ namespace library.Controllers
         [HttpGet]
         public ViewResult CreatePageBibliographicmaterialAdmin()
         {
-            return View(_serviceProvider.GetRequiredService<IDataBaseHelperLibraryCatolog>().StartLibraryModels());
+            return View(_libraryServices.StartLibraryModels());
+
           
         }
 
@@ -300,31 +304,18 @@ namespace library.Controllers
         /// <param name="img">Картинка</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult CreatePageBibliographicmaterialAdmin(string? nameBibliographicmaterial = null, string? nameAuthor = null, string? namePublisher = null, string? date = null,IFormFile? img=null)
+        public IActionResult CreatePageBibliographicmaterialAdmin(BibliographicMaterial bibliographicMaterial , IFormFile? img)
         {
-           /* if (img != null && img.Length > 0)
-            {
-                var filePath = Path.Combine(_appEnvironment.WebRootPath, "img", img.FileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    img.CopyTo(fileStream);
-                }
+            /* if (img != null && img.Length > 0)
+             {
+                 var filePath = Path.Combine(_appEnvironment.WebRootPath, "img", img.FileName);
+                 using (var fileStream = new FileStream(filePath, FileMode.Create))
+                 {
+                     img.CopyTo(fileStream);
+                 }
 
-            }*/
-            _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().AddBibliographicMaterial(new BibliographicMaterial()
-            {
-                Name = nameBibliographicmaterial,
-                Date = date,
-                Img = "pict1.jpg",
-                Author = new Author()
-                {
-                    Id = int.Parse(nameAuthor)
-                },
-                Publisher = new Publisher()
-                {
-                    Id = int.Parse(namePublisher)
-                }
-            });
+             }*/
+            _bibliographicmaterialServices.Insert(bibliographicMaterial);
            
             return RedirectToAction("CatalogAdmin", "Home");
 

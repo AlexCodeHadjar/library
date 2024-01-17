@@ -19,6 +19,9 @@ namespace library.ViewModels
         ///перебор всех обьектов Bibliographicmaterial
         /// </summary>
         public IEnumerable <BibliographicMaterial> AllBibliographicmaterial {  get; set; }
+        ///<summary>
+        ///перебор всех обьектов User
+        /// </summary>
         public IEnumerable <User> AllUsers {  get; set; }
 
 

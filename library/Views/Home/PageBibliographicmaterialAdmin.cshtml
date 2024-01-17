@@ -32,12 +32,12 @@
                             <div>
                                 <div style="margin:40px;">
                                     <span>Название: @material.Name</span>
-                                    <input type="text" class="form-control" name="nameBibliographicmaterial">
+                                    <input type="text" class="form-control" name="Name">
                                 </div>
                                 <div style="margin:40px;">
                                     <span>Автор: @material.Author.FullName</span>
                                     <p>
-                                        <select name="nameAuthor" >
+                                        <select name="AuthorId" >
                                             <option value="">Выберите автора</option>
                                             @foreach (var author in Model.AllAuthors)
                                             {
@@ -51,7 +51,7 @@
                                 <div style="margin:40px;">
                                     <span>Издательство: @material.Publisher.Name</span>
                                     <p>
-                                        <select name="namePublisher">
+                                        <select name="PublisherId">
                                             <option value="">Выберите издательство</option>
                                             @foreach (var publisher in Model.AllPublishers)
                                             {
@@ -62,17 +62,17 @@
                                 </div>
                                 <div style="margin:40px;">
                                     <span>Год издания: @material.Date</span>
-                                    <input type="text" class="form-control" name="date">
+                                    <input type="text" class="form-control" name="Date">
                                 </div>
                                 <div style="margin:40px;">
                                    
-                                    <input type="hidden" name="idBibliographicmaterial" value="@material.Id">
+                                    <input type="hidden" name="Id" value="@material.Id">
                                 </div>
                             </div>
                             <div class="ml-auto">
                                 <img src="~/img/pict1.jpg" alt="Изображение" style="width: 400px; height: auto;" />
                                 <p>
-                                    <input type="file" name="img" accept="image/*">
+                                    <input type="file" name="img" accept="image/*" value="pict1">
                                     
                                 </p>
                             </div>
@@ -82,10 +82,10 @@
             }
             <input  type="submit" value=" Отправить">
         </form>
-        <form method="get" action="/Home/AddPublisher">
+        <form method="get" action="/Home/InsertPublisher">
             <input type="submit" value="Добавить Издательство" />
         </form>
-        <form method="get" action="/Home/AddAuthor">
+        <form method="get" action="/Home/InsertAuthor">
             <input type="submit" value="Добавить Автора" />
         </form>
         <form method="post" action="/Home/DeleteBibliographicmaterial">
@@ -104,14 +104,14 @@
             @foreach (var material in Model.AllBibliographicmaterial)
             {
                 <form class="modal-content" method="post" action="/Home/PageBibliographicmaterialAdminRedactionPublisher">
-                <input type="hidden" name="idPublisher" value="@material.Publisher.Id">
+                <input type="hidden" name="Id" value="@material.Publisher.Id">
                 <div class="container">
                     <label for="namePublisher"><b>Название Издательства</b></label>
-                    <input type="text" placeholder="Название Издательства" name="namePublisher" >
+                    <input type="text" placeholder="Название Издательства" name="Name" >
                     <label for="contactsPublisher"><b>Контакты</b></label>
-                    <input type="text" placeholder="Контакты" name="contactsPublisher" >
+                        <input type="text" placeholder="Контакты" name="Contacts">
                     <label for="addressPublisher"><b>Адрес</b></label>
-                    <input type="text" placeholder="Адрес" name="addressPublisher" >
+                        <input type="text" placeholder="Адрес" name="Address">
 
                     <button type="submit">Отправить</button>
                 </div>
@@ -128,14 +128,14 @@
               @foreach (var material in Model.AllBibliographicmaterial)
             {
             <form class="modal-content" method="post" action="/Home/PageBibliographicmaterialAdminRedactionAuthor">
-                <input type="hidden" name="idAuthor" value="@material.Author.Id">
+                <input type="hidden" name="Id" value="@material.Author.Id">
                 <div class="container">
                     <label for="nameAuthor"><b>Имя Автора</b></label>
-                    <input type="text" placeholder="Имя Автора" name="nameAuthor" >
+                    <input type="text" placeholder="Имя Автора" name="FullName" >
                     <label for="contactsAuthor"><b>Контакты</b></label>
-                    <input type="text" placeholder="Контакты" name="contactsAuthor">
+                        <input type="text" placeholder="Контакты" name="Contacts">
                     <label for="informationdAuthor"><b>Информация</b></label>
-                    <input type="text" placeholder="Информация" name="informationAuthor" >
+                        <input type="text" placeholder="Информация" name="Information">
 
                     <button type="submit">Отправить</button>
                 </div>

@@ -1,4 +1,4 @@
-﻿using library.Data.Models;
+﻿/*using library.Data.Models;
 
 namespace library.DataBase
 {
@@ -12,17 +12,17 @@ namespace library.DataBase
         /// </summary>
         /// <param name="nameAuthor"> Имя автора</param>
         /// <returns></returns>
-        public IEnumerable<Author> SelectAuthor(string? nameAuthor=null);
+        public IEnumerable<Author> SelectAuthor(string nameAuthor = null);
         /// <summary>
         /// добавление Author из бд 
         /// </summary>
         /// <param name="author">Параметры автора</param>
-        public void AddAuthor(Author? author=null);
+        public void InsertAuthor(Author author);
         /// <summary>
         /// Удаление Author из бд 
         /// </summary>
         /// <param name="idAuthor">ID пользователя</param>
-        public void DeleteAuthor(int? idAuthor=null);
+        public void DeleteAuthor(int idAuthor);
         /// <summary>
         /// Обновление/изменение Author из бд 
         /// </summary>
@@ -30,6 +30,7 @@ namespace library.DataBase
         /// <param name="nameAuthor">Имя автора</param>
         /// <param name="contactsAuthor">Контакты автора</param>
         /// <param name="informationAuthor">Информация автора</param>
-        public void UpdateAuthor(int? idAuthor=null, string? nameAuthor=null, string? contactsAuthor=null, string? informationAuthor=null);
+        public void UpdateAuthor(Author author);
     }
 }
+*/

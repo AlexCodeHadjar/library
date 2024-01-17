@@ -16,12 +16,14 @@ namespace library.Controllers
         const string CONNECTIONSTRING = "Data Source=Catalogsdata.db";
         
         private DatabaseHelper _databaseHelper = new DatabaseHelper(CONNECTIONSTRING);
+        private readonly IDataBaseHelperUser _userServices;
         ///<summary>
         ///для работы с предстваление Authorization(регистрация) вывод информации 
         /// </summary>
         public RegistrationController(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
+            _userServices = _serviceProvider.GetRequiredService<IDataBaseHelperUser>();
         }
         [HttpGet]
     
@@ -36,10 +38,10 @@ namespace library.Controllers
         [HttpPost]
         public IActionResult Authorization(User user)
         {
-            bool userExists = _serviceProvider.GetRequiredService<IDataBaseHelperUser>().SelectUser().Any(p => p.Login == user.Login && p.Password == user.Password && p.Admin == user.Admin);
-            if (_serviceProvider.GetRequiredService<IDataBaseHelperUser>().Authorization(user, userExists))
+            bool userExists = _userServices.SelectUser().Any(p => p.Login == user.Login && p.Password == user.Password && p.Admin == user.Admin);
+            if (_userServices.Authorization(user, userExists))
             {
-                _serviceProvider.GetRequiredService<IDataBaseHelperUser>().AddUser(user);
+                _userServices.AddUser(user);
                 return RedirectToAction("Regist", "Registration");
             }
             else
@@ -65,12 +67,12 @@ namespace library.Controllers
        
         public IActionResult Regist( User user)
         {
-            User login = _serviceProvider.GetRequiredService<IDataBaseHelperUser>().SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password);
-            if (_serviceProvider.GetRequiredService<IDataBaseHelperUser>().Regist(user,login) == "false")
+            User login = _userServices.SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password);
+            if (_userServices.Regist(user,login) == "false")
             {
                 return RedirectToAction("Catalog", "Home");
             }
-            if (_serviceProvider.GetRequiredService<IDataBaseHelperUser>().Regist(user,login) == "true")
+            if (_userServices.Regist(user,login) == "true")
             {
                 return RedirectToAction("CatalogAdmin", "Home");
             }

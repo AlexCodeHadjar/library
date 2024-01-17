@@ -1,4 +1,4 @@
-﻿using library.Data.Models;
+﻿/*using library.Data.Models;
 
 namespace library.DataBase
 {
@@ -12,12 +12,12 @@ namespace library.DataBase
         /// </summary>
         /// <param name="namePublisher">Название издательства</param>
         /// <returns></returns>
-        public IEnumerable<Publisher> SelectPublisher(string? namePublisher = null);
+        public IEnumerable<Publisher> SelectPublisher(string namePublisher = null);
         /// <summary>
         /// Добавление Publisher в бд
         /// </summary>
         /// <param name="publisher"></param>
-        public void AddPublisher(Publisher? publisher=null);
+        public void InsertPublisher(Publisher publisher);
         /// <summary>
         /// Обновление/изменение Publisher в бд 
         /// </summary>
@@ -25,12 +25,13 @@ namespace library.DataBase
         /// <param name="namePublisher"><Название/param>
         /// <param name="contactsPublisher">Контакты</param>
         /// <param name="addressPublisher">Адрес</param>
-        public void UpdatePublisher(int? idPublisher=null, string? namePublisher = null, string? contactsPublisher = null, string? addressPublisher = null);
+        public void UpdatePublisher(Publisher publisher);
         /// <summary>
         /// удаление Publisher из бд
         /// </summary>
         /// <param name="idPublisher">ID издательства</param>
-        public void DeletePublisher(int? idPublisher);
+        public void DeletePublisher(int idPublisher);
 
     }
 }
+*/

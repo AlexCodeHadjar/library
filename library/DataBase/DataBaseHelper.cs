@@ -1,6 +1,15 @@
 ﻿using library.Data.Models;
 using library.ViewModels;
 using Microsoft.Data.Sqlite;
+using System.Security.Cryptography.X509Certificates;
+//using System.Security.Policy;
+
+//using System.Security.Policy;
+
+
+//using System.Security.Policy;
+
+//using System.Security.Policy;
 using static library.Controllers.HomeController;
 using static library.DataBase.DatabaseHelper;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -25,7 +34,7 @@ namespace library.DataBase
             public bool SortDate { get; set; }
         }
         //получение строки подключения
-        private static string _connectionString;
+        public static string _connectionString;
       
 
 
@@ -35,13 +44,68 @@ namespace library.DataBase
             _connectionString = connectionString;
          
         }
-        
-        public class DataBaseAuthor : IDataBaseHelperAuthor
+        public class DataBaseAuthor : IDataBaseHelperModels<Author>
         {
-            ///<summary>
-            ///перебор всех обьектов Author из базы данных Catalogsdata
-            /// </summary>
-            public IEnumerable<Author> SelectAuthor(string? nameAuthor = null)
+            public void Delete(int idAuthor)
+            {
+                using (var connection = new SqliteConnection(_connectionString))
+                {
+                    connection.Open();
+
+                 
+                    string checkUsageQuery = $"SELECT COUNT(*) FROM BibliographicMaterial WHERE AuthorId = {idAuthor}";
+                    using (var checkUsageCommand = new SqliteCommand(checkUsageQuery, connection))
+                    {
+                        int usageCount = Convert.ToInt32(checkUsageCommand.ExecuteScalar());
+
+                  
+                        if (usageCount > 0)
+                        {
+
+                            return;
+                        }
+
+                    }
+                  
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+
+                    string sqlExpression = $"DELETE FROM Author WHERE Id = {idAuthor}";
+                    command.CommandText = sqlExpression;
+                    command.ExecuteNonQuery();
+
+                }
+            }
+
+
+            public void Insert(Author author)
+                {
+                    if (author.FullName == null || author.Contacts == null || author.Information == null)
+                    {
+                        return;
+                       
+                    }
+                    using (var connection = new SqliteConnection(_connectionString))
+                    {
+                        connection.Open();
+
+                        SqliteCommand command = new SqliteCommand();
+                        command.Connection = connection;
+
+
+                        command.CommandText = "INSERT INTO Author (FullName, Contacts, Information) VALUES (@FullName, @Contacts, @Information)";
+                        command.Parameters.AddWithValue("@FullName", author.FullName);
+                        command.Parameters.AddWithValue("@Contacts", author.Contacts);
+                        command.Parameters.AddWithValue("@Information", author.Information);
+
+                        command.ExecuteNonQuery();
+
+
+                    }
+                }
+            
+
+            public IEnumerable<Author> Select(Author model = null)
             {
                 List<Author> authorList = new List<Author>();
                 IEnumerable<Author> allAuthor;
@@ -49,13 +113,13 @@ namespace library.DataBase
                 using (var connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
-                    if (nameAuthor == null)
+                    if (model == null)
                     {
                         sqlExpression = "SELECT * FROM Author ";
                     }
                     else
                     {
-                        sqlExpression = $"SELECT * FROM Author WHERE fullname = '{nameAuthor}'";
+                        sqlExpression = $"SELECT * FROM Author WHERE fullname = '{model.FullName}'";
                     }
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
                     command.Connection = connection;
@@ -84,68 +148,14 @@ namespace library.DataBase
                     }
                 }
             }
-            ///<summary>
-            ///Вставка новой записи в таблицу "AddAuthor"
-            /// </summary>//  
 
-            public void AddAuthor(Author? author)
+            public void Update(Author author)
             {
-                if (author.FullName == null || author.Contacts == null || author.Information == null )
+                if (author.FullName == null && author.Contacts == null && author.Information == null)
                 {
                     return;
-                    //throw new ArgumentException("FullName and Contacts and Information must be set for the Author.");
-                }
-                using (var connection = new SqliteConnection(_connectionString))
-                {
-                    connection.Open();
-
-                    SqliteCommand command = new SqliteCommand();
-                    command.Connection = connection;
-
-
-                    command.CommandText = "INSERT INTO Author (FullName, Contacts, Information) VALUES (@FullName, @Contacts, @Information)";
-                    command.Parameters.AddWithValue("@FullName", author.FullName);
-                    command.Parameters.AddWithValue("@Contacts", author.Contacts);
-                    command.Parameters.AddWithValue("@Information", author.Information);
-
-                    command.ExecuteNonQuery();
-
 
                 }
-            }
-            public void DeleteAuthor(int? idAuthor)
-            {
-                using (var connection = new SqliteConnection(_connectionString))
-                {
-                    connection.Open();
-
-                    // Проверяем, используется ли идентификатор автора в таблице BibliographicMaterial
-                    string checkUsageQuery = $"SELECT COUNT(*) FROM BibliographicMaterial WHERE AuthorId = {idAuthor}";
-                    using (var checkUsageCommand = new SqliteCommand(checkUsageQuery, connection))
-                    {
-                        int usageCount = Convert.ToInt32(checkUsageCommand.ExecuteScalar());
-
-                        // Если идентификатор автора используется в таблице BibliographicMaterial, прерываем удаление
-                        if (usageCount > 0)
-                        {
-
-                            return;
-                        }
-
-                    }
-                    // Если идентификатор автора не используется, выполняем удаление
-                    SqliteCommand command = new SqliteCommand();
-                    command.Connection = connection;
-
-                    string sqlExpression = $"DELETE FROM Author WHERE Id = {idAuthor}";
-                    command.CommandText = sqlExpression;
-                    command.ExecuteNonQuery();
-
-                }
-            }
-
-            public void UpdateAuthor(int? idAuthor, string? nameAuthor = null, string? contactsAuthor = null, string? informationAuthor = null)
-            {
                 using (var connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
@@ -159,26 +169,81 @@ namespace library.DataBase
                     string sqlExpression = "UPDATE Author SET ";
 
 
-                    if (nameAuthor != null)
-                        sqlExpression += $"`FullName` = '{nameAuthor}', ";
+                    if (author.FullName != null)
+                        sqlExpression += $"`FullName` = '{author.FullName}', ";
 
-                    if (contactsAuthor != null)
-                        sqlExpression += $"`Contacts` = '{contactsAuthor}', ";
+                    if (author.Contacts != null)
+                        sqlExpression += $"`Contacts` = '{author.Contacts}', ";
 
-                    if (informationAuthor != null)
-                        sqlExpression += $"`Information` = '{informationAuthor}', ";
+                    if (author.Information != null)
+                        sqlExpression += $"`Information` = '{author.Information}', ";
 
                     sqlExpression = sqlExpression.TrimEnd(',', ' ');
-                    sqlExpression += $" WHERE Id = '{idAuthor}'";
+                    sqlExpression += $" WHERE Id = '{author.Id}'";
 
                     command.CommandText = sqlExpression;
                     command.ExecuteNonQuery();
                 }
             }
         }
-        public class DataBasePublisher : IDataBaseHelperPublisher
+        public class DataBasePublisher : IDataBaseHelperModels<Publisher>
         {
-            public IEnumerable<Publisher> SelectPublisher(string? namePublisher = null)
+            public void Delete(int id)
+            {
+                using (var connection = new SqliteConnection(_connectionString))
+                {
+                    connection.Open();
+
+
+                    string checkUsageQuery = $"SELECT COUNT(*) FROM BibliographicMaterial WHERE PublisherId = {id}";
+                    using (var checkUsageCommand = new SqliteCommand(checkUsageQuery, connection))
+                    {
+                        int usageCount = Convert.ToInt32(checkUsageCommand.ExecuteScalar());
+
+                     
+                        if (usageCount > 0)
+                        {
+
+                            return;
+                        }
+
+                    }
+
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+
+                    string sqlExpression = $"DELETE FROM Publisher WHERE Id = {id}";
+                    command.CommandText = sqlExpression;
+                    command.ExecuteNonQuery();
+
+                }
+            }
+        
+
+            public void Insert(Publisher model = null)
+            {
+                 if (model.Name == null || model.Contacts == null || model.Address == null)
+                {
+                    return;
+              
+                }
+                using (var connection = new SqliteConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+
+                    command.CommandText = "INSERT INTO Publisher (Name, Contacts, Address) VALUES (@Name, @Contacts, @Address)";
+                    command.Parameters.AddWithValue("@Name", model.Name);
+                    command.Parameters.AddWithValue("@Contacts", model.Contacts);
+                    command.Parameters.AddWithValue("@Address", model.Address);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            public IEnumerable<Publisher> Select(Publisher model = null)
             {
                 List<Publisher> publisherList = new List<Publisher>();
                 string sqlExpression;
@@ -186,13 +251,13 @@ namespace library.DataBase
                 using (var connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
-                    if (namePublisher == null)
+                    if (model == null)
                     {
                         sqlExpression = "SELECT * FROM Publisher";
                     }
                     else
                     {
-                        sqlExpression = $"SELECT * FROM Publisher WHERE Name = '{namePublisher}'";
+                        sqlExpression = $"SELECT * FROM Publisher WHERE Name = '{model.Name}'";
                     }
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
@@ -221,36 +286,13 @@ namespace library.DataBase
                 }
             }
 
-            ///<summary>
-            ///Вставка новой записи в таблицу "Publisher"
-            /// </summary>// 
-
-            public void AddPublisher(Publisher? publisher)
+            public void Update(Publisher model = null)
             {
-                if (publisher.Name == null || publisher.Contacts == null || publisher.Address == null)
+                 if (model.Name == null && model.Contacts == null && model.Address == null)
                 {
-                    return ;
-                    //throw new ArgumentException("Name and Contacts and Address must be set for the publisher.");
+                    return;
+                   
                 }
-                using (var connection = new SqliteConnection(_connectionString))
-                {
-                    connection.Open();
-
-                    SqliteCommand command = new SqliteCommand();
-                    command.Connection = connection;
-
-                    command.CommandText = "INSERT INTO Publisher (Name, Contacts, Address) VALUES (@Name, @Contacts, @Address)";
-                    command.Parameters.AddWithValue("@Name", publisher.Name);
-                    command.Parameters.AddWithValue("@Contacts", publisher.Contacts);
-                    command.Parameters.AddWithValue("@Address", publisher.Address);
-
-                    command.ExecuteNonQuery();
-
-                }
-            }
-
-            public void UpdatePublisher(int? idPublisher, string? namePublisher = null, string? contactsPublisher = null, string? addressPublisher = null)
-            {
                 using (var connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
@@ -264,62 +306,80 @@ namespace library.DataBase
                     string sqlExpression = "UPDATE Publisher SET ";
 
 
-                    if (namePublisher != null)
-                        sqlExpression += $"`Name` = '{namePublisher}', ";
+                    if (model.Name != null)
+                        sqlExpression += $"`Name` = '{model.Name}', ";
 
-                    if (contactsPublisher != null)
-                        sqlExpression += $"`Contacts` = '{contactsPublisher}', ";
+                    if (model.Contacts != null)
+                        sqlExpression += $"`Contacts` = '{model.Contacts}', ";
 
-                    if (addressPublisher != null)
-                        sqlExpression += $"`Address` = '{addressPublisher}', ";
+                    if (model.Address != null)
+                        sqlExpression += $"`Address` = '{model.Address}', ";
 
                     sqlExpression = sqlExpression.TrimEnd(',', ' ');
-                    sqlExpression += $" WHERE Id = '{idPublisher}'";
+                    sqlExpression += $" WHERE Id = '{model.Id}'";
 
                     command.CommandText = sqlExpression;
                     command.ExecuteNonQuery();
                 }
             }
-
-            public void DeletePublisher(int? idPublisher=null)
+        }
+        public class DataBaseBibliographicmaterial : IDataBaseHelperModels<BibliographicMaterial>
+        {
+            public void Delete(int id)
             {
                 using (var connection = new SqliteConnection(_connectionString))
                 {
                     connection.Open();
 
-               
-                    string checkUsageQuery = $"SELECT COUNT(*) FROM BibliographicMaterial WHERE PublisherId = {idPublisher}";
-                    using (var checkUsageCommand = new SqliteCommand(checkUsageQuery, connection))
-                    {
-                        int usageCount = Convert.ToInt32(checkUsageCommand.ExecuteScalar());
-
-                        // Если идентификатор издательства используется в таблице BibliographicMaterial, прерываем удаление
-                        if (usageCount > 0)
-                        {
-
-                            return;
-                        }
-
-                    }
-                
                     SqliteCommand command = new SqliteCommand();
                     command.Connection = connection;
 
-                    string sqlExpression = $"DELETE FROM Publisher WHERE Id = {idPublisher}";
+                    string sqlExpression = $"DELETE FROM BibliographicMaterial WHERE Id = {id}";
                     command.CommandText = sqlExpression;
                     command.ExecuteNonQuery();
+                }
+
+
+            }
+
+            public void Insert(BibliographicMaterial model = null)
+            {
+                if (model == null)
+                {
+                    return;
+                }
+                model.Img = "pict1";
+                if (model.PublisherId == null || model.AuthorId == null || model.Date == null || model.Name == null || model.Img == null)
+                {
+                    return;
+
+                }
+
+                using (var connection = new SqliteConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    SqliteCommand command = new SqliteCommand();
+                    command.Connection = connection;
+
+
+                    command.CommandText = "INSERT INTO BibliographicMaterial (Name, Date, Img, AuthorId, PublisherId) VALUES (@Name, @Date, @Img, @AuthorId, @PublisherId)";
+                    command.Parameters.AddWithValue("@Name", model.Name);
+                    command.Parameters.AddWithValue("@Date", model.Date);
+                    command.Parameters.AddWithValue("@Img", model.Img);
+                    command.Parameters.AddWithValue("@AuthorId", model.AuthorId);
+                    command.Parameters.AddWithValue("@PublisherId", model.PublisherId);
+
+                    command.ExecuteNonQuery();
+
 
                 }
             }
-        }
 
-        public class DataBaseBibliographicmaterial : IDataBaseHelperBibliographicmaterial
-        {
-            ///<summary>
-            ///перебор всех обьектов Bibliographicmaterial из базы данных Catalogsdata
-            /// </summary>
-            public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial()
+
+            public IEnumerable<BibliographicMaterial> Select(BibliographicMaterial model = null)
             {
+
                 List<BibliographicMaterial> bibliographicmaterialsDatebase = new List<BibliographicMaterial>();
                 string sqlExpression;
 
@@ -333,7 +393,7 @@ namespace library.DataBase
 
                     SqliteCommand command = new SqliteCommand(sqlExpression, connection);
                     command.Connection = connection;
-                    DataBaseAuthor allPuthor = new DataBaseAuthor();
+                    DataBaseAuthor allAuthor = new DataBaseAuthor();
                     DataBasePublisher allPublisher = new DataBasePublisher();
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
@@ -347,8 +407,8 @@ namespace library.DataBase
                                 var img = reader.GetString(3);
                                 var Authorid = reader.GetInt32(4);
                                 var Publisherid = reader.GetInt32(5);
-                                var author = allPuthor.SelectAuthor().FirstOrDefault(a => a.Id == Authorid);
-                                var publisher = allPublisher.SelectPublisher().FirstOrDefault(p => p.Id == Publisherid);
+                                var author = allAuthor.Select().FirstOrDefault(a => a.Id == Authorid);
+                                var publisher = allPublisher.Select().FirstOrDefault(p => p.Id == Publisherid);
                                 bibliographicmaterialsDatebase.Add(new BibliographicMaterial()
                                 {
                                     Id = id,
@@ -370,87 +430,8 @@ namespace library.DataBase
                 }
             }
 
-            public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string? nameBibliographicmaterial = null, string? date = null, string? nameAuthor = null, string? namePublisher = null)
-            {
-                DataBaseAuthor author = new();
-                DataBasePublisher publisher = new();
-                DataBaseBibliographicmaterial bibliographicmaterial = new();
-                IEnumerable<BibliographicMaterial> filteredBibliographicmaterial = bibliographicmaterial.SelectBibliographicmaterial();
 
-                if (!string.IsNullOrEmpty(nameBibliographicmaterial))
-                {
-                    filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => a.Name == nameBibliographicmaterial);
-                }
-
-                if (!string.IsNullOrEmpty(date))
-                {
-                    filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => int.Parse(a.Date) >= int.Parse(date));
-                }
-
-                if (!string.IsNullOrEmpty(nameAuthor))
-                {
-                    var authors = author.SelectAuthor(nameAuthor).Select(a => a.Id);
-                    filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => authors.Contains(a.Author.Id));
-                }
-
-                if (!string.IsNullOrEmpty(namePublisher))
-                {
-                    var publishers = publisher.SelectPublisher(namePublisher).Select(a => a.Id);
-                    filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => publishers.Contains(a.Publisher.Id));
-                }
-
-                return filteredBibliographicmaterial;
-            }
-
-            ///<summary>
-            ///Вставка новой записи в таблицу "BibliographicMaterial"
-            /// </summary>// 
-            
-            public void AddBibliographicMaterial(BibliographicMaterial? material=null)
-            {
-                if (material.Author.Id == null || material.Publisher.Id == null || material.Date == null || material.Name == null || material.Img == null)
-                {
-                    return;
-            
-                }
-                using (var connection = new SqliteConnection(_connectionString))
-                {
-                    connection.Open();
-
-                    SqliteCommand command = new SqliteCommand();
-                    command.Connection = connection;
-
-
-                    command.CommandText = "INSERT INTO BibliographicMaterial (Name, Date, Img, AuthorId, PublisherId) VALUES (@Name, @Date, @Img, @AuthorId, @PublisherId)";
-                    command.Parameters.AddWithValue("@Name", material.Name);
-                    command.Parameters.AddWithValue("@Date", material.Date);
-                    command.Parameters.AddWithValue("@Img", material.Img);
-                    command.Parameters.AddWithValue("@AuthorId", material.Author.Id);
-                    command.Parameters.AddWithValue("@PublisherId", material.Publisher.Id);
-
-                    command.ExecuteNonQuery();
-
-
-                }
-            }
-
-            public void DeleteBibliographicmaterial(int? idBibliographicmaterial=null)
-            {
-                using (var connection = new SqliteConnection(_connectionString))
-                {
-                    connection.Open();
-
-                    SqliteCommand command = new SqliteCommand();
-                    command.Connection = connection;
-
-                    string sqlExpression = $"DELETE FROM BibliographicMaterial WHERE Id = {idBibliographicmaterial}";
-                    command.CommandText = sqlExpression;
-                    command.ExecuteNonQuery();
-                }
-            }
-
-            public void UpdateBibliographicmaterial(int? idBibliographicmaterial=null, string? nameBibliographicmaterial = null,
-                        string? nameAuthor = null, string? namePublisher = null, string? date = null)
+            public void Update(BibliographicMaterial model = null)
             {
 
                 using (var connection = new SqliteConnection(_connectionString))
@@ -459,7 +440,7 @@ namespace library.DataBase
 
                     SqliteCommand command = new SqliteCommand();
                     command.Connection = connection;
-                    if (nameBibliographicmaterial == null && date == null && nameAuthor == null && namePublisher == null)
+                    if (model.Name == null && model.Date == null && model.AuthorId == null && model.PublisherId == null)
                     {
 
                         return;
@@ -470,29 +451,29 @@ namespace library.DataBase
                     string sqlExpression = "UPDATE BibliographicMaterial SET ";
 
 
-                    if (nameBibliographicmaterial != null)
-                        sqlExpression += $"`Name` = '{nameBibliographicmaterial}', ";
+                    if (model.Name != null)
+                        sqlExpression += $"`Name` = '{model.Name}', ";
 
-                    if (date != null)
-                        sqlExpression += $"`Date` = '{date}', ";
+                    if (model.Date != null)
+                        sqlExpression += $"`Date` = '{model.Date}', ";
 
-                    if (nameAuthor != null)
-                        sqlExpression += $"`AuthorId` = '{int.Parse(nameAuthor)}', ";
+                    if (model.AuthorId != null)
+                        sqlExpression += $"`AuthorId` = '{model.AuthorId}', ";
 
-                    if (namePublisher != null)
-                        sqlExpression += $"`PublisherId` = '{int.Parse(namePublisher)}', ";
+                    if (model.PublisherId != null)
+                        sqlExpression += $"`PublisherId` = '{model.PublisherId}', ";
 
                     sqlExpression = sqlExpression.TrimEnd(',', ' ');
-                    sqlExpression += $" WHERE Id = '{idBibliographicmaterial}'";
+                    sqlExpression += $" WHERE Id = '{model.Id}'";
 
                     command.CommandText = sqlExpression;
                     command.ExecuteNonQuery();
                 }
             }
-           
 
-            }
 
+
+        }
         public class DataBaseUser : IDataBaseHelperUser
         {
             private readonly IServiceProvider _serviceProvider;
@@ -538,7 +519,7 @@ namespace library.DataBase
             ///<summary>
             ///Вставка новой записи в таблицу "AddUser"
             /// </summary>//
-            public void AddUser(User? material = null)
+            public void AddUser(User  material)
             {
                 if (material.Login== null || material.Password == null || material.Admin == null )
                 {
@@ -570,7 +551,6 @@ namespace library.DataBase
                
                if (user != null && !string.IsNullOrEmpty(user.Login) && !string.IsNullOrEmpty(user.Password))
                 {
-                    // login = _serviceProvider.GetRequiredService<IDataBaseHelperUser>().SelectUser().FirstOrDefault(p => p.Login == user.Login && p.Password == user.Password);
 
 
                     if (login != null)
@@ -606,7 +586,7 @@ namespace library.DataBase
                    
                         
 
-                        // добавление пользователя(user)
+                       
                         
                         return true;
                     }
@@ -616,75 +596,8 @@ namespace library.DataBase
                 return false;
             }
         }
-
-        public class DataBaseLibraryCatolog : IDataBaseHelperLibraryCatolog
-        {
-
-            private readonly IServiceProvider _serviceProvider;
-
-            public DataBaseLibraryCatolog(IServiceProvider serviceProvider)
-            {
-                _serviceProvider = serviceProvider;
-            }
-            public AllLibraryModels SortLibraryModels(string? nameBibliographicmaterial = null, string? nameAuthor = null, string? namePublisher = null, string? date = null, SortBy? sortBy = null)
-            {
-                AllLibraryModels libraryobj = new AllLibraryModels();
-                libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher);
-                if (sortBy.SortNameAuthor)
-                {
-
-                    libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Author.FullName);
-                }
-
-
-                if (sortBy.SortNamePublisher)
-                {
-                    libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Publisher.Name);
-                }
-
-                if (sortBy.SortNameBibliographicmaterial)
-                {
-                    libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderBy(a => a.Name);
-                }
-
-                if (sortBy.SortDate)
-                {
-                    libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderByDescending(a => a.Date);
-                }
-                //libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).OrderByDescending(a => a.Date);
-
-                libraryobj.AllPublishers = string.IsNullOrEmpty(namePublisher) ? _serviceProvider.GetRequiredService<IDataBaseHelperPublisher>().SelectPublisher().OrderBy(a => a.Name) : _serviceProvider.GetRequiredService<IDataBaseHelperPublisher>().SelectPublisher(namePublisher).OrderBy(a => a.Name);
-                libraryobj.AllAuthors = string.IsNullOrEmpty(nameAuthor) ? _serviceProvider.GetRequiredService<IDataBaseHelperAuthor>().SelectAuthor().OrderBy(a => a.FullName) : _serviceProvider.GetRequiredService<IDataBaseHelperAuthor>().SelectAuthor(nameAuthor).OrderBy(a => a.FullName);
-
-                return libraryobj;
-            }
-
-            public AllLibraryModels StartLibraryModels()
-            {
-                AllLibraryModels libraryobj = new AllLibraryModels();
-                libraryobj.AllAuthors = _serviceProvider.GetRequiredService<IDataBaseHelperAuthor>().SelectAuthor().OrderBy(a => a.FullName);
-                libraryobj.AllPublishers = _serviceProvider.GetRequiredService<IDataBaseHelperPublisher>().SelectPublisher().OrderBy(a => a.Name);
-                libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial().OrderBy(a => a.Name);
-                return libraryobj;
-            }
-            public AllLibraryModels PageBibliographicmaterial(int materialId)
-            {
-                AllLibraryModels libraryobj = new AllLibraryModels();
-
-                libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial().Where(a => a.Id == materialId);
-                return libraryobj;
-            }
-            public AllLibraryModels PageBibliographicmaterialAdmin(int materialId)
-            {
-                AllLibraryModels libraryobj = new AllLibraryModels();
-                libraryobj = _serviceProvider.GetRequiredService<IDataBaseHelperLibraryCatolog>().StartLibraryModels();
-                libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperBibliographicmaterial>().SelectBibliographicmaterial().Where(a => a.Id == materialId);
-                return libraryobj;
-            }
-        }
-
        
-    
     }
+    }
+    
 
-}

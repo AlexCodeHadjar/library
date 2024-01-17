@@ -1,4 +1,4 @@
-﻿using library.Data.Models;
+﻿/*using library.Data.Models;
 
 namespace library.DataBase
 {
@@ -20,18 +20,18 @@ namespace library.DataBase
         /// <param name="nameAuthor">Имя автора</param>
         /// <param name="namePublisher">Название Издательства</param>
         /// <returns></returns>
-        public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string? nameBibliographicmaterial = null, string? date = null, string? nameAuthor = null, string? namePublisher = null);
+        public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string nameBibliographicmaterial, string date, string nameAuthor, string namePublisher );
         /// <summary>
         /// Добавление BibliographicMaterial в бд
         /// </summary>
         /// <param name="material">Имя </param>
-        public void AddBibliographicMaterial(BibliographicMaterial? material=null);
+        public void InsertBibliographicMaterial(BibliographicMaterial material);
         /// <summary>
         /// Удаление BibliographicMaterial из бд
         /// </summary>
         /// <param name="idBibliographicmaterial">ID </param>
 
-        public void DeleteBibliographicmaterial(int? idBibliographicmaterial=null);
+        public void DeleteBibliographicmaterial(int idBibliographicmaterial);
         /// <summary>
         /// Обновление/изменение BibliographicMaterial в бд 
         /// </summary>
@@ -40,8 +40,8 @@ namespace library.DataBase
         /// <param name="nameAuthor"> Имя автора </param>
         /// <param name="namePublisher">Название издательства</param>
         /// <param name="date">Год издания</param>
-        public void UpdateBibliographicmaterial(int? idBibliographicmaterial=null, string? nameBibliographicmaterial = null,
-     string? nameAuthor = null, string? namePublisher = null, string? date = null);
+        public void UpdateBibliographicmaterial(BibliographicMaterial material);
 
     }
 }
+*/

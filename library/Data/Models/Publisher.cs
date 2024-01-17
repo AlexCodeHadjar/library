@@ -13,7 +13,7 @@ namespace library.Data.Models
         /// <summary>
         /// ID 
         /// </summary>
-        public int Id { get; set; }
+        public int? Id { get; set; }
         /// <summary>
         /// Название 
         /// </summary>

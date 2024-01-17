@@ -32,12 +32,12 @@
                             <div>
                                 <div style="margin:40px;">
                                     <span>Название: </span>
-                                    <input type="text" class="form-control" name="nameBibliographicmaterial">
+                                    <input type="text" class="form-control" name="Name">
                                 </div>
                                 <div style="margin:40px;">
                                     <span>Автор:</span>
                                     <p>
-                                        <select name="nameAuthor">
+                                        <select name="AuthorId">
                                             <option value="">Выберите автора</option>
                                             @foreach (var author in Model.AllAuthors)
                                             {
@@ -51,7 +51,7 @@
                                 <div style="margin:40px;">
                                     <span>Издательство: </span>
                                     <p>
-                                        <select name="namePublisher">
+                                        <select name="PublisherId">
                                             <option value="">Выберите издательство</option>
                                             @foreach (var publisher in Model.AllPublishers)
                                             {
@@ -62,13 +62,13 @@
                                 </div>
                                 <div style="margin:40px;">
                                     <span>Год издания:</span>
-                                    <input type="text" class="form-control" name="date">
+                                    <input type="text" class="form-control" name="Date">
                                 </div>
                             </div>
                             <div class="ml-auto">
                                 <img src="~/img/pict1.jpg" alt="Изображение" style="width: 400px; height: auto;" />
                                 <p>
-                                    <input type="file" name="img" >
+                                    <input type="file" name="Img" value="pict1" >
 
                                 </p>
                             </div>
@@ -78,10 +78,10 @@
             }
             <input type="submit" value=" Отправить">
         </form>
-        <form method="get" action="/Home/AddPublisher">
+        <form method="get" action="/Home/InsertPublisher">
             <input type="submit" value="Добавить Издательство" />
         </form>
-        <form method="get" action="/Home/AddAuthor">
+        <form method="get" action="/Home/InsertAuthor">
             <input type="submit" value="Добавить Автора" />
         </form>
     </div>
