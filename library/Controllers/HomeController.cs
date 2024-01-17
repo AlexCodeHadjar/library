@@ -32,6 +32,10 @@ namespace library.Controllers
         {
             _serviceProvider = serviceProvider;
             _appEnvironment = appEnvironment;
+            _libraryServices = _serviceProvider.GetRequiredService<IBusinessLogicCatalog>();
+            _authorServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Author>>();
+            _publisherServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Publisher>>();
+            _bibliographicmaterialServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>();
 
           
    
