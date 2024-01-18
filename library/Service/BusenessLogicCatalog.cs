@@ -57,7 +57,8 @@ namespace library.BusinessLogic
             libraryobj.AllAuthors = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Author>>().Select().OrderBy(a => a.FullName);
             libraryobj.AllPublishers = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Publisher>>().Select().OrderBy(a => a.Name);
                 libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().OrderBy(a => a.Name);
-                return libraryobj;
+            libraryobj.AllImgs = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().ToList();
+            return libraryobj;
             }
             public AllLibraryModels PageBibliographicmaterial(int materialId)
             {
@@ -71,9 +72,10 @@ namespace library.BusinessLogic
                 AllLibraryModels libraryobj = new AllLibraryModels();
                 libraryobj = _serviceProvider.GetRequiredService<IBusinessLogicCatalog>().StartLibraryModels();
                 libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().Where(a => a.Id == materialId);
-                return libraryobj;
+            libraryobj.AllImgs = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().ToList();
+            return libraryobj;
             }
-        public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string nameBibliographicmaterial = null, string date = null, string nameAuthor = null, string namePublisher = null)
+        public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string nameBibliographicmaterial , string date , string nameAuthor , string namePublisher )
         {
             Author dopauthor = new();
             dopauthor.FullName = nameAuthor;
@@ -83,7 +85,7 @@ namespace library.BusinessLogic
             DataBasePublisher publisher = new();
             DataBaseBibliographicmaterial bibliographicmaterial = new();
 
-            IEnumerable<BibliographicMaterial> filteredBibliographicmaterial = bibliographicmaterial.Select();
+            IEnumerable<BibliographicMaterial> filteredBibliographicmaterial = bibliographicmaterial.Select(null);
 
             if (!string.IsNullOrEmpty(nameBibliographicmaterial))
             {

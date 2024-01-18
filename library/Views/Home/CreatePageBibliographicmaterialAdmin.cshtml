@@ -67,10 +67,18 @@
                             </div>
                             <div class="ml-auto">
                                 <img src="~/img/pict1.jpg" alt="Изображение" style="width: 400px; height: auto;" />
-                                <p>
-                                    <input type="file" name="Img" value="pict1" >
-
-                                </p>
+                                <div style="margin:40px;">
+                                
+                                    <p>
+                                        <select name="Img">
+                                            <option value="">Выберите Обложку</option>
+                                            @foreach (var books in Model.AllImgs)
+                                            {
+                                                <option value="@books.Img">@books.Img</option>
+                                            }
+                                        </select>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </td>

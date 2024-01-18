@@ -30,7 +30,7 @@ namespace library.BusinessLogic
             /// <param name="materialId">ID</param>
             /// <returns></returns>
             public AllLibraryModels PageBibliographicmaterialAdmin(int materialId);
-            public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string nameBibliographicmaterial = null, string date = null, string nameAuthor = null, string namePublisher = null);
+            public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string nameBibliographicmaterial, string date, string nameAuthor, string namePublisher);
 
     }
     }

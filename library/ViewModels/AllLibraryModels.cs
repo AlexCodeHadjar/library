@@ -1,4 +1,5 @@
 ﻿using library.Data.Models;
+using System.Data.Entity.Core.Objects.DataClasses;
 
 namespace library.ViewModels
 {
@@ -23,6 +24,11 @@ namespace library.ViewModels
         ///перебор всех обьектов User
         /// </summary>
         public IEnumerable <User> AllUsers {  get; set; }
+        ///<summary>
+        ///перебор всех картинок 
+        /// </summary>
+        public IEnumerable<BibliographicMaterial> AllImgs { get; set; }
+
 
 
     }

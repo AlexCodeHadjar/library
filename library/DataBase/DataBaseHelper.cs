@@ -2,14 +2,6 @@
 using library.ViewModels;
 using Microsoft.Data.Sqlite;
 using System.Security.Cryptography.X509Certificates;
-//using System.Security.Policy;
-
-//using System.Security.Policy;
-
-
-//using System.Security.Policy;
-
-//using System.Security.Policy;
 using static library.Controllers.HomeController;
 using static library.DataBase.DatabaseHelper;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -24,8 +16,8 @@ namespace library.DataBase
     /// </summary>// 
     public class DatabaseHelper
     {
-     
 
+        private const string CONNECTION_STRING = "Data Source=Catalogsdata.db";
         public class SortBy
         {
             public bool SortNameBibliographicmaterial { get; set; }
@@ -34,16 +26,9 @@ namespace library.DataBase
             public bool SortDate { get; set; }
         }
         //получение строки подключения
-        public static string _connectionString;
-      
-
-
-
-        public DatabaseHelper(string connectionString)
-        {
-            _connectionString = connectionString;
-         
-        }
+        public static string _connectionString = CONNECTION_STRING;
+    
+       
         public class DataBaseAuthor : IDataBaseHelperModels<Author>
         {
             public void Delete(int idAuthor)
@@ -105,8 +90,9 @@ namespace library.DataBase
                 }
             
 
-            public IEnumerable<Author> Select(Author model = null)
+            public IEnumerable<Author> Select(Author model )
             {
+
                 List<Author> authorList = new List<Author>();
                 IEnumerable<Author> allAuthor;
                 string sqlExpression;
@@ -220,7 +206,7 @@ namespace library.DataBase
             }
         
 
-            public void Insert(Publisher model = null)
+            public void Insert(Publisher model )
             {
                  if (model.Name == null || model.Contacts == null || model.Address == null)
                 {
@@ -243,7 +229,7 @@ namespace library.DataBase
                 }
             }
 
-            public IEnumerable<Publisher> Select(Publisher model = null)
+            public IEnumerable<Publisher> Select(Publisher model )
             {
                 List<Publisher> publisherList = new List<Publisher>();
                 string sqlExpression;
@@ -286,7 +272,7 @@ namespace library.DataBase
                 }
             }
 
-            public void Update(Publisher model = null)
+            public void Update(Publisher model )
             {
                  if (model.Name == null && model.Contacts == null && model.Address == null)
                 {
@@ -342,13 +328,13 @@ namespace library.DataBase
 
             }
 
-            public void Insert(BibliographicMaterial model = null)
+            public void Insert(BibliographicMaterial model )
             {
                 if (model == null)
                 {
                     return;
                 }
-                model.Img = "pict1";
+                //model.Img = "pict1";
                 if (model.PublisherId == null || model.AuthorId == null || model.Date == null || model.Name == null || model.Img == null)
                 {
                     return;
@@ -377,7 +363,7 @@ namespace library.DataBase
             }
 
 
-            public IEnumerable<BibliographicMaterial> Select(BibliographicMaterial model = null)
+            public IEnumerable<BibliographicMaterial> Select(BibliographicMaterial model )
             {
 
                 List<BibliographicMaterial> bibliographicmaterialsDatebase = new List<BibliographicMaterial>();
@@ -407,8 +393,8 @@ namespace library.DataBase
                                 var img = reader.GetString(3);
                                 var Authorid = reader.GetInt32(4);
                                 var Publisherid = reader.GetInt32(5);
-                                var author = allAuthor.Select().FirstOrDefault(a => a.Id == Authorid);
-                                var publisher = allPublisher.Select().FirstOrDefault(p => p.Id == Publisherid);
+                                var author = allAuthor.Select(null).FirstOrDefault(a => a.Id == Authorid);//переделать на конкретный запрос по ф
+                                var publisher = allPublisher.Select(null).FirstOrDefault(p => p.Id == Publisherid);
                                 bibliographicmaterialsDatebase.Add(new BibliographicMaterial()
                                 {
                                     Id = id,
@@ -431,7 +417,7 @@ namespace library.DataBase
             }
 
 
-            public void Update(BibliographicMaterial model = null)
+            public void Update(BibliographicMaterial model )
             {
 
                 using (var connection = new SqliteConnection(_connectionString))
@@ -440,7 +426,7 @@ namespace library.DataBase
 
                     SqliteCommand command = new SqliteCommand();
                     command.Connection = connection;
-                    if (model.Name == null && model.Date == null && model.AuthorId == null && model.PublisherId == null)
+                    if (model.Name == null && model.Date == null && model.AuthorId == null && model.PublisherId == null&&model.Img == null)
                     {
 
                         return;
@@ -462,6 +448,8 @@ namespace library.DataBase
 
                     if (model.PublisherId != null)
                         sqlExpression += $"`PublisherId` = '{model.PublisherId}', ";
+                    if (model.Img != null)
+                        sqlExpression += $"`Img` = '{model.Img}', ";
 
                     sqlExpression = sqlExpression.TrimEnd(',', ' ');
                     sqlExpression += $" WHERE Id = '{model.Id}'";
@@ -474,57 +462,20 @@ namespace library.DataBase
 
 
         }
-        public class DataBaseUser : IDataBaseHelperUser
+
+        public class DataBaseUser : IDataBaseHelperModels<User>
         {
-            private readonly IServiceProvider _serviceProvider;
-            ///<summary>
-            ///перебор всех обьектов User из базы данных Catalogsdata
-            /// </summary>
-            public IEnumerable<User> SelectUser()
+            public void Delete(int id)
             {
-                List<User> userList = new List<User>();
-                using (var connection = new SqliteConnection(_connectionString))
-                {
-                    connection.Open();
-                    string sqlExpression = "SELECT * FROM User";
-                    SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-                    command.Connection = connection;
-                    using (SqliteDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                var id = reader.GetInt32(0);
-                                var login = reader.GetString(1);
-                                var password = reader.GetString(2);
-                                var admin = reader.GetString(3);
-
-                                userList.Add(new User()
-                                {
-                                    Id = id,
-                                    Login = login,
-                                    Password = password,
-                                    Admin = admin
-
-
-                                });
-                            }
-                        }
-                        return userList;
-                    }
-                }
+                throw new NotImplementedException();
             }
 
-            ///<summary>
-            ///Вставка новой записи в таблицу "AddUser"
-            /// </summary>//
-            public void AddUser(User  material)
+            public void Insert(User model = null)
             {
-                if (material.Login== null || material.Password == null || material.Admin == null )
+                if (model.Login == null || model.Password == null || model.Admin == null)
                 {
                     return;
-            
+
                 }
                 using (var connection = new SqliteConnection(_connectionString))
                 {
@@ -535,9 +486,9 @@ namespace library.DataBase
 
 
                     command.CommandText = "INSERT INTO User (Login, Password,Admin) VALUES (@login, @password,@Admin)";
-                    command.Parameters.AddWithValue("@login", material.Login);
-                    command.Parameters.AddWithValue("@password", material.Password);
-                    command.Parameters.AddWithValue("@Admin", material.Admin);
+                    command.Parameters.AddWithValue("@login", model.Login);
+                    command.Parameters.AddWithValue("@password", model.Password);
+                    command.Parameters.AddWithValue("@Admin", model.Admin);
 
 
                     command.ExecuteNonQuery();
@@ -546,57 +497,49 @@ namespace library.DataBase
                 }
             }
 
-            public string Regist(User user, User login)
+            public IEnumerable<User> Select(User model)
             {
-               
-               if (user != null && !string.IsNullOrEmpty(user.Login) && !string.IsNullOrEmpty(user.Password))
                 {
-
-
-                    if (login != null)
+                    List<User> userList = new List<User>();
+                    using (var connection = new SqliteConnection(_connectionString))
                     {
-                        if (login.Admin == "false")
+                        connection.Open();
+                        string sqlExpression = "SELECT * FROM User";
+                        SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                        command.Connection = connection;
+                        using (SqliteDataReader reader = command.ExecuteReader())
                         {
-                            return "false";
-                        }
-                        else
-                        {
-                            return "true";
-                        }
-                            
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    var id = reader.GetInt32(0);
+                                    var login = reader.GetString(1);
+                                    var password = reader.GetString(2);
+                                    var admin = reader.GetString(3);
+
+                                    userList.Add(new User()
+                                    {
+                                        Id = id,
+                                        Login = login,
+                                        Password = password,
+                                        Admin = admin
 
 
+                                    });
+                                }
+                            }
+                            return userList;
+                        }
                     }
-
-
-             
                 }
-                return "error";
-               
             }
 
-            public bool Authorization(User user, bool userExists)
+            public void Update(User model)
             {
-                if (user != null && !string.IsNullOrEmpty(user.Login) && !string.IsNullOrEmpty(user.Password))
-                {
-                    
-
-                    if (!userExists)
-                    {
-                   
-                        
-
-                       
-                        
-                        return true;
-                    }
-                }
-
-
-                return false;
+                throw new NotImplementedException();
             }
         }
-       
     }
     }
     

@@ -19,7 +19,8 @@ namespace library.Controllers
     /// </summary>
     public class HomeController : Controller
     {
-        private const string CONNECTIONSTRING  = "Data Source=Catalogsdata.db";
+
+       
 
         private readonly IServiceProvider _serviceProvider;
 
@@ -28,14 +29,13 @@ namespace library.Controllers
         private readonly IDataBaseHelperModels<Publisher> _publisherServices;
        
         private readonly IDataBaseHelperModels<BibliographicMaterial> _bibliographicmaterialServices;
-        private readonly IWebHostEnvironment _appEnvironment;
+
 
         private readonly IBusinessLogicCatalog _libraryServices;
 
-        public HomeController(IServiceProvider serviceProvider, IWebHostEnvironment appEnvironment)
+        public HomeController(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _appEnvironment = appEnvironment;
             _libraryServices = _serviceProvider.GetRequiredService<IBusinessLogicCatalog>();
             _authorServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Author>>();
             _publisherServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Publisher>>();
@@ -55,9 +55,15 @@ namespace library.Controllers
      
 
         }
-        ///<summary>
-        ///получения данных из формы  представления 
+        /// <summary>
+        /// вызов представления Catalog для пользователя 
         /// </summary>
+        /// <param name="nameBibliographicmaterial"> Внесение изменения в параметр Name</param>
+        /// <param name="nameAuthor">Внесение изменения в параметр Author</param>
+        /// <param name="namePublisher">Внесение изменения в параметр Publisher</param>
+        /// <param name="date">Внесение изменения в параметр Date</param>
+        /// <param name="sortBy">Выборка параметра изменения</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Catalog(string nameBibliographicmaterial , string nameAuthor, string namePublisher, string date , DatabaseHelper.SortBy sortBy)
         {
@@ -124,32 +130,14 @@ namespace library.Controllers
           
         }
         /// <summary>
-        /// Изменяет BibliographicMaterial  информации о BibliographicMaterial для пользователя
+        /// Внесение изменений в объект BibliographicMaterial
         /// </summary>
-        /// <param name="idBibliographicmaterial">ID</param>
-        /// <param name="nameBibliographicmaterial">Название BibliographicMaterial</param>
-        /// <param name="nameAuthor">Имя автора</param>
-        /// <param name="namePublisher">Название издательства</param>
-        /// <param name="date">Год </param>
+        /// <param name="material"></param>
         /// <returns></returns>
         [HttpPost]
 
-        public IActionResult PageBibliographicmaterialAdminRedaction(BibliographicMaterial material,IFormFile? file= null)
+        public IActionResult PageBibliographicmaterialAdminRedaction(BibliographicMaterial material)
         {
-            /*
-            if (file != null)
-            {
-                var filePath = Path.Combine(_appEnvironment.WebRootPath, "img", file.FileName);
-
-               
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
-                
-
-            }
-            */
             _bibliographicmaterialServices.Update(material);
 
             return RedirectToAction("CatalogAdmin", "Home");
@@ -157,12 +145,9 @@ namespace library.Controllers
 
         }
         /// <summary>
-        /// Изменяет  информацию о Author 
+        /// Внесение изменений в объект Publisher
         /// </summary>
-        /// <param name="idAuthor">ID</param>
-        /// <param name="nameAuthor">Имя автора</param>
-        /// <param name="contactsAuthor">Контакты </param>
-        /// <param name="informationAuthor">Информация</param>
+        /// <param name="author">данные author</param>
         /// <returns></returns>
         [HttpPost]
 
@@ -174,12 +159,9 @@ namespace library.Controllers
             return RedirectToAction("CatalogAdmin", "Home");
         }
         /// <summary>
-        /// Изменяет  информацию о Publisher 
+        /// Внесение изменений в объект Publisher
         /// </summary>
-        /// <param name="idPublisher">ID</param>
-        /// <param name="namePublisher">Название</param>
-        /// <param name="contactsPublisher">Контакты</param>
-        /// <param name="InsertressPublisher">Адрес</param>
+        /// <param name="publisher">данные publisher</param>
         /// <returns></returns>
         [HttpPost]
 
@@ -295,26 +277,15 @@ namespace library.Controllers
         }
 
         /// <summary>
-        /// получает форму  для создания BibliographicMaterial
+        /// Создание объекта bibliographicMaterial
         /// </summary>
-        /// <param name="nameBibliographicmaterial">Название</param>
-        /// <param name="nameAuthor">Имя автора</param>
-        /// <param name="namePublisher">Название издательства</param>
-        /// <param name="date">Год издания</param>
-        /// <param name="img">Картинка</param>
+        /// <param name="bibliographicMaterial">данные bibliographicMaterial</param>
+
         /// <returns></returns>
         [HttpPost]
-        public IActionResult CreatePageBibliographicmaterialAdmin(BibliographicMaterial bibliographicMaterial , IFormFile? img)
+        public IActionResult CreatePageBibliographicmaterialAdmin(BibliographicMaterial bibliographicMaterial)
         {
-            /* if (img != null && img.Length > 0)
-             {
-                 var filePath = Path.Combine(_appEnvironment.WebRootPath, "img", img.FileName);
-                 using (var fileStream = new FileStream(filePath, FileMode.Create))
-                 {
-                     img.CopyTo(fileStream);
-                 }
 
-             }*/
             _bibliographicmaterialServices.Insert(bibliographicMaterial);
            
             return RedirectToAction("CatalogAdmin", "Home");

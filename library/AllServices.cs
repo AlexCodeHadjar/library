@@ -1,6 +1,7 @@
 ﻿using library.BusinessLogic;
 using library.DataBase;
 using library.Data.Models;
+using library.Service;
 
 namespace library
 {
@@ -12,24 +13,18 @@ namespace library
             
             builder.Services.AddMvc();
             var services = builder.Services;
-
-
-            //сервис для обьединения инферфейса IDataBaseHelperAuthor и класс релизации  DatabaseHelper.DataBaseAuthor
-            //services.AddTransient<IDataBaseHelperAuthor, DatabaseHelper.DataBaseAuthor>();
+            // сервис для работы с базой данных для модели Author
             services.AddTransient<IDataBaseHelperModels<Author>, DatabaseHelper.DataBaseAuthor>();
+            // сервис для работы с базой данных для модели Publisher
             services.AddTransient<IDataBaseHelperModels<Publisher>, DatabaseHelper.DataBasePublisher>();
+            // сервис для работы с базой данных для модели BibliographicMaterial
             services.AddTransient<IDataBaseHelperModels<BibliographicMaterial>, DatabaseHelper.DataBaseBibliographicmaterial>();
-            //сервис для обьединения инферфейса IDataBaseHelperPublisher и класс релизации DatabaseHelper.DataBasePublisher
-           // services.AddTransient<IDataBaseHelperPublisher, DatabaseHelper.DataBasePublisher>();
-
-            //сервис для обьединения инферфейса IDataBaseHelperBibliographicmaterial и класс релизации DatabaseHelper.DataBaseBibliographicmaterial
-            //services.AddTransient<IDataBaseHelperBibliographicmaterial, DatabaseHelper.DataBaseBibliographicmaterial>();
-
-            //сервис для обьединения инферфейса IDataBaseHelperUser и класс релизации DatabaseHelper.DataBaseUser
-            services.AddTransient<IDataBaseHelperUser, DatabaseHelper.DataBaseUser>();
-
-            //сервис для обьединения инферфейса IDataBaseHelperLibraryCatolog и класс релизации  DatabaseHelper.DataBaseLibraryCatolog
+            // сервис для работы с базой данных для модели User
+            services.AddTransient<IDataBaseHelperModels<User>, DatabaseHelper.DataBaseUser>();
+            // сервисы для работы с контролером HomeController 
             services.AddTransient<IBusinessLogicCatalog, BusenessLogicCatalog>();
+            // сервисы для работы с контролером RegistrationController 
+            services.AddTransient<IBusinessLogicRegistratioan, BusinessLogicRegistratioan>();
 
             return services;
         }
