@@ -1,5 +1,4 @@
-﻿
-namespace library.DataBase
+﻿namespace library.DataBase.Contract
 {
     public interface IDataBaseHelperModels<T>
     {
@@ -8,7 +7,7 @@ namespace library.DataBase
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public IEnumerable<T> Select(T model = default(T) );
+        public IEnumerable<T> Select(T model = default);
         /// <summary>
         /// Удаление объекта в базе данных
         /// </summary>
@@ -18,12 +17,12 @@ namespace library.DataBase
         /// Обновление объекта в базе данных 
         /// </summary>
         /// <param name="model"></param>
-        public void Update(T model = default(T) );
+        public void Update(T model = default);
         /// <summary>
         /// Добавление нового объекта в базу данных
         /// </summary>
         /// <param name="model"></param>
-        public void Insert(T model = default(T) );
-     
+        public void Insert(T model = default);
+
     }
 }

@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using library.DataBase;
 using library.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Policy;
 using System.Diagnostics.Eventing.Reader;
 using System.Data;
-using static library.DataBase.DatabaseHelper;
-using library.Service;
+using static library.DataBase.ImpI.DatabaseHelper;
 using Microsoft.Extensions.DependencyInjection;
+using library.Service.Contract;
 
 
 namespace library.Controllers
@@ -15,7 +14,7 @@ namespace library.Controllers
     public class RegistrationController:Controller
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IBusinessLogicRegistratioan _businessLogicRegistration;
+        private readonly IRegistratioanService _businessLogicRegistration;
 
   
         ///<summary>
@@ -24,7 +23,7 @@ namespace library.Controllers
         public RegistrationController(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _businessLogicRegistration = _serviceProvider.GetRequiredService<IBusinessLogicRegistratioan>();
+            _businessLogicRegistration = _serviceProvider.GetRequiredService<IRegistratioanService>();
         }
         [HttpGet]
     

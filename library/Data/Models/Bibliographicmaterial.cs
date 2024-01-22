@@ -5,40 +5,41 @@ using System.Collections.Generic;
 
 namespace library.Data.Models
 {
+
     /// <summary>
     /// Модель BibliographicMaterial
     /// </summary>
-
     public partial class BibliographicMaterial
     {
+
         /// <summary>
         /// ID
         /// </summary>
         public int? Id { get; set; }
+
         /// <summary>
         /// Название
         /// </summary>
-
         public string Name { get; set; }
+
         /// <summary>
         /// Год издания
         /// </summary>
-
         public string Date { get; set; }
+
         /// <summary>
         /// Картинка
         /// </summary>
-
         public string Img { get; set; }
+
         /// <summary>
         /// ID автора
         /// </summary>
-
         public int? AuthorId { get; set; }
+
         /// <summary>
         /// ID издательства
         /// </summary>
-
         public int? PublisherId { get; set; }
 
 

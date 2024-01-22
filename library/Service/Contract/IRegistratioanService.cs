@@ -1,8 +1,8 @@
 ﻿using library.Data.Models;
 
-namespace library.Service
+namespace library.Service.Contract
 {
-    public interface IBusinessLogicRegistratioan
+    public interface IRegistratioanService
     {
         /// <summary>
         /// Анутификация

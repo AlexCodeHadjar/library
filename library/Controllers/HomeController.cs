@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
-using library.DataBase;
 using System.Data.Entity;
 using library.Controllers;
 using System.Globalization;
 using System.Runtime.Intrinsics.X86;
 using System.IO;
-using library.BusinessLogic;
+using library.Service;
+using library.Service.ImpI;
+using library.Service.Contract;
+using library.DataBase.Contract;
 
 namespace library.Controllers
 {
@@ -31,16 +33,16 @@ namespace library.Controllers
         private readonly IDataBaseHelperModels<BibliographicMaterial> _bibliographicmaterialServices;
 
 
-        private readonly IBusinessLogicCatalog _libraryServices;
+        private readonly ICatalogService _libraryServices;
 
         public HomeController(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _libraryServices = _serviceProvider.GetRequiredService<IBusinessLogicCatalog>();
+            _libraryServices = _serviceProvider.GetRequiredService<ICatalogService>();
             _authorServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Author>>();
             _publisherServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Publisher>>();
             _bibliographicmaterialServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>();
-  
+    
 
 
 
@@ -65,7 +67,7 @@ namespace library.Controllers
         /// <param name="sortBy">Выборка параметра изменения</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Catalog(string nameBibliographicmaterial , string nameAuthor, string namePublisher, string date , DatabaseHelper.SortBy sortBy)
+        public IActionResult Catalog(string nameBibliographicmaterial , string nameAuthor, string namePublisher, string date ,CatalogService.SortBy sortBy)
         {
             return View(_libraryServices.SortLibraryModels(nameBibliographicmaterial, nameAuthor, namePublisher, date, sortBy));
            
@@ -93,7 +95,7 @@ namespace library.Controllers
         /// <returns></returns>
 
         [HttpPost]
-        public IActionResult CatalogAdmin(string nameBibliographicmaterial , string nameAuthor , string namePublisher , string date, DatabaseHelper.SortBy sortBy )
+        public IActionResult CatalogAdmin(string nameBibliographicmaterial , string nameAuthor , string namePublisher , string date, CatalogService.SortBy sortBy )
         {
             return View(_libraryServices.SortLibraryModels(nameBibliographicmaterial, nameAuthor, namePublisher, date, sortBy));
           
