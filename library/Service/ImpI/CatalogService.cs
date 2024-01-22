@@ -26,14 +26,13 @@ namespace library.Service.ImpI
             _serviceProvider = serviceProvider;
         }
 
-
         public AllLibraryModels StartLibraryModels()
         {
             AllLibraryModels libraryobj = new AllLibraryModels();
             libraryobj.AllAuthors = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Author>>().Select().OrderBy(a => a.FullName);
             libraryobj.AllPublishers = _serviceProvider.GetRequiredService<IDataBaseHelperModels<Publisher>>().Select().OrderBy(a => a.Name);
             libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().OrderBy(a => a.Name);
-            libraryobj.AllImgs = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().ToList();
+            libraryobj.AllImgs = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().DistinctBy(x => x.Img).ToList();
             return libraryobj;
         }
         public AllLibraryModels PageBibliographicmaterial(int materialId)
@@ -48,7 +47,7 @@ namespace library.Service.ImpI
             AllLibraryModels libraryobj = new AllLibraryModels();
             libraryobj = _serviceProvider.GetRequiredService<ICatalogService>().StartLibraryModels();
             libraryobj.AllBibliographicmaterial = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().Where(a => a.Id == materialId);
-            libraryobj.AllImgs = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().ToList();
+            libraryobj.AllImgs = _serviceProvider.GetRequiredService<IDataBaseHelperModels<BibliographicMaterial>>().Select().DistinctBy(x => x.Img).ToList();
             return libraryobj;
         }
         public IEnumerable<BibliographicMaterial> SelectBibliographicmaterial(string nameBibliographicmaterial, string date, string nameAuthor, string namePublisher)

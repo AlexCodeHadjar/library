@@ -8,22 +8,27 @@ namespace library.ViewModels
     /// </summary>
     public class AllLibraryModels
     {
+
         ///<summary>
         ///перебор всех обьектов Author
         /// </summary>
-        public IEnumerable<Author>AllAuthors {  get; set; }
+        public IEnumerable<Author> AllAuthors { get; set; }
+
         ///<summary>
         ///перебор всех обьектов Publisher
         /// </summary>
-        public IEnumerable<Publisher>AllPublishers {  get; set; }
+        public IEnumerable<Publisher> AllPublishers { get; set; }
+
         ///<summary>
         ///перебор всех обьектов Bibliographicmaterial
         /// </summary>
-        public IEnumerable <BibliographicMaterial> AllBibliographicmaterial {  get; set; }
+        public IEnumerable<BibliographicMaterial> AllBibliographicmaterial { get; set; }
+
         ///<summary>
         ///перебор всех обьектов User
         /// </summary>
-        public IEnumerable <User> AllUsers {  get; set; }
+        public IEnumerable<User> AllUsers { get; set; }
+
         ///<summary>
         ///перебор всех картинок 
         /// </summary>

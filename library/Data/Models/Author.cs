@@ -14,7 +14,7 @@ namespace library.Data.Models
         /// <summary>
         /// ID 
         /// </summary>
-        
+
         public int? Id { get; set; }
         /// <summary>
         /// Полное имя

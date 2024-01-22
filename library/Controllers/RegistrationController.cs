@@ -4,19 +4,17 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Policy;
 using System.Diagnostics.Eventing.Reader;
 using System.Data;
-using static library.DataBase.ImpI.DatabaseHelper;
 using Microsoft.Extensions.DependencyInjection;
 using library.Service.Contract;
 
 
 namespace library.Controllers
 {
-    public class RegistrationController:Controller
+    public class RegistrationController : Controller
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IRegistratioanService _businessLogicRegistration;
 
-  
         ///<summary>
         ///для работы с предстваление Authorization(регистрация) вывод информации 
         /// </summary>
@@ -26,19 +24,20 @@ namespace library.Controllers
             _businessLogicRegistration = _serviceProvider.GetRequiredService<IRegistratioanService>();
         }
         [HttpGet]
-    
+
         public ViewResult Authorization()
         {
 
             return View();
         }
+
         ///<summary>
         ///для работы с предстваление Authorization(регистрация) получения данных
         /// </summary>
         [HttpPost]
         public IActionResult Authorization(User user)
         {
-            
+
             if (_businessLogicRegistration.Authorization(user))
             {
                 return RedirectToAction("Regist", "Registration");
@@ -47,13 +46,14 @@ namespace library.Controllers
             {
                 return View();
             }
-          
+
         }
+
         ///<summary>
         ///для работы с предстваление Regist(авторизация) вывод информации 
         /// </summary>
         [HttpGet]
-     
+
         public ViewResult Regist()
         {
             return View();
@@ -63,8 +63,8 @@ namespace library.Controllers
         ///для работы с предстваление Regist(авторизация) получение информации 
         /// </summary>
         [HttpPost]
-       
-        public IActionResult Regist( User user)
+
+        public IActionResult Regist(User user)
         {
             if (_businessLogicRegistration.Regist(user) == "false")
             {
@@ -82,7 +82,7 @@ namespace library.Controllers
         ///переходит к представлению Regist
         /// </summary>
         [HttpPost]
-   
+
         public IActionResult Next()
         {
             return RedirectToAction("Regist", "Registration");
@@ -93,7 +93,7 @@ namespace library.Controllers
         /// </summary>
         [HttpPost]
         public IActionResult Return()
-      
+
         {
             return RedirectToAction("Authorization", "Registration");
         }
