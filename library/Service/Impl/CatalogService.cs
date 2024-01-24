@@ -1,11 +1,11 @@
 ﻿using library.ViewModels;
-using static library.DataBase.ImpI.DatabaseHelper;
+using static library.DataBase.Impl.DatabaseHelper;
 using library.Data.Models;
 using library.Service.Contract;
 using library.DataBase.Contract;
-using library.DataBase.ImpI;
+using library.DataBase.Impl;
 
-namespace library.Service.ImpI
+namespace library.Service.Impl
 {
 
     public class CatalogService : ICatalogService

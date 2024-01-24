@@ -1,7 +1,7 @@
 ﻿using library.Data.Models;
 using library.DataBase;
 using library.ViewModels;
-using static library.Service.ImpI.CatalogService;
+using static library.Service.Impl.CatalogService;
 
 namespace library.Service.Contract
 {

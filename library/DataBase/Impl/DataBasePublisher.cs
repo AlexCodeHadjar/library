@@ -3,7 +3,7 @@ using library.DataBase.Contract;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace library.DataBase.ImpI
+namespace library.DataBase.Impl
 {
     public class DataBasePublisher : DatabaseHelper, IDataBaseHelperModels<Publisher>
     {

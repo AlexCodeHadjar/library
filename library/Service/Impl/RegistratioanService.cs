@@ -2,7 +2,7 @@
 using library.DataBase.Contract;
 using library.Service.Contract;
 
-namespace library.Service.ImpI
+namespace library.Service.Impl
 {
     public class RegistrationService : IRegistrationService
     {

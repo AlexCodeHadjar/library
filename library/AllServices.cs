@@ -2,11 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using System.Configuration;
-using static library.DataBase.ImpI.DatabaseHelper;
-using library.Service.ImpI;
+using static library.DataBase.Impl.DatabaseHelper;
+using library.Service.Impl;
 using library.Service.Contract;
 using library.DataBase.Contract;
-using library.DataBase.ImpI;
+using library.DataBase.Impl;
 
 
 namespace library
