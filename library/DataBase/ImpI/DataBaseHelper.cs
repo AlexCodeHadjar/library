@@ -3,12 +3,12 @@ using library.ViewModels;
 using Microsoft.Data.Sqlite;
 using System.Security.Cryptography.X509Certificates;
 using static library.Controllers.HomeController;
-using static library.DataBase.Impl.DatabaseHelper;
+using static library.DataBase.ImpI.DatabaseHelper;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
-namespace library.DataBase.Impl
+namespace library.DataBase.ImpI
 {
 
     ///<summary>
