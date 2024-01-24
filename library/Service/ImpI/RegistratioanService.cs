@@ -4,11 +4,11 @@ using library.Service.Contract;
 
 namespace library.Service.ImpI
 {
-    public class RegistratioanService : IRegistratioanService
+    public class RegistrationService : IRegistrationService
     {
         private readonly IDataBaseHelperModels<User> _userServices;
         private readonly IServiceProvider _serviceProvider;
-        public RegistratioanService(IServiceProvider serviceProvider)
+        public RegistrationService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _userServices = _serviceProvider.GetRequiredService<IDataBaseHelperModels<User>>();

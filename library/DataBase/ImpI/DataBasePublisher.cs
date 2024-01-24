@@ -1,43 +1,36 @@
 ﻿using library.Data.Models;
 using library.DataBase.Contract;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace library.DataBase.ImpI
 {
     public class DataBasePublisher : DatabaseHelper, IDataBaseHelperModels<Publisher>
     {
         public DataBasePublisher(string dbConnectionString) : base(dbConnectionString) { }
+        
         public void Delete(int id)
         {
-            using (var connection = new SqliteConnection(_connectionString))
+            var options = new DbContextOptionsBuilder<CUsersusersourcereposlibrarylibraryCatalogsdatadbContext>()
+                            .UseSqlite(_connectionString)
+                            .Options;
+
+            using (var dbContext = new CUsersusersourcereposlibrarylibraryCatalogsdatadbContext(options))
             {
-                connection.Open();
-
-
-                string checkUsageQuery = $"SELECT COUNT(*) FROM BibliographicMaterial WHERE PublisherId = {id}";
-                using (var checkUsageCommand = new SqliteCommand(checkUsageQuery, connection))
+                var publisher = dbContext.Publishers.FirstOrDefault(a => a.Id == id);
+                if (publisher != null)
                 {
-                    int usageCount = Convert.ToInt32(checkUsageCommand.ExecuteScalar());
-
-
-                    if (usageCount > 0)
+                    if (publisher.BibliographicMaterials.Any())
                     {
 
                         return;
                     }
 
+                    dbContext.Publishers.Remove(publisher);
+                    dbContext.SaveChanges();
                 }
-
-                SqliteCommand command = new SqliteCommand();
-                command.Connection = connection;
-
-                string sqlExpression = $"DELETE FROM Publisher WHERE Id = {id}";
-                command.CommandText = sqlExpression;
-                command.ExecuteNonQuery();
-
             }
         }
-
 
         public void Insert(Publisher model)
         {
@@ -46,61 +39,32 @@ namespace library.DataBase.ImpI
                 return;
 
             }
-            using (var connection = new SqliteConnection(_connectionString))
+            var options = new DbContextOptionsBuilder<CUsersusersourcereposlibrarylibraryCatalogsdatadbContext>()
+                            .UseSqlite(_connectionString)
+                            .Options;
+
+            using (var dbContext = new CUsersusersourcereposlibrarylibraryCatalogsdatadbContext(options))
             {
-                connection.Open();
 
-                SqliteCommand command = new SqliteCommand();
-                command.Connection = connection;
-
-                command.CommandText = "INSERT INTO Publisher (Name, Contacts, Address) VALUES (@Name, @Contacts, @Address)";
-                command.Parameters.AddWithValue("@Name", model.Name);
-                command.Parameters.AddWithValue("@Contacts", model.Contacts);
-                command.Parameters.AddWithValue("@Address", model.Address);
-
-                command.ExecuteNonQuery();
+                dbContext.Publishers.Add(model);
+                dbContext.SaveChanges();
             }
         }
-
+  
         public IEnumerable<Publisher> Select(Publisher model)
         {
-            List<Publisher> publisherList = new List<Publisher>();
-            string sqlExpression;
-
-            using (var connection = new SqliteConnection(_connectionString))
+            var options = new DbContextOptionsBuilder<CUsersusersourcereposlibrarylibraryCatalogsdatadbContext>()
+                           .UseSqlite(_connectionString)
+                           .Options;
+            using (var dbContext = new CUsersusersourcereposlibrarylibraryCatalogsdatadbContext(options))
             {
-                connection.Open();
                 if (model == null)
                 {
-                    sqlExpression = "SELECT * FROM Publisher";
+                    return dbContext.Publishers.ToList();
                 }
                 else
                 {
-                    sqlExpression = $"SELECT * FROM Publisher WHERE Name = '{model.Name}'";
-                }
-
-                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-                command.Connection = connection;
-                using (SqliteDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            var id = reader.GetInt32(0);
-                            var name = reader.GetString(1);
-                            var contacts = reader.GetString(2);
-                            var address = reader.GetString(3);
-                            publisherList.Add(new Publisher()
-                            {
-                                Id = id,
-                                Name = name,
-                                Contacts = contacts,
-                                Address = address
-                            });
-                        }
-                    }
-                    return publisherList;
+                    return dbContext.Publishers.Where(a => a.Name == model.Name).ToList();
                 }
             }
         }
@@ -112,33 +76,28 @@ namespace library.DataBase.ImpI
                 return;
 
             }
-            using (var connection = new SqliteConnection(_connectionString))
+            var options = new DbContextOptionsBuilder<CUsersusersourcereposlibrarylibraryCatalogsdatadbContext>()
+                           .UseSqlite(_connectionString)
+                           .Options;
+            using (var dbContext = new CUsersusersourcereposlibrarylibraryCatalogsdatadbContext(options))
             {
-                connection.Open();
-
-                SqliteCommand command = new SqliteCommand();
-                command.Connection = connection;
-
-
-
-
-                string sqlExpression = "UPDATE Publisher SET ";
-
-
-                if (model.Name != null)
-                    sqlExpression += $"`Name` = '{model.Name}', ";
-
-                if (model.Contacts != null)
-                    sqlExpression += $"`Contacts` = '{model.Contacts}', ";
-
-                if (model.Address != null)
-                    sqlExpression += $"`Address` = '{model.Address}', ";
-
-                sqlExpression = sqlExpression.TrimEnd(',', ' ');
-                sqlExpression += $" WHERE Id = '{model.Id}'";
-
-                command.CommandText = sqlExpression;
-                command.ExecuteNonQuery();
+                var existingPublisher = dbContext.Publishers.FirstOrDefault(a => a.Id == model.Id);
+                if (existingPublisher != null)
+                {
+                    if (model.Name != null)
+                    {
+                        existingPublisher.Name = model.Name;
+                    }
+                    if (model.Contacts != null)
+                    {
+                        existingPublisher.Contacts = model.Contacts;
+                    }
+                    if (model.Address != null)
+                    {
+                        existingPublisher.Address = model.Address;
+                    }
+                    dbContext.SaveChanges();
+                }
             }
         }
     }

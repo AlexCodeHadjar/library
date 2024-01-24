@@ -2,7 +2,7 @@
 
 namespace library.Service.Contract
 {
-    public interface IRegistratioanService
+    public interface IRegistrationService
     {
 
         /// <summary>

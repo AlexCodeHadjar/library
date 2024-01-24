@@ -38,7 +38,7 @@ namespace library
             services.AddTransient<ICatalogService, CatalogService>();
 
             // сервисы для работы с контролером RegistrationController 
-            services.AddTransient<IRegistratioanService, RegistratioanService>();
+            services.AddTransient<IRegistrationService, RegistrationService>();
 
             return services;
         }

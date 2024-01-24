@@ -54,7 +54,7 @@ namespace library.Data.Models
                 entity.ToTable("User");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
+                   // .ValueGeneratedNever()
                     .HasColumnName("id");
                 entity.Property(e => e.Login).HasColumnName("login");
                 entity.Property(e => e.Password).HasColumnName("password");
@@ -64,5 +64,7 @@ namespace library.Data.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+      
     }
 }
+

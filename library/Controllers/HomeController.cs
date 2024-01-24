@@ -168,7 +168,7 @@ namespace library.Controllers
 
         public IActionResult PageBibliographicmaterialAdminRedactionPublisher(Publisher publisher)
         {
-
+            _publisherServices.Update(publisher);
 
             return RedirectToAction("CatalogAdmin", "Home");
         }

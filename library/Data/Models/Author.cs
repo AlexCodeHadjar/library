@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 namespace library.Data.Models
 {
+
     /// <summary>
     /// Модель автора Author
     /// </summary>
-
     public partial class Author
     {
         /// <summary>

@@ -13,7 +13,7 @@ namespace library.Controllers
     public class RegistrationController : Controller
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IRegistratioanService _businessLogicRegistration;
+        private readonly IRegistrationService _businessLogicRegistration;
 
         ///<summary>
         ///для работы с предстваление Authorization(регистрация) вывод информации 
@@ -21,7 +21,7 @@ namespace library.Controllers
         public RegistrationController(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _businessLogicRegistration = _serviceProvider.GetRequiredService<IRegistratioanService>();
+            _businessLogicRegistration = _serviceProvider.GetRequiredService<IRegistrationService>();
         }
         [HttpGet]
 
