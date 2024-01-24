@@ -1,9 +1,8 @@
-﻿using library.Data.Models;
-using library.DataBase.Contract;
-using Microsoft.Data.Sqlite;
+﻿using DataBaseHelperSQLite.Data.Models;
+using DataBaseHelperSQLite.DataBase.Contract;
 using Microsoft.EntityFrameworkCore;
 
-namespace library.DataBase.ImpI
+namespace DataBaseHelperSQLite.DataBase.Impl
 {
     public class DataBaseAuthor : DatabaseHelper, IDataBaseHelperModels<Author>
     {

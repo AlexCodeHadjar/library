@@ -1,8 +1,8 @@
-﻿using library.Data.Models;
-using library.DataBase.Contract;
+﻿using DataBaseHelperSQLite.Data.Models;
+using DataBaseHelperSQLite.DataBase.Contract;
 using library.Service.Contract;
 
-namespace library.Service.ImpI
+namespace library.Service.Impl
 {
     public class RegistrationService : IRegistrationService
     {

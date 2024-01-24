@@ -1,11 +1,11 @@
 using Microsoft.Data.Sqlite;
-using library.DataBase;
 using System.Data.SQLite;
 using library;
+using DataBaseHelperSQLite;
+
 
 AllServices services = new();
 services.Services();
-
 
 var app = services.builder.Build();
 

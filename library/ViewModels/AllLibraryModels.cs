@@ -1,5 +1,4 @@
-﻿using library.Data.Models;
-using System.Data.Entity.Core.Objects.DataClasses;
+﻿using DataBaseHelperSQLite.Data.Models;
 
 namespace library.ViewModels
 {

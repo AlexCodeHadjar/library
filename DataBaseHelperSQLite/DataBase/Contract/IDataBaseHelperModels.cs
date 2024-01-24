@@ -1,4 +1,4 @@
-﻿namespace library.DataBase.Contract
+﻿namespace DataBaseHelperSQLite.DataBase.Contract
 {
     public interface IDataBaseHelperModels<T>
     {

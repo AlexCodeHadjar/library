@@ -1,4 +1,4 @@
-﻿using library.Data.Models;
+﻿using DataBaseHelperSQLite.Data.Models;
 
 namespace library.Service.Contract
 {

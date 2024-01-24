@@ -1,12 +1,8 @@
-﻿using library.Data.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
-using System.Configuration;
-using static library.DataBase.ImpI.DatabaseHelper;
-using library.Service.ImpI;
+﻿using DataBaseHelperSQLite.Data.Models;
+using library.Service.Impl;
 using library.Service.Contract;
-using library.DataBase.Contract;
-using library.DataBase.ImpI;
+using DataBaseHelperSQLite.DataBase.Contract;
+using DataBaseHelperSQLite.DataBase.Impl;
 
 
 namespace library
