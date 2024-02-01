@@ -25,7 +25,7 @@ namespace DataBaseHelperSQLite.DataBase.Impl
                     }
 
                     dbContext.Authors.Remove(author);
-                   dbContext.SaveChanges();
+                    dbContext.SaveChanges();
                 }
             }
         }
