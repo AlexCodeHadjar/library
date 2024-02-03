@@ -6,7 +6,7 @@
     /// </summary>// 
     public class DatabaseHelper
     {
-        public const string CONNECTION_STRING = "Data Source=Catalogsdata.db";
+        public const string CONNECTION_STRING = "Data Source=../../../../Catalogsdata.db";
         
         
         //public const string CONNECTION_STRING = "Data Source=Catalogsdata.db";
