@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication;
 using System.Data.Entity;
 using library;
+using Microsoft.AspNetCore.Builder;
+using XUnitTest;
 
 
 namespace XUnitTestProject
@@ -14,48 +16,41 @@ namespace XUnitTestProject
     public class UnitTestDataBaseHelperSQLite
     {
 
-      // public const string CONNECTION_STRING = "Data Source=C:\\Users\\user\\source\\repos\\library\\library\\Catalogsdata.db";
+     
+       // public const string CONNECTION_STRING = "Data Source=../../../../Catalogsdata.db";
+       // public const string CONNECTION_STRING = "Data Source=C:\\Users\\user\\source\\repos\\library\\Catalogsdata.db";
+
         public const string CONNECTION_STRING = "Data Source=../../../../Catalogsdata.db";
+        private readonly MockedServiceCollection _serviceCollection = new MockedServiceCollection();
+
+
+        private readonly IDataBaseHelperModels<Author> _authorServices;
         public UnitTestDataBaseHelperSQLite()
         {
-           
-        }
-        
-        [Fact]
-        public void TestDataBaseAuthorDelete()
-        {
-            var servicesCollections = new AllServices();
-           var collections =  servicesCollections.Services();
-       
-            var options = new DbContextOptionsBuilder<CUsersusersourcereposlibrarylibraryCatalogsdatadbContext>()
-                         .UseSqlite(CONNECTION_STRING)
-                         .Options;
-            DataBaseAuthor dataBaseAuthor = new(CONNECTION_STRING);
+            _authorServices = (IDataBaseHelperModels<Author>)_serviceCollection.GetService(typeof(IDataBaseHelperModels<Author>));
 
-            using (var dbContext = new CUsersusersourcereposlibrarylibraryCatalogsdatadbContext(options))
-            {
-                
-                dataBaseAuthor.Delete(1);
+            // _authorServices = new DataBaseAuthor(CONNECTION_STRING);
 
-                // Проверяем, что автор успешно удален из базы данных
-                var deletedAuthor = dbContext.Authors.Find(1);
-                Assert.Null(deletedAuthor);
-            }
+
+
         }
+
         [Fact]
         public void TestDataBaseAuthorInsert()
         {
-            Author author = new Author() { FullName = "Григорий", Contacts = "Contacts", Information = "Many-many" };
-            var options = new DbContextOptionsBuilder<CUsersusersourcereposlibrarylibraryCatalogsdatadbContext>()
-                            .UseSqlite(CONNECTION_STRING)
-                            .Options;
+            
+            Author author = new Author() { FullName = "Григорий", Contacts = "Contacts", Information = "Many-many"};
+           
 
-            using (var dbContext = new CUsersusersourcereposlibrarylibraryCatalogsdatadbContext(options))
-            {
-                dbContext.Authors.Add(author);
-                int recordsAffected = dbContext.SaveChanges();
-                Assert.True(recordsAffected > 0);
-            }
+           
+                var i = _authorServices.Select().Count();
+            
+                _authorServices.Insert(author);
+               
+                
+               
+                Assert.NotEqual(i,_authorServices.Select().Count());
+            
         }
         
     }

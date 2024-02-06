@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -25,6 +25,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Library\library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UnitTestDataBaseHelperSQLite\TestDataBaseAuthor\" />
+    <Folder Include="UnitTestDataBaseHelperSQLite\TestDataBasePublisher\" />
+    <Folder Include="UnitTestDataBaseHelperSQLite\TestDataBaseBibliographicmaterial\" />
+    <Folder Include="UnitTestDataBaseHelperSQLite\TestDataBaseUser\" />
   </ItemGroup>
 
 </Project>

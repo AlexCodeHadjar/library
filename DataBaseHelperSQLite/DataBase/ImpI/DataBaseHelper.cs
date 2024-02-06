@@ -6,10 +6,9 @@
     /// </summary>// 
     public class DatabaseHelper
     {
-        public const string CONNECTION_STRING = "Data Source=../../../../Catalogsdata.db";
-        
-        
-        //public const string CONNECTION_STRING = "Data Source=Catalogsdata.db";
+        public const string CONNECTION_STRING = "Data Source=C:\\Users\\user\\source\\repos\\library\\Catalogsdata.db";
+       // public const string CONNECTION_STRING = "Data Source=../../../../Catalogsdata.db";
+
 
         public string _connectionString = CONNECTION_STRING;
         public DatabaseHelper(string dbConnectionString)

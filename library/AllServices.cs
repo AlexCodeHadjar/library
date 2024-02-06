@@ -9,13 +9,17 @@ namespace library
 {
     public class AllServices
     {
+        public const string CONNECTION_STRING = "Data Source=C:\\Users\\user\\source\\repos\\library\\Catalogsdata.db";
+        //public const string CONNECTION_STRING = "Data Source=../../../../Catalogsdata.db";
         public WebApplicationBuilder builder = WebApplication.CreateBuilder();
         public IServiceCollection Services()
         {
 
-            const string CONNECTION_STRING = "Data Source=Catalogsdata.db";
+         
+            //const string CONNECTION_STRING = "Data Source=C:\\Users\\user\\source\\repos\\library\\Catalogsdata.db";
+                    
 
-            builder.Services.AddMvc();
+        builder.Services.AddMvc();
             var services = builder.Services;
 
             // сервис для работы с базой данных для модели Author

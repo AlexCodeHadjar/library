@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "library", "Library\library.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBaseHelperSQLite", "DataBaseHelperSQLite\DataBaseHelperSQLite.csproj", "{8E35ECA9-0037-4DCB-8239-2C4AC0446B1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTest", "XUnitTest\XUnitTest.csproj", "{B87FC8BD-6674-4F94-8DF3-78228AD00A04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTest", "XUnitTest\XUnitTest.csproj", "{B87FC8BD-6674-4F94-8DF3-78228AD00A04}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{66245A23-3BF1-4C80-AB3C-52CDDDA94656}"
+	ProjectSection(SolutionItems) = preProject
+		Catalogsdata.db = Catalogsdata.db
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
