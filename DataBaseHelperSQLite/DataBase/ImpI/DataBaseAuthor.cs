@@ -9,6 +9,7 @@ namespace DataBaseHelperSQLite.DataBase.Impl
         public DataBaseAuthor(string dbConnectionString) : base(dbConnectionString) { }
         public void Delete(int idAuthor)
         {
+            
             var options = new DbContextOptionsBuilder<CUsersusersourcereposlibrarylibraryCatalogsdatadbContext>()
                             .UseSqlite(_connectionString)
                             .Options;
@@ -60,7 +61,7 @@ namespace DataBaseHelperSQLite.DataBase.Impl
                 }
                 else
                 {
-                    return dbContext.Authors.Where(a => a.FullName == model.FullName).ToList();
+                    return dbContext.Authors.Where(a => a.Id == model.Id).ToList();
                 }
             }
         }

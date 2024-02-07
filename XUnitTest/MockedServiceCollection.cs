@@ -28,11 +28,6 @@ namespace XUnitTest
             AddService(typeof(IDataBaseHelperModels<Publisher>), new DataBasePublisher(CONNECTION_STRING));
             AddService(typeof(IDataBaseHelperModels<BibliographicMaterial>), new DataBaseBibliographicmaterial(CONNECTION_STRING));
             AddService(typeof(IDataBaseHelperModels<User>), new DataBaseUser(CONNECTION_STRING));
-
-
-
-
-
         }
         public void AddService(Type t, object o)
         {

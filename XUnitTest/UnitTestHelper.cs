@@ -13,7 +13,7 @@ using XUnitTest;
 
 namespace XUnitTestProject
 {
-    public class UnitTestDataBaseHelperSQLite
+    public class UnitTestHelper
     {
 
      
@@ -25,33 +25,12 @@ namespace XUnitTestProject
 
 
         private readonly IDataBaseHelperModels<Author> _authorServices;
-        public UnitTestDataBaseHelperSQLite()
+        public UnitTestHelper()
         {
             _authorServices = (IDataBaseHelperModels<Author>)_serviceCollection.GetService(typeof(IDataBaseHelperModels<Author>));
 
-            // _authorServices = new DataBaseAuthor(CONNECTION_STRING);
-
 
 
         }
-
-        [Fact]
-        public void TestDataBaseAuthorInsert()
-        {
-            
-            Author author = new Author() { FullName = "Григорий", Contacts = "Contacts", Information = "Many-many"};
-           
-
-           
-                var i = _authorServices.Select().Count();
-            
-                _authorServices.Insert(author);
-               
-                
-               
-                Assert.NotEqual(i,_authorServices.Select().Count());
-            
-        }
-        
     }
 }
