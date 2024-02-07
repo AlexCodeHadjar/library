@@ -63,7 +63,7 @@ namespace DataBaseHelperSQLite.DataBase.Impl
                 }
                 else
                 {
-                    return dbContext.Publishers.Where(a => a.Name == model.Name).ToList();
+                    return dbContext.Publishers.Where(a => a.Id == model.Id).ToList();
                 }
             }
         }

@@ -27,8 +27,6 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
 
             Author author = new Author() { Id = -101, FullName = "Григорий", Contacts = "Contacts", Information = "Many-many" };
 
-
-
             var countStart = _authorServices.Select().Count();
 
             _authorServices.Insert(author);
@@ -125,8 +123,8 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
             Author updatedAuthor = _authorServices.Select(authorSearch).First();
             _authorServices.Delete(-100);
             Assert.NotEqual(updatedAuthor.FullName, authorSearch.FullName);
-            Assert.NotEqual(updatedAuthor.FullName, authorSearch.FullName);
-            Assert.NotEqual(updatedAuthor.FullName, authorSearch.FullName);
+            Assert.NotEqual(updatedAuthor.Contacts, authorSearch.Contacts);
+            Assert.NotEqual(updatedAuthor.Information, authorSearch.Information);
 
         }
         [Fact]
@@ -211,7 +209,21 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
         [Fact]
         public void Test_Select_Author()
         {
-            
+           var startValue  = _authorServices.Select().Count();
+            _authorServices.Insert(new Author { Id = -100, FullName = "Удалить", Contacts = " Удалить", Information = "Удалить" });
+            var afterValue = _authorServices.Select().Count();
+            _authorServices.Delete(-100);
+            Assert.True(startValue + 1 == afterValue);
+        }
+        [Fact]
+        public void Test_SelectAuthor_Author()
+        {
+           _authorServices.Insert(new Author { Id = -100, FullName = "Удалить", Contacts = " Удалить", Information = "Удалить" });
+            Author authorExpectation = new Author { Id = -100, FullName = "Удалить", Contacts = " Удалить", Information = "Удалить" };
+            Author seachAuthor = new Author() {Id= -100 };
+            Author afterValue = _authorServices.Select(seachAuthor).First();
+            _authorServices.Delete(-100);
+            Assert.True(authorExpectation.Id == afterValue.Id);
         }
         
     }

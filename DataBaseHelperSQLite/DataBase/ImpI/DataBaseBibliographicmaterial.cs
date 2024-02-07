@@ -70,7 +70,7 @@ namespace DataBaseHelperSQLite.DataBase.Impl
                     return dbContext.BibliographicMaterials
                         .Include(b => b.Author)
                         .Include(b => b.Publisher)
-                        .Where(b => b.Name == model.Name)
+                        .Where(b => b.Id == model.Id)
                         .ToList();
                 }
             }
