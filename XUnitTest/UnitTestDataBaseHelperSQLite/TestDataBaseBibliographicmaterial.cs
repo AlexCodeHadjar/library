@@ -1,10 +1,5 @@
 ﻿using DataBaseHelperSQLite.Data.Models;
 using DataBaseHelperSQLite.DataBase.Contract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace XUnitTest.UnitTestDataBaseHelperSQLite
 {

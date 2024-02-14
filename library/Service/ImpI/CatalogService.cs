@@ -26,6 +26,8 @@ namespace library.Service.Impl
             _serviceProvider = serviceProvider;
         }
 
+      
+
         public AllLibraryModels StartLibraryModels()
         {
             AllLibraryModels libraryobj = new AllLibraryModels();
@@ -73,17 +75,16 @@ namespace library.Service.Impl
                 filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => int.Parse(a.Date) == int.Parse(date));
             }
 
-            if (!string.IsNullOrEmpty(dopauthor.FullName))
+            if (!string.IsNullOrEmpty(dopauthor.FullName) )
             {
-                var authors = author.Select(dopauthor).Select(a => a.Id);
-                filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => authors.Contains(a.Author.Id));
+                filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => a.Author.Id == dopauthor.Id || a.Author.FullName.Contains(dopauthor.FullName));
             }
 
             if (!string.IsNullOrEmpty(dopPublisher.Name))
             {
-                var publishers = publisher.Select(dopPublisher).Select(a => a.Id);
-                filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => publishers.Contains(a.Publisher.Id));
+                filteredBibliographicmaterial = filteredBibliographicmaterial.Where(a => a.Publisher.Id == dopPublisher.Id || a.Publisher.Name.Contains(dopPublisher.Name));
             }
+            
 
             return filteredBibliographicmaterial;
         }

@@ -1,12 +1,5 @@
 ﻿using DataBaseHelperSQLite.Data.Models;
 using DataBaseHelperSQLite.DataBase.Contract;
-using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace XUnitTest.UnitTestDataBaseHelperSQLite
 {
@@ -42,7 +35,7 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
         public void Test_Insert_EmptyAuthor()
         {
 
-            Author author = new() {Id=-101 };
+            Author author = new() { Id = -101 };
 
 
 
@@ -97,7 +90,7 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
         public void Test_Insert_EmptyInformation_Author()
         {
 
-            Author author = new Author() { Id =-101,FullName = "Григорий", Contacts = "Contacts", Information = null };
+            Author author = new Author() { Id = -101, FullName = "Григорий", Contacts = "Contacts", Information = null };
 
 
 
@@ -114,7 +107,7 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
         [Fact]
         public void Test_Update_Author()
         {
-            _authorServices.Insert(new Author {Id = -100,FullName = "Удалить", Contacts = "Удалить", Information = "Удалить" });
+            _authorServices.Insert(new Author { Id = -100, FullName = "Удалить", Contacts = "Удалить", Information = "Удалить" });
             Author author = new Author { Id = -100 };
 
             Author authorSearch = _authorServices.Select(author).First();
@@ -134,7 +127,7 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
             _authorServices.Insert(new Author { Id = -100, FullName = "Удалить", Contacts = "Удалить", Information = "Удалить" });
             Author author = new Author { Id = -100 };
 
-       
+
 
             Author authorSearch = _authorServices.Select(author).First();
             Author authorTest = new Author { Id = -100, FullName = null, Contacts = "ivan@example.com", Information = "Информация об авторе" };
@@ -200,7 +193,7 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
         {
             _authorServices.Insert(new Author { Id = -100, FullName = "Удалить", Contacts = " Удалить", Information = "Удалить" });
             Author author = new Author { Id = -100 };
-           Author authorSearch = _authorServices.Select(author).First();
+            Author authorSearch = _authorServices.Select(author).First();
             _authorServices.Delete(-100);
             authorSearch = _authorServices.Select(author).FirstOrDefault();
             Assert.True(authorSearch == null);
@@ -209,7 +202,7 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
         [Fact]
         public void Test_Select_Author()
         {
-           var startValue  = _authorServices.Select().Count();
+            var startValue = _authorServices.Select().Count();
             _authorServices.Insert(new Author { Id = -100, FullName = "Удалить", Contacts = " Удалить", Information = "Удалить" });
             var afterValue = _authorServices.Select().Count();
             _authorServices.Delete(-100);
@@ -218,13 +211,13 @@ namespace XUnitTest.UnitTestDataBaseHelperSQLite
         [Fact]
         public void Test_SelectAuthor_Author()
         {
-           _authorServices.Insert(new Author { Id = -100, FullName = "Удалить", Contacts = " Удалить", Information = "Удалить" });
+            _authorServices.Insert(new Author { Id = -100, FullName = "Удалить", Contacts = " Удалить", Information = "Удалить" });
             Author authorExpectation = new Author { Id = -100, FullName = "Удалить", Contacts = " Удалить", Information = "Удалить" };
-            Author seachAuthor = new Author() {Id= -100 };
+            Author seachAuthor = new Author() { Id = -100 };
             Author afterValue = _authorServices.Select(seachAuthor).First();
             _authorServices.Delete(-100);
             Assert.True(authorExpectation.Id == afterValue.Id);
         }
-        
+
     }
 }
