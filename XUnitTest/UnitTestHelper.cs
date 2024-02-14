@@ -1,13 +1,5 @@
-using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 using DataBaseHelperSQLite.Data.Models;
 using DataBaseHelperSQLite.DataBase.Contract;
-using DataBaseHelperSQLite.DataBase.Impl;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication;
-using System.Data.Entity;
-using library;
-using Microsoft.AspNetCore.Builder;
 using XUnitTest;
 
 

@@ -1,11 +1,6 @@
 ﻿using DataBaseHelperSQLite.Data.Models;
 using DataBaseHelperSQLite.DataBase.Contract;
 using library.Service.Contract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace XUnitTest.UnitTestService
 {
@@ -28,8 +23,8 @@ namespace XUnitTest.UnitTestService
             var testUsersValue = _userServices.Select().Count();
             User testUser = new() { Admin = "true", Password = "newPassword", Login = "newLogin" };
             _registrationServices.Authorization(testUser);
-            var  testUsersValueAfter = _userServices.Select().Count();
-            Assert.NotEqual(testUsersValue,testUsersValueAfter);
+            var testUsersValueAfter = _userServices.Select().Count();
+            Assert.NotEqual(testUsersValue, testUsersValueAfter);
         }
         [Fact]
         public void Test_ICatalogService_EmptyAdmin()
@@ -58,6 +53,39 @@ namespace XUnitTest.UnitTestService
             var testUsersValueAfter = _userServices.Select().Count();
             Assert.Equal(testUsersValue, testUsersValueAfter);
         }
+        [Fact]
+        public void Test_Regist_AdminTrue()
+        {
+            User testUser = new() { Admin = "true", Password = "newPassword", Login = "newLogin" };
+            var valueUserTest = _registrationServices.Regist(testUser);
+            Assert.True(valueUserTest == "true");
+
+        }
+        [Fact]
+        public void Test_Regist_AdminFalse()
+        {
+            User testUser = new() { Admin = "false", Password = "newPassword", Login = "newLogin" };
+            var valueUserTest = _registrationServices.Regist(testUser);
+            Assert.True(valueUserTest != "false");
+
+        }
+        [Fact]
+        public void Test_Regist_WrongLogin()
+        {
+            User testUser = new() { Admin = "true", Password = "newPassword", Login = null };
+            var valueUserTest = _registrationServices.Regist(testUser);
+            Assert.True(valueUserTest == " ");
+
+        }
+        [Fact]
+        public void Test_Regist_WrongPassword()
+        {
+            User testUser = new() { Admin = "true", Password = null, Login = "newLogin" };
+            var valueUserTest = _registrationServices.Regist(testUser);
+            Assert.True(valueUserTest == " ");
+
+        }
+
 
     }
 }

@@ -1,12 +1,8 @@
 ﻿using DataBaseHelperSQLite.DataBase.Contract;
 using library.Service.Contract;
-using Xunit;
 using static library.Service.Impl.CatalogService;
-using library.Service.Impl;
 using library.ViewModels;
 using DataBaseHelperSQLite.Data.Models;
-using System.Collections.Generic;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace XUnitTest.UnitTestService
 {
@@ -80,7 +76,7 @@ namespace XUnitTest.UnitTestService
         {
             _bibliographicmaterialServices.Insert(new BibliographicMaterial { Id = -100, Name = "Удалить", Date = "2068", Img = "Удалить", AuthorId = 5, PublisherId = 2 });
             string nameBibliographicmaterial = "Удалить", nameAuthor = null, namePublisher = null, date = null;
-            SortBy sortBy = new SortBy() {};
+            SortBy sortBy = new SortBy() { };
 
 
             AllLibraryModels allLibraryModelsAfter = _libraryServices.SortLibraryModels(nameBibliographicmaterial, nameAuthor, namePublisher, date, sortBy);
@@ -93,20 +89,20 @@ namespace XUnitTest.UnitTestService
         {
             _bibliographicmaterialServices.Insert(new BibliographicMaterial { Id = -100, Name = "Удалить", Date = "2068", Img = "Удалить", AuthorId = 5, PublisherId = 2 });
             string nameBibliographicmaterial = null, nameAuthor = "H.R.R. Tolkien", namePublisher = null, date = null;
-            SortBy sortBy = new SortBy() {};
+            SortBy sortBy = new SortBy() { };
 
 
             AllLibraryModels allLibraryModelsAfter = _libraryServices.SortLibraryModels(nameBibliographicmaterial, nameAuthor, namePublisher, date, sortBy);
             var checkTestValue = allLibraryModelsAfter.AllAuthors.Count();
             _bibliographicmaterialServices.Delete(-100);
-            Assert.True(checkTestValue==1);
+            Assert.True(checkTestValue == 1);
         }
         [Fact]
         public void Test_SortLibraryModels_SearchBynamePublisher()
         {
-              _bibliographicmaterialServices.Insert(new BibliographicMaterial { Id = -100, Name = "Удалить", Date = "2068", Img = "Удалить", AuthorId = 5, PublisherId = 2 });
+            _bibliographicmaterialServices.Insert(new BibliographicMaterial { Id = -100, Name = "Удалить", Date = "2068", Img = "Удалить", AuthorId = 5, PublisherId = 2 });
             string nameBibliographicmaterial = null, nameAuthor = null, namePublisher = "Unwin", date = null;
-            SortBy sortBy = new SortBy() {};
+            SortBy sortBy = new SortBy() { };
 
 
             AllLibraryModels allLibraryModelsAfter = _libraryServices.SortLibraryModels(nameBibliographicmaterial, nameAuthor, namePublisher, date, sortBy);
@@ -120,11 +116,11 @@ namespace XUnitTest.UnitTestService
         {
             _bibliographicmaterialServices.Insert(new BibliographicMaterial { Id = -100, Name = "Удалить", Date = "2068", Img = "Удалить", AuthorId = 5, PublisherId = 2 });
             string nameBibliographicmaterial = null, nameAuthor = null, namePublisher = null, date = "2068";
-            SortBy sortBy = new SortBy() {  };
+            SortBy sortBy = new SortBy() { };
 
 
             var allLibraryModelsAfter = _libraryServices.SortLibraryModels(nameBibliographicmaterial, nameAuthor, namePublisher, date, sortBy);
-            bool checkTestValue = allLibraryModelsAfter.AllBibliographicmaterial .Count() == 1;
+            bool checkTestValue = allLibraryModelsAfter.AllBibliographicmaterial.Count() == 1;
             _bibliographicmaterialServices.Delete(-100);
             Assert.True(checkTestValue);
         }
@@ -144,7 +140,7 @@ namespace XUnitTest.UnitTestService
         [Fact]
         public void Test_StartLibraryModels_AllAuthors()
         {
-            var testValueBefore =  _libraryServices.StartLibraryModels().AllAuthors.Count();
+            var testValueBefore = _libraryServices.StartLibraryModels().AllAuthors.Count();
             _authorServices.Insert(new Author { Id = -100, FullName = "Удалить", Contacts = " Удалить", Information = "Удалить" });
             var testValueAfter = _libraryServices.StartLibraryModels().AllAuthors.Count();
             _authorServices.Delete(-100);
@@ -172,8 +168,8 @@ namespace XUnitTest.UnitTestService
         public void Test_PageBibliographicmaterial()
         {
             BibliographicMaterial bibliographicMaterialTest = new BibliographicMaterial() { Id = -100, Name = "Удалить", Date = "2068", Img = "Удалить", AuthorId = 5, PublisherId = 2 };
-           _bibliographicmaterialServices.Insert(bibliographicMaterialTest);
-           IEnumerable< BibliographicMaterial> bibliographicMaterialTestSearch = _libraryServices.PageBibliographicmaterial(-100).AllBibliographicmaterial;
+            _bibliographicmaterialServices.Insert(bibliographicMaterialTest);
+            IEnumerable<BibliographicMaterial> bibliographicMaterialTestSearch = _libraryServices.PageBibliographicmaterial(-100).AllBibliographicmaterial;
             _bibliographicmaterialServices.Delete(-100);
             Assert.Equal(bibliographicMaterialTest.Id, bibliographicMaterialTestSearch.First().Id);
         }
@@ -190,16 +186,16 @@ namespace XUnitTest.UnitTestService
         public void Test_SelectBibliographicmaterial()
         {
             string nameBibliographicmaterial = null, nameAuthor = null, namePublisher = null, date = null;
-            var bibliographicmateriaValue  = _libraryServices.SelectBibliographicmaterial(nameBibliographicmaterial,date,nameAuthor,namePublisher).Count();
+            var bibliographicmateriaValue = _libraryServices.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).Count();
 
-            Assert.True(bibliographicmateriaValue >0);
-   
+            Assert.True(bibliographicmateriaValue > 0);
+
         }
         [Fact]
         public void Test_SelectBibliographicmaterial_ByNameBibliographicmaterial()
         {
             string nameBibliographicmaterial = null, nameAuthor = null, namePublisher = null, date = null;
-            var bibliographicmateriaValueBefore  = _libraryServices.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).Count();
+            var bibliographicmateriaValueBefore = _libraryServices.SelectBibliographicmaterial(nameBibliographicmaterial, date, nameAuthor, namePublisher).Count();
             BibliographicMaterial bibliographicMaterialTest = new BibliographicMaterial() { Id = -100, Name = "Удалить", Date = "2068", Img = "Удалить", AuthorId = 5, PublisherId = 2 };
             _bibliographicmaterialServices.Insert(bibliographicMaterialTest);
             var bibliographicmateriaValueAfter = _libraryServices.SelectBibliographicmaterial("Удалить", date, nameAuthor, namePublisher).Count();
