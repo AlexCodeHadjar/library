@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using library.Service.Impl;
 using library.Service.Contract;
 using DataBaseHelperSQLite.DataBase.Contract;
+using Newtonsoft.Json;
 
 namespace library.Controllers
 {
@@ -69,6 +70,10 @@ namespace library.Controllers
         [HttpGet]
         public ViewResult CatalogAdmin()
         {
+            string jsonBooks = JsonConvert.SerializeObject(_libraryServices.StartLibraryModels());
+
+            // Передаем JSON в представление через ViewBag
+            ViewBag.jsonBooks = jsonBooks;
             return View(_libraryServices.StartLibraryModels());
 
 

@@ -9,14 +9,15 @@ services.Services();
 
 var app = services.builder.Build();
 
+
 app.UseStaticFiles();
 
 app.MapControllerRoute(
    name: "default",
 
-//pattern: "{controller=Home}/{action=CatalogAdmin}");
+pattern: "{controller=Home}/{action=CatalogAdmin}");
 
-pattern: "{controller=Registration}/{action=Authorization}");
+//pattern: "{controller=Registration}/{action=Authorization}");
 
 //pattern: "{controller=Registration}/{action=Regist}");
 

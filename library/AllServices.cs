@@ -3,6 +3,8 @@ using library.Service.Impl;
 using library.Service.Contract;
 using DataBaseHelperSQLite.DataBase.Contract;
 using DataBaseHelperSQLite.DataBase.Impl;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 
 namespace library
@@ -20,8 +22,9 @@ namespace library
                     
 
         builder.Services.AddMvc();
-            var services = builder.Services;
 
+            var services = builder.Services;
+       
             // сервис для работы с базой данных для модели Author
             services.AddTransient<IDataBaseHelperModels<Author>>(provider => new DataBaseAuthor(CONNECTION_STRING));
 
