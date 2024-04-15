@@ -6,7 +6,6 @@ const glyphWidth = 32;
 const glyphHeight = 40;
 const glyphsAcrossTexture = 16;
 function formatBookInfo(author, year, title, publisher) {
-    /* const formattedInfo = `\n Автор ${author}\n \n Год издания  ${year}\n\t Название ${title}`;*/
     const formattedInfo = `Автор:${author}\n\nГод издания:${year}\n\nНазвание:${title}\n\nИздательство:${publisher}`;
 
     return formattedInfo;
@@ -42,13 +41,6 @@ function genreateGlyphTextureAtlas() {
     }
 
 
-
-
-
-
-
-    // Продолжайте отображать кириллические символы
-
     return ctx.canvas;
 }
 
@@ -63,6 +55,12 @@ async function main(AllLibraryInfo) {
 
     // Создание canvas и его настройка
     const canvas = document.createElement('canvas');
+
+    const submitButton = document.createElement('button');
+    submitButton.textContent = 'Отправить'; // Устанавливаем текст на кнопке
+    submitButton.style.position = 'absolute'; // Устанавливаем позиционирование
+    submitButton.style.top = '35%'; // Устанавливаем отступ сверху
+    submitButton.style.left = '3%'; // Устанавливаем отс
 
     const authorInput = document.createElement('input');
     authorInput.placeholder = 'Автор';
@@ -103,6 +101,7 @@ async function main(AllLibraryInfo) {
     document.body.appendChild(yearInput);
     document.body.appendChild(nameInput);
     document.body.appendChild(publisherInput);
+    document.body.appendChild(submitButton);
 
     const context = canvas.getContext('webgpu');
     const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
@@ -336,14 +335,55 @@ async function main(AllLibraryInfo) {
         copySourceToTexture(device, texture, source, options);
         return texture;
     }
+    submitButton.addEventListener('click', function (event) {
+   
+        const inputData = getInputData();
+
+      
+        sendDataToServer(inputData);
+    });
+
+    
+    function sendDataToServer(data) {
+        fetch('/Home/PageBibliographicmaterialAdminRedaction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при отправке данных');
+                }
+                return response.json();
+            })
+            .then(result => {
+                console.log('Данные успешно отправлены на сервер:', result);
+               
+            })
+            .catch(error => {
+                console.error('Произошла ошибка при отправке данных:', error);
+                
+            });
+    }
+
+    //function getInputData() {
+        
+    //    const author = authorInput.value;
+    //    const year = yearInput.value;
+    //    const title = nameInput.value;
+    //    const publisher = publisherInput.value;
+    //    return { author, year, title, publisher };
+    //}
 
     function getInputData() {
-        
-        const author = authorInput.value;
+
+        //const author = authorInput.value;
         const year = yearInput.value;
         const title = nameInput.value;
-        const publisher = publisherInput
-        return { author, year, title, publisher };
+        //const publisher = publisherInput.value;
+        return { year, title };
     }
  
 

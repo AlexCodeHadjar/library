@@ -134,7 +134,7 @@ namespace library.Controllers
         /// <returns></returns>
         [HttpPost]
 
-        public IActionResult PageBibliographicmaterialAdminRedaction(BibliographicMaterial material)
+        public IActionResult PageBibliographicmaterialAdminRedaction([FromBody] BibliographicMaterial material)
         {
             _bibliographicmaterialServices.Update(material);
 

@@ -360,6 +360,7 @@ async function main(AllLibraryInfo) {
     }
     document.addEventListener('click', handleClick);
     let openWindow = false;
+    let click = 0;
     function handleClick(event) {
 
         const canvas = event.target;
@@ -369,17 +370,26 @@ async function main(AllLibraryInfo) {
         //console.log(`Мышь  в (${x}, ${y})`);
 
 
-        if (x >= 650 && y >= 450 && x <= 950 && y <= 550 && openWindow==false) {
+        if (x >= 650 && y >= 450 && x <= 950 && y <= 550 && click!=2) {
           //  console.log('Начинаем отрисовку...');
             openWindow = true;
+            
+
             console.log(openWindow);
             startRendering();
+            click = click + 1;
+            if (click == 2) {
+                document.getElementById('myForm').action = '/Home/PageBibliographicmaterialAdmin';
+             
+                document.getElementById('myForm').submit();
+            }
+            console.log(click);
 
 
         }
         else {
             if (openWindow) {
-             
+                click = 0;
                 const canvasId = canvas.getAttribute('id');
                 const canvasToRemove = document.getElementById(canvasId);
                
