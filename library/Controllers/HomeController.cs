@@ -118,6 +118,10 @@ namespace library.Controllers
         [HttpPost]
         public ViewResult PageBibliographicmaterialAdmin(int materialId)
         {
+            string jsonBooks = JsonConvert.SerializeObject(_libraryServices.StartLibraryModels());
+
+            // Передаем JSON в представление через ViewBag
+            ViewBag.jsonBooks = jsonBooks;
 
             return View(_libraryServices.PageBibliographicmaterialAdmin(materialId));
 

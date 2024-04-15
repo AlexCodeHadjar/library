@@ -118,7 +118,7 @@
                                 <tr class="spacer"><td colspan="100"></td></tr>
                             }
                         </tbody>
-                      
+                  
 
 
 
@@ -127,6 +127,14 @@
                 <input type="submit" value="search" />
             </form>
         </div>
+
+        <canvas></canvas>
+        <script>
+            var booksData = @Html.Raw(ViewBag.JsonBooks);
+
+        </script>
+        <script type="module" src="~/js/Ex2.js"></script>
+        <script type="module" src="~/js/Ex3.js"></script>
         <form id="myForm" method="post" action="/Home/PageBibliographicmaterialAdmin">
             <input type="hidden" id="materialId" name="materialId" value="" />
         </form>
