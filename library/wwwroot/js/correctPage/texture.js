@@ -33,16 +33,27 @@ async function main() {
     const canvas = document.createElement('canvas');
 
     // Устанавливаем его размеры
-    canvas.width = 300; // Примерное значение ширины
-    canvas.height = 350; // Примерное значение высоты
+    canvas.width = 450; // Примерное значение ширины
+    canvas.height = 600; // Примерное значение высоты
     canvas.style.border = '1px solid black';
     canvas.style.position = 'absolute';
-    canvas.style.top = '50%';
-    canvas.style.left = '20%';
+    canvas.style.top = '30%';
+    canvas.style.left = '88%';
     canvas.style.transform = 'translate(-50%, -50%)';
+    canvas.classList.add('myCanvasClass');
+
+
+    const submitButton = document.createElement('button');
+    submitButton.textContent = 'X'; // Устанавливаем текст на кнопке
+    submitButton.style.position = 'absolute'; // Устанавливаем позиционирование
+    submitButton.style.top = '1%'; // Устанавливаем отступ сверху
+    submitButton.style.left = '77%'; // Устанавливаем отступ слева
+    submitButton.style.zIndex = '1';
+    submitButton.classList.add('myCanvasClass');
 
     // Добавляем canvas на страницу, например, в body
     document.body.appendChild(canvas);
+    document.body.appendChild(submitButton);
     const context = canvas.getContext('webgpu');
     const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
     context.configure({
@@ -160,9 +171,13 @@ async function main() {
         addressModeV: 'repeat',
         magFilter: 'linear',
     };
+    const canvasElements = document.getElementsByClassName('myCanvasClass');
 
-
-
+    submitButton.addEventListener('click', function () {
+        // Удаляем элементы с классом 'myCanvasClass'
+        const elementsToRemove = document.querySelectorAll('.myCanvasClass');
+        elementsToRemove.forEach(element => element.remove());
+    });
     function render() {
         renderQuad(context, device, pipeline, bindGroups, renderPassDescriptor, settings);
     }

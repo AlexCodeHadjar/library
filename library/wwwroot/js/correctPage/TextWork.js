@@ -58,48 +58,58 @@ async function main(AllLibraryInfo) {
     const submitButton = document.createElement('button');
     submitButton.textContent = 'Отправить'; // Устанавливаем текст на кнопке
     submitButton.style.position = 'absolute'; // Устанавливаем позиционирование
-    submitButton.style.top = '35%'; // Устанавливаем отступ сверху
-    submitButton.style.left = '3%'; // Устанавливаем отступ слева
-    submitButton.style.display = 'none'; // Делаем кнопку невидимой
+    submitButton.style.top = '55%'; // Устанавливаем отступ сверху
+    submitButton.style.left = '94%'; // Устанавливаем отступ слева
+    submitButton.style.zIndex = '1';
+    submitButton.classList.add('myCanvasClass');
 
     const authorInput = document.createElement('input');
     authorInput.placeholder = 'Автор';
     authorInput.style.position = 'absolute';
-    authorInput.style.top = '13%';
-    authorInput.style.left = '3%';
-    authorInput.style.display = 'none'; // Делаем поле ввода автора невидимым
+    authorInput.style.top = '37%';
+    authorInput.style.left = '78%';
+    authorInput.style.zIndex = '1';
+    authorInput.classList.add('myCanvasClass');
 
     const yearInput = document.createElement('input');
     yearInput.placeholder = 'Год Издания';
     yearInput.style.position = 'absolute';
-    yearInput.style.top = '18%';
-    yearInput.style.left = '3%';
-    yearInput.style.display = 'none'; // Делаем поле ввода года издания невидимым
+    yearInput.style.top = '42%';
+    yearInput.style.left = '78%';
+    yearInput.style.zIndex = '1';
+    yearInput.classList.add('myCanvasClass');
 
     const nameInput = document.createElement('input');
     nameInput.placeholder = 'Название';
     nameInput.style.position = 'absolute';
-    nameInput.style.top = '24%';
-    nameInput.style.left = '3%';
-    nameInput.style.display = 'none'; // Делаем поле ввода названия невидимым
+    nameInput.style.top = '48%';
+    nameInput.style.left = '78%';
+    nameInput.style.zIndex = '1';
+    nameInput.classList.add('myCanvasClass');
 
     const publisherInput = document.createElement('input');
     publisherInput.placeholder = 'Издательство';
     publisherInput.style.position = 'absolute';
-    publisherInput.style.top = '29%';
-    publisherInput.style.left = '3%';
-    publisherInput.style.display = 'none'; // Делаем поле ввода издательства невидимым
-
+    publisherInput.style.top = '53%';
+    publisherInput.style.left = '78%';
+    publisherInput.style.zIndex = '1';
+    publisherInput.classList.add('myCanvasClass');
+   
+    
+    
+ 
+  
 
     canvas.style.backgroundColor = 'transparent'; // Устанавливаем прозрачный фон
-    canvas.width = 300; // Установите нужную ширину
-    canvas.height = 150; // Установите нужную высоту
+    canvas.width = 450; // Установите нужную ширину
+    canvas.height = 250; // Установите нужную высоту
   //  canvas.style.border = '1px solid black';
     canvas.style.position = 'absolute';
-    canvas.style.top = '60%';
-    canvas.style.left = '20%';
+    canvas.style.top = '44%';
+    canvas.style.left = '88%';
     canvas.style.transform = 'translate(-50%, -50%)';
-    canvas.style.zIndex = '9999';
+    canvas.style.zIndex = '1';
+    canvas.classList.add('myCanvasClass');
 
     document.body.appendChild(canvas);
     document.body.appendChild(authorInput);
@@ -440,7 +450,7 @@ async function main(AllLibraryInfo) {
         ],
     };
 
-
+    
 
     function render(time) {
         time = 0;
@@ -460,9 +470,9 @@ async function main(AllLibraryInfo) {
 
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
-        const scaleX = 0.5;
+        const scaleX = 0.4;
         //const scaleX =  desiredTextHeight / desiredTextWidth;
-        const scaleY = 0.7;
+        const scaleY = 0.6
         mat4.scale(viewProjectionMatrix, [scaleX, scaleY, 1], viewProjectionMatrix);
 
         renderPassDescriptor.colorAttachments[0].view =
