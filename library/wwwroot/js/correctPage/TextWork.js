@@ -5,8 +5,8 @@
 const glyphWidth = 32;
 const glyphHeight = 40;
 const glyphsAcrossTexture = 16;
-function formatBookInfo(author, year, title, publisher) {
-    const formattedInfo = `Автор:${author}\n\nГод издания:${year}\n\nНазвание:${title}\n\nИздательство:${publisher}`;
+function formatBookInfo(author, date, name, publisher) {
+    const formattedInfo = `Автор:${author}\n\nГод издания:${date}\n\nНазвание:${name}\n\nИздательство:${publisher}`;
 
     return formattedInfo;
 }
@@ -55,46 +55,51 @@ async function main(AllLibraryInfo) {
 
     // Создание canvas и его настройка
     const canvas = document.createElement('canvas');
-
     const submitButton = document.createElement('button');
     submitButton.textContent = 'Отправить'; // Устанавливаем текст на кнопке
     submitButton.style.position = 'absolute'; // Устанавливаем позиционирование
     submitButton.style.top = '35%'; // Устанавливаем отступ сверху
-    submitButton.style.left = '3%'; // Устанавливаем отс
+    submitButton.style.left = '3%'; // Устанавливаем отступ слева
+    submitButton.style.display = 'none'; // Делаем кнопку невидимой
 
     const authorInput = document.createElement('input');
     authorInput.placeholder = 'Автор';
     authorInput.style.position = 'absolute';
     authorInput.style.top = '13%';
     authorInput.style.left = '3%';
+    authorInput.style.display = 'none'; // Делаем поле ввода автора невидимым
 
     const yearInput = document.createElement('input');
     yearInput.placeholder = 'Год Издания';
     yearInput.style.position = 'absolute';
     yearInput.style.top = '18%';
     yearInput.style.left = '3%';
+    yearInput.style.display = 'none'; // Делаем поле ввода года издания невидимым
 
     const nameInput = document.createElement('input');
     nameInput.placeholder = 'Название';
     nameInput.style.position = 'absolute';
     nameInput.style.top = '24%';
     nameInput.style.left = '3%';
+    nameInput.style.display = 'none'; // Делаем поле ввода названия невидимым
 
     const publisherInput = document.createElement('input');
     publisherInput.placeholder = 'Издательство';
     publisherInput.style.position = 'absolute';
     publisherInput.style.top = '29%';
     publisherInput.style.left = '3%';
+    publisherInput.style.display = 'none'; // Делаем поле ввода издательства невидимым
 
 
     canvas.style.backgroundColor = 'transparent'; // Устанавливаем прозрачный фон
-    canvas.width = 350; // Установите нужную ширину
-    canvas.height = 300; // Установите нужную высоту
-    canvas.style.border = '1px solid black';
+    canvas.width = 300; // Установите нужную ширину
+    canvas.height = 150; // Установите нужную высоту
+  //  canvas.style.border = '1px solid black';
     canvas.style.position = 'absolute';
-    canvas.style.top = '20%';
-    canvas.style.left = '11%';
+    canvas.style.top = '60%';
+    canvas.style.left = '20%';
     canvas.style.transform = 'translate(-50%, -50%)';
+    canvas.style.zIndex = '9999';
 
     document.body.appendChild(canvas);
     document.body.appendChild(authorInput);
@@ -257,11 +262,11 @@ async function main(AllLibraryInfo) {
     var AuthorInfo = AllLibraryInfo.AllAuthors[0];
     var PublisherInfo = AllLibraryInfo.AllPublishers[0];
     let author = AuthorInfo.FullName;
-    let  year = BooksInfo.Date;
-    let title = BooksInfo.Name;
+    let date = BooksInfo.Date;
+    let name = BooksInfo.Name;
     let  publisher = PublisherInfo.Name;
 
-    const text = formatBookInfo(author, year, title, publisher)
+    const text = formatBookInfo(author, date, name, publisher)
     const { vertexData, numGlyphs, width, height } = generateGlyphVerticesForText(
         text, [
         [1, 1, 1, 1]
@@ -345,11 +350,13 @@ async function main(AllLibraryInfo) {
 
     
     function sendDataToServer(data) {
+        console.log(data);
         fetch('/Home/PageBibliographicmaterialAdminRedaction', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
+           
             body: JSON.stringify(data)
         })
             .then(response => {
@@ -380,10 +387,10 @@ async function main(AllLibraryInfo) {
     function getInputData() {
 
         //const author = authorInput.value;
-        const year = yearInput.value;
-        const title = nameInput.value;
+        const date = yearInput.value;
+        const name = nameInput.value;
         //const publisher = publisherInput.value;
-        return { year, title };
+        return { date, name };
     }
  
 
@@ -453,9 +460,9 @@ async function main(AllLibraryInfo) {
 
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
-        const scaleX = 0.29;
+        const scaleX = 0.5;
         //const scaleX =  desiredTextHeight / desiredTextWidth;
-        const scaleY = 0.5;
+        const scaleY = 0.7;
         mat4.scale(viewProjectionMatrix, [scaleX, scaleY, 1], viewProjectionMatrix);
 
         renderPassDescriptor.colorAttachments[0].view =

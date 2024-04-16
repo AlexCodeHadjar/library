@@ -34,7 +34,7 @@ async function main() {
 
     // Устанавливаем его размеры
     canvas.width = 300; // Примерное значение ширины
-    canvas.height = 350; // Примерное значение высоты
+    canvas.height = 300; // Примерное значение высоты
     canvas.style.border = '1px solid black';
     canvas.style.position = 'absolute';
     canvas.style.top = '50%';

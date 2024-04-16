@@ -496,6 +496,17 @@ async function main(bibliographicMaterialCount) {
             },
         ],
     };
+    const renderPassDescriptorRed = {
+        label: 'our basic canvas renderPass',
+        colorAttachments: [
+            {
+
+                clearValue: [0.3, 0.3, 0.3, 1],
+                loadOp: 'clear',
+                storeOp: 'store',
+            },
+        ],
+    };
 
 
 
@@ -513,17 +524,7 @@ async function main(bibliographicMaterialCount) {
     //    ],
     //};
 
-    const renderPassDescriptorRed = {
-        label: 'our basic canvas renderPass',
-        colorAttachments: [
-            {
-
-                clearValue: [0.3, 0.3, 0.3, 1],
-                loadOp: 'clear',
-                storeOp: 'store',
-            },
-        ],
-    };
+  
 
 
    //  mouseover
@@ -567,12 +568,12 @@ async function main(bibliographicMaterialCount) {
 
 
 
-        await renderLinesWithDelay(1000,
-            bibliographicMaterialCount,
-            context,
-            device,
-            pipelineLine,
-            renderPassDescriptorLine);
+        //await renderLinesWithDelay(1000,
+        //    bibliographicMaterialCount,
+        //    context,
+        //    device,
+        //    pipelineLine,
+        //    renderPassDescriptorLine);
      
         
 
@@ -585,7 +586,7 @@ async function main(bibliographicMaterialCount) {
             context,
             device,
             pipelineLineCenter,
-            renderPassDescriptor);
+            renderPassDescriptorLine);
         console.log(vertic);
 
         // Отрисовка линий
