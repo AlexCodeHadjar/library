@@ -5,8 +5,9 @@
 const glyphWidth = 32;
 const glyphHeight = 40;
 const glyphsAcrossTexture = 16;
-function formatBookInfo(author, date, name, publisher) {
-    const formattedInfo = `Автор:${author}\n\nГод издания:${date}\n\nНазвание:${name}\n\nИздательство:${publisher}`;
+
+function formatBookInfo(nameUse, dateUse, publisherIdUse, authorIdUse, imgUse, author, publisher) {
+    const formattedInfo = `Автор:${author}\n\nГод издания:${dateUse}\n\nНазвание:${nameUse}\n\nИздательство:${publisher}`;
 
     return formattedInfo;
 }
@@ -118,6 +119,7 @@ async function main(AllLibraryInfo) {
     document.body.appendChild(publisherInput);
     document.body.appendChild(submitButton);
 
+   
     const context = canvas.getContext('webgpu');
     const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
     context.configure({
@@ -268,15 +270,9 @@ async function main(AllLibraryInfo) {
     }
 
   
-    var BooksInfo = AllLibraryInfo.AllBibliographicmaterial[0];
-    var AuthorInfo = AllLibraryInfo.AllAuthors[0];
-    var PublisherInfo = AllLibraryInfo.AllPublishers[0];
-    let author = AuthorInfo.FullName;
-    let date = BooksInfo.Date;
-    let name = BooksInfo.Name;
-    let  publisher = PublisherInfo.Name;
 
-    const text = formatBookInfo(author, date, name, publisher)
+
+    const text = formatBookInfo(nameUse, dateUse, publisherIdUse, authorIdUse, imgUse, author, publisher)
     const { vertexData, numGlyphs, width, height } = generateGlyphVerticesForText(
         text, [
         [1, 1, 1, 1]
@@ -350,6 +346,23 @@ async function main(AllLibraryInfo) {
         copySourceToTexture(device, texture, source, options);
         return texture;
     }
+
+    var BooksInfo = AllLibraryInfo.AllBibliographicmaterial[0];
+    var AuthorInfo = AllLibraryInfo.AllAuthors[0];
+    var PublisherInfo = AllLibraryInfo.AllPublishers[0];
+
+    /*  model.Name == null && model.Date == null && model.PublisherId == null && model.AuthorId == null && model.Img == null*/
+    let nameUse = BooksInfo.Name;
+    let dateUse = BooksInfo.Date;
+    let publisherIdUse = BooksInfo.PublisherId;
+    let authorIdUse = BooksInfo.AuthorId;
+    let imgUse = BooksInfo.Img;
+
+    let author = AuthorInfo.FullName;
+
+
+    let publisher = PublisherInfo.Name;
+
     submitButton.addEventListener('click', function (event) {
    
         const inputData = getInputData();
@@ -357,6 +370,17 @@ async function main(AllLibraryInfo) {
       
         sendDataToServer(inputData);
     });
+    function getInputData() {
+        //const author = authorInput.value;
+        const date = yearInput.value;
+        const name = nameInput.value;
+        const publisherId = publisherIdUse;
+        const authorId = authorIdUse;
+        const img = imgUse;
+
+        //const publisher = publisherInput.value;
+        return { date, name, publisherId, authorId, img };
+    }
 
     
     function sendDataToServer(data) {
@@ -394,14 +418,7 @@ async function main(AllLibraryInfo) {
     //    return { author, year, title, publisher };
     //}
 
-    function getInputData() {
-
-        //const author = authorInput.value;
-        const date = yearInput.value;
-        const name = nameInput.value;
-        //const publisher = publisherInput.value;
-        return { date, name };
-    }
+   
  
 
 
