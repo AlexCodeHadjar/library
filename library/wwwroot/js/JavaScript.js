@@ -15,7 +15,7 @@ let dateUse = BooksInfo.Date;
 let publisherIdUse = BooksInfo.PublisherId;
 let authorIdUse = BooksInfo.AuthorId;
 let imgUse = BooksInfo.Img;
-
+let idUse = BooksInfo.Id;
 let author = AuthorInfo.FullName;
 
 
@@ -25,4 +25,11 @@ console.log(dateUse);
 console.log(publisherIdUse);
 console.log(authorIdUse);
 console.log(imgUse);
+console.log(idUse);
+let select = document.createElement("select");
+["Опция 1", "Опция 2", "Опция 3"].forEach((text, index) => {
+    let option = new Option(text, "value" + index);
+    select.add(option);
+});
+document.body.appendChild(select);
 

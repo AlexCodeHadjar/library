@@ -72,6 +72,8 @@ async function main(AllLibraryInfo) {
     authorInput.style.zIndex = '1';
     authorInput.classList.add('myCanvasClass');
 
+  
+
     const yearInput = document.createElement('input');
     yearInput.placeholder = 'Год Издания';
     yearInput.style.position = 'absolute';
@@ -95,6 +97,7 @@ async function main(AllLibraryInfo) {
     publisherInput.style.left = '78%';
     publisherInput.style.zIndex = '1';
     publisherInput.classList.add('myCanvasClass');
+
    
     
     
@@ -111,13 +114,15 @@ async function main(AllLibraryInfo) {
     canvas.style.transform = 'translate(-50%, -50%)';
     canvas.style.zIndex = '1';
     canvas.classList.add('myCanvasClass');
-
+    
     document.body.appendChild(canvas);
     document.body.appendChild(authorInput);
     document.body.appendChild(yearInput);
     document.body.appendChild(nameInput);
     document.body.appendChild(publisherInput);
     document.body.appendChild(submitButton);
+
+
 
    
     const context = canvas.getContext('webgpu');
@@ -269,6 +274,22 @@ async function main(AllLibraryInfo) {
         };
     }
 
+    var BooksInfo = AllLibraryInfo.AllBibliographicmaterial[0];
+    var AuthorInfo = AllLibraryInfo.AllAuthors[0];
+    var PublisherInfo = AllLibraryInfo.AllPublishers[0];
+
+    /*  model.Name == null && model.Date == null && model.PublisherId == null && model.AuthorId == null && model.Img == null*/
+    let nameUse = BooksInfo.Name;
+    let dateUse = BooksInfo.Date;
+    let publisherIdUse = BooksInfo.PublisherId;
+    let authorIdUse = BooksInfo.AuthorId;
+    let imgUse = BooksInfo.Img;
+    let idUse = BooksInfo.Id;
+
+    let author = AuthorInfo.FullName;
+
+
+    let publisher = PublisherInfo.Name;
   
 
 
@@ -347,21 +368,7 @@ async function main(AllLibraryInfo) {
         return texture;
     }
 
-    var BooksInfo = AllLibraryInfo.AllBibliographicmaterial[0];
-    var AuthorInfo = AllLibraryInfo.AllAuthors[0];
-    var PublisherInfo = AllLibraryInfo.AllPublishers[0];
-
-    /*  model.Name == null && model.Date == null && model.PublisherId == null && model.AuthorId == null && model.Img == null*/
-    let nameUse = BooksInfo.Name;
-    let dateUse = BooksInfo.Date;
-    let publisherIdUse = BooksInfo.PublisherId;
-    let authorIdUse = BooksInfo.AuthorId;
-    let imgUse = BooksInfo.Img;
-
-    let author = AuthorInfo.FullName;
-
-
-    let publisher = PublisherInfo.Name;
+   
 
     submitButton.addEventListener('click', function (event) {
    
@@ -377,9 +384,10 @@ async function main(AllLibraryInfo) {
         const publisherId = publisherIdUse;
         const authorId = authorIdUse;
         const img = imgUse;
+        const id = idUse;
 
         //const publisher = publisherInput.value;
-        return { date, name, publisherId, authorId, img };
+        return { date, name, publisherId, authorId, img, id };
     }
 
     
