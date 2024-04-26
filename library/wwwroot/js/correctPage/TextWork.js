@@ -6,7 +6,7 @@ const glyphWidth = 32;
 const glyphHeight = 40;
 const glyphsAcrossTexture = 16;
 
-function formatBookInfo(nameUse, dateUse, publisherIdUse, authorIdUse, imgUse, author, publisher) {
+function formatBookInfo(nameUse, dateUse,author, publisher) {
     const formattedInfo = `Автор:${author}\n\nГод издания:${dateUse}\n\nНазвание:${nameUse}\n\nИздательство:${publisher}`;
 
     return formattedInfo;
@@ -54,6 +54,10 @@ async function main(AllLibraryInfo) {
         return;
     }
 
+    var allBibliographicMaterial = AllLibraryInfo.AllBibliographicmaterial;
+    var allAuthors = AllLibraryInfo.AllAuthors;
+    var allPublisher = AllLibraryInfo.AllPublishers;
+
     // Создание canvas и его настройка
     const canvas = document.createElement('canvas');
     const submitButton = document.createElement('button');
@@ -64,13 +68,13 @@ async function main(AllLibraryInfo) {
     submitButton.style.zIndex = '1';
     submitButton.classList.add('myCanvasClass');
 
-    const authorInput = document.createElement('input');
-    authorInput.placeholder = 'Автор';
-    authorInput.style.position = 'absolute';
-    authorInput.style.top = '37%';
-    authorInput.style.left = '78%';
-    authorInput.style.zIndex = '1';
-    authorInput.classList.add('myCanvasClass');
+    //const authorInput = document.createElement('input');
+    //authorInput.placeholder = 'Автор';
+    //authorInput.style.position = 'absolute';
+    //authorInput.style.top = '37%';
+    //authorInput.style.left = '78%';
+    //authorInput.style.zIndex = '1';
+    //authorInput.classList.add('myCanvasClass');
 
   
 
@@ -90,13 +94,76 @@ async function main(AllLibraryInfo) {
     nameInput.style.zIndex = '1';
     nameInput.classList.add('myCanvasClass');
 
-    const publisherInput = document.createElement('input');
-    publisherInput.placeholder = 'Издательство';
-    publisherInput.style.position = 'absolute';
-    publisherInput.style.top = '53%';
-    publisherInput.style.left = '78%';
-    publisherInput.style.zIndex = '1';
-    publisherInput.classList.add('myCanvasClass');
+    //const publisherInput = document.createElement('input');
+    //publisherInput.placeholder = 'Издательство';
+    //publisherInput.style.position = 'absolute';
+    //publisherInput.style.top = '53%';
+    //publisherInput.style.left = '78%';
+    //publisherInput.style.zIndex = '1';
+    //publisherInput.classList.add('myCanvasClass');
+
+    var selectAuthor = document.createElement("select");
+    selectAuthor.style.position = 'absolute';
+    selectAuthor.style.top = '37%';
+    selectAuthor.style.left = '78%';
+    selectAuthor.style.zIndex = '2';
+    selectAuthor.classList.add('myCanvasClass');
+
+
+    var selectPublisher = document.createElement("select");
+    selectPublisher.style.position = 'absolute';
+    selectPublisher.style.top = '53%';
+    selectPublisher.style.left = '78%';
+    selectPublisher.style.zIndex = '2';
+    selectPublisher.classList.add('myCanvasClass');
+
+    var selectImg = document.createElement("select");
+    selectImg.style.position = 'absolute';
+    selectImg.style.top = '56%';
+    selectImg.style.left = '78%';
+    selectImg.style.zIndex = '2';
+    selectImg.classList.add('myCanvasClass');
+
+
+
+    var placeholderOptionAuthor = document.createElement("option");
+    placeholderOptionAuthor.disabled = true; // Отключаем возможность выбора этой опции
+    placeholderOptionAuthor.text = "Выберите автора"; // Текст для пустой опции
+    placeholderOptionAuthor.value = ""; // Значение пустой опции
+    // Проходимся по каждому автору и добавляем его имя в select в качестве опции
+    selectAuthor.appendChild(placeholderOptionAuthor.cloneNode(true));
+
+    allAuthors.forEach((author) => {
+        var option = document.createElement("option");
+        option.text = author.FullName;
+        option.value = author.Id;
+        selectAuthor.appendChild(option);
+    });
+
+    var placeholderOptionPublusher = document.createElement("option");
+    placeholderOptionPublusher.disabled = true; // Отключаем возможность выбора этой опции
+    placeholderOptionPublusher.text = "Выберите издательство"; // Текст для пустой опции
+    placeholderOptionPublusher.value = ""; // Значение пустой опции
+    // Проходимся по каждому автору и добавляем его имя в select в качестве опции
+    selectPublisher.appendChild(placeholderOptionPublusher.cloneNode(true));
+    allPublisher.forEach((publisher) => {
+        var option = document.createElement("option");
+        option.text = publisher.Name;
+        option.value = publisher.Id;
+        selectPublisher.appendChild(option);
+    });
+    var placeholderOptionImg = document.createElement("option");
+    placeholderOptionImg.disabled = true; // Отключаем возможность выбора этой опции
+    placeholderOptionImg.text = "Выберите Обложку"; // Текст для пустой опции
+    placeholderOptionImg.value = ""; // Значение пустой опции
+
+    selectImg.appendChild(placeholderOptionImg.cloneNode(true));
+    allBibliographicMaterial.forEach((bibliographicMaterial) => {
+        var option = document.createElement("option");
+        option.text = bibliographicMaterial.Img;
+        option.value = bibliographicMaterial.Img;
+        selectImg.appendChild(option);
+    });
 
    
     
@@ -114,12 +181,15 @@ async function main(AllLibraryInfo) {
     canvas.style.transform = 'translate(-50%, -50%)';
     canvas.style.zIndex = '1';
     canvas.classList.add('myCanvasClass');
-    
+
+    document.body.appendChild(selectAuthor);
+    document.body.appendChild(selectPublisher);
+    document.body.appendChild(selectImg);
     document.body.appendChild(canvas);
-    document.body.appendChild(authorInput);
+  /*  document.body.appendChild(authorInput);*/
     document.body.appendChild(yearInput);
     document.body.appendChild(nameInput);
-    document.body.appendChild(publisherInput);
+  /*  document.body.appendChild(publisherInput);*/
     document.body.appendChild(submitButton);
 
 
@@ -275,25 +345,32 @@ async function main(AllLibraryInfo) {
     }
 
     var BooksInfo = AllLibraryInfo.AllBibliographicmaterial[0];
-    var AuthorInfo = AllLibraryInfo.AllAuthors[0];
-    var PublisherInfo = AllLibraryInfo.AllPublishers[0];
+    //var AuthorInfo = AllLibraryInfo.AllAuthors[0];
+    //var PublisherInfo = AllLibraryInfo.AllPublishers[0];
 
+    // Поиск соответствующего автора по Id
+    var AuthorInfo = AllLibraryInfo.AllAuthors.find(author => author.Id === BooksInfo.AuthorId);
+    // Если автор найден, используем его полное имя, иначе присваиваем пустую строку
+    var author = AuthorInfo ? AuthorInfo.FullName : "";
+
+    // Поиск соответствующего издателя по Id
+    var PublisherInfo = AllLibraryInfo.AllPublishers.find(publisher => publisher.Id === BooksInfo.PublisherId);
+    // Если издатель найден, используем его название, иначе присваиваем пустую строку
+    var publisher = PublisherInfo ? PublisherInfo.Name : "";
     /*  model.Name == null && model.Date == null && model.PublisherId == null && model.AuthorId == null && model.Img == null*/
     let nameUse = BooksInfo.Name;
     let dateUse = BooksInfo.Date;
-    let publisherIdUse = BooksInfo.PublisherId;
-    let authorIdUse = BooksInfo.AuthorId;
-    let imgUse = BooksInfo.Img;
+ //   let imgUse = BooksInfo.Img;
     let idUse = BooksInfo.Id;
 
-    let author = AuthorInfo.FullName;
+    //let author = AuthorInfo.FullName;
 
 
-    let publisher = PublisherInfo.Name;
+    //let publisher = PublisherInfo.Name;
   
 
 
-    const text = formatBookInfo(nameUse, dateUse, publisherIdUse, authorIdUse, imgUse, author, publisher)
+    const text = formatBookInfo(nameUse, dateUse,author, publisher)
     const { vertexData, numGlyphs, width, height } = generateGlyphVerticesForText(
         text, [
         [1, 1, 1, 1]
@@ -381,9 +458,9 @@ async function main(AllLibraryInfo) {
         //const author = authorInput.value;
         const date = yearInput.value;
         const name = nameInput.value;
-        const publisherId = publisherIdUse;
-        const authorId = authorIdUse;
-        const img = imgUse;
+        const publisherId = selectPublisher.value;
+        const authorId = selectAuthor.value;
+        const img = selectImg.value;
         const id = idUse;
 
         //const publisher = publisherInput.value;
