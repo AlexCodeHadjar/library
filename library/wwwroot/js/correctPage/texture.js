@@ -20,18 +20,8 @@
     const commandBuffer = encoder.finish();
     device.queue.submit([commandBuffer]);
 }
-
-async function main() {
-    const adapter = await navigator.gpu?.requestAdapter();
-    const device = await adapter?.requestDevice();
-    if (!device) {
-        fail('need a browser that supports WebGPU');
-        return;
-    }
-
-    // Get a WebGPU context from the canvas and configure it
-    const canvas = document.createElement('canvas');
-
+function CreateElement(canvas) {
+    
     // Устанавливаем его размеры
     canvas.width = 450; // Примерное значение ширины
     canvas.height = 600; // Примерное значение высоты
@@ -43,17 +33,26 @@ async function main() {
     canvas.classList.add('myCanvasClass');
 
 
-    const submitButton = document.createElement('button');
-    submitButton.textContent = 'X'; // Устанавливаем текст на кнопке
-    submitButton.style.position = 'absolute'; // Устанавливаем позиционирование
-    submitButton.style.top = '1%'; // Устанавливаем отступ сверху
-    submitButton.style.left = '77%'; // Устанавливаем отступ слева
-    submitButton.style.zIndex = '1';
-    submitButton.classList.add('myCanvasClass');
+
 
     // Добавляем canvas на страницу, например, в body
     document.body.appendChild(canvas);
-    document.body.appendChild(submitButton);
+  
+}
+
+async function main() {
+    const adapter = await navigator.gpu?.requestAdapter();
+    const device = await adapter?.requestDevice();
+    if (!device) {
+        fail('need a browser that supports WebGPU');
+        return;
+    }
+   
+    // Get a WebGPU context from the canvas and configure it
+    const canvas = document.createElement('canvas');
+    
+
+    CreateElement( canvas);
     const context = canvas.getContext('webgpu');
     const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
     context.configure({
@@ -120,7 +119,7 @@ async function main() {
         return await createImageBitmap(blob, { colorSpaceConversion: 'none' });
     }
 
-    const url = '/img/pict1.jpg';
+    let url = '/img/pict1.jpg';
     const source = await loadImageBitmap(url);
     const texture = device.createTexture({
         label: url,
@@ -171,13 +170,9 @@ async function main() {
         addressModeV: 'repeat',
         magFilter: 'linear',
     };
-    const canvasElements = document.getElementsByClassName('myCanvasClass');
+    //const canvasElements = document.getElementsByClassName('myCanvasClass');
 
-    submitButton.addEventListener('click', function () {
-        // Удаляем элементы с классом 'myCanvasClass'
-        const elementsToRemove = document.querySelectorAll('.myCanvasClass');
-        elementsToRemove.forEach(element => element.remove());
-    });
+  
     function render() {
         renderQuad(context, device, pipeline, bindGroups, renderPassDescriptor, settings);
     }

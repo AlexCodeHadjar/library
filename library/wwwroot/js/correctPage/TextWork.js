@@ -44,7 +44,130 @@ function genreateGlyphTextureAtlas() {
 
     return ctx.canvas;
 }
+function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor, selectPublisher, selectImg, placeholderOptionAuthor, placeholderOptionPublusher, placeholderOptionImg, allAuthors, allPublisher, allBibliographicMaterial, container,DeleteButton) {
+    container.classList.add('container');
+    container.style.display = 'flex';
+    container.style.position = 'absolute';
+    container.style.flexDirection = 'column';
+    container.style.alignItems = 'flex-start';
+    container.style.margin = '33px'; // Пример отступа между элементами
+    container.style.top = '33%';
+    container.style.left = '75%';
+    container.style.zIndex = '1';
 
+    var bottomContainer = document.createElement('div');
+    bottomContainer.style.display = 'flex';
+    bottomContainer.style.flexDirection = 'row'; // Располагаем элементы в строку
+    bottomContainer.style.alignItems = 'flex-end'; // Выравниваем элементы по нижнему краю
+    bottomContainer.style.marginTop = 'auto'; // Помещаем контейнер внизу
+
+    // Стили для каждого элемента с отступом
+    var elementStyles = {
+        margin: '10px' // Растояние между элементами
+    };
+
+    canvas.style.backgroundColor = 'transparent';
+    canvas.width = 450;
+    canvas.height = 250;
+    canvas.style.position = 'absolute';
+    canvas.style.top = '44%';
+    canvas.style.left = '88%';
+    canvas.style.transform = 'translate(-50%, -50%)';
+    canvas.style.zIndex = '1';
+    canvas.classList.add('myCanvasClass');
+
+   
+
+    yearInput.placeholder = 'Год Издания';
+    yearInput.classList.add('myCanvasClass');
+    applyStyles(yearInput, elementStyles);
+
+    nameInput.placeholder = 'Название';
+    nameInput.classList.add('myCanvasClass');
+    applyStyles(nameInput, elementStyles);
+
+    selectAuthor.classList.add('myCanvasClass');
+    applyStyles(selectAuthor, elementStyles);
+
+    selectPublisher.classList.add('myCanvasClass');
+    applyStyles(selectPublisher, elementStyles);
+
+    selectImg.classList.add('myCanvasClass');
+    applyStyles(selectImg, elementStyles);
+
+    placeholderOptionAuthor.disabled = true;
+    placeholderOptionAuthor.text = "Выберите автора";
+    placeholderOptionAuthor.value = "";
+    selectAuthor.appendChild(placeholderOptionAuthor.cloneNode(true));
+
+    allAuthors.forEach((author) => {
+        var option = document.createElement("option");
+        option.text = author.FullName;
+        option.value = author.Id;
+        selectAuthor.appendChild(option);
+    });
+
+    placeholderOptionPublusher.disabled = true;
+    placeholderOptionPublusher.text = "Выберите издательство";
+    placeholderOptionPublusher.value = "";
+    selectPublisher.appendChild(placeholderOptionPublusher.cloneNode(true));
+    allPublisher.forEach((publisher) => {
+        var option = document.createElement("option");
+        option.text = publisher.Name;
+        option.value = publisher.Id;
+        selectPublisher.appendChild(option);
+
+      
+    });
+
+    placeholderOptionImg.disabled = true;
+    placeholderOptionImg.text = "Выберите Обложку";
+    placeholderOptionImg.value = "";
+
+    selectImg.appendChild(placeholderOptionImg.cloneNode(true));
+    allBibliographicMaterial.forEach((bibliographicMaterial) => {
+        var option = document.createElement("option");
+        option.text = bibliographicMaterial.Img;
+        option.value = bibliographicMaterial.Img;
+        selectImg.appendChild(option);
+    });
+
+    DeleteButton.textContent = 'X'; // Устанавливаем текст на кнопке
+    DeleteButton.style.position = 'absolute'; // Устанавливаем позиционирование
+    DeleteButton.style.top = '1%'; // Устанавливаем отступ сверху
+    DeleteButton.style.left = '77%'; // Устанавливаем отступ слева
+    DeleteButton.style.zIndex = '1';
+    DeleteButton.classList.add('myCanvasClass');
+
+    submitButton.textContent = 'Отправить';
+    submitButton.classList.add('myCanvasClass');
+    applyStyles(submitButton, elementStyles);
+
+    // Добавляем элементы в контейнер
+    bottomContainer.appendChild(selectImg);
+    bottomContainer.appendChild(submitButton);
+    /*   container.appendChild(submitButton);*/
+    container.appendChild(selectAuthor);
+    container.appendChild(yearInput);
+    container.appendChild(nameInput);
+ 
+    container.appendChild(selectPublisher);
+    container.appendChild(bottomContainer);
+
+    /*container.appendChild(selectImg);*/
+
+   
+    document.body.appendChild(DeleteButton);
+    document.body.appendChild(canvas);
+    document.body.appendChild(container);
+}
+
+// Функция для применения стилей к элементу
+function applyStyles(element, styles) {
+    for (var style in styles) {
+        element.style[style] = styles[style];
+    }
+}
 
 async function main(AllLibraryInfo) {
     const adapter = await navigator.gpu?.requestAdapter();
@@ -58,141 +181,30 @@ async function main(AllLibraryInfo) {
     var allAuthors = AllLibraryInfo.AllAuthors;
     var allPublisher = AllLibraryInfo.AllPublishers;
 
-    // Создание canvas и его настройка
+    const container = document.createElement('div');
     const canvas = document.createElement('canvas');
     const submitButton = document.createElement('button');
-    submitButton.textContent = 'Отправить'; // Устанавливаем текст на кнопке
-    submitButton.style.position = 'absolute'; // Устанавливаем позиционирование
-    submitButton.style.top = '55%'; // Устанавливаем отступ сверху
-    submitButton.style.left = '94%'; // Устанавливаем отступ слева
-    submitButton.style.zIndex = '1';
-    submitButton.classList.add('myCanvasClass');
-
-    //const authorInput = document.createElement('input');
-    //authorInput.placeholder = 'Автор';
-    //authorInput.style.position = 'absolute';
-    //authorInput.style.top = '37%';
-    //authorInput.style.left = '78%';
-    //authorInput.style.zIndex = '1';
-    //authorInput.classList.add('myCanvasClass');
-
-  
-
     const yearInput = document.createElement('input');
-    yearInput.placeholder = 'Год Издания';
-    yearInput.style.position = 'absolute';
-    yearInput.style.top = '42%';
-    yearInput.style.left = '78%';
-    yearInput.style.zIndex = '1';
-    yearInput.classList.add('myCanvasClass');
-
     const nameInput = document.createElement('input');
-    nameInput.placeholder = 'Название';
-    nameInput.style.position = 'absolute';
-    nameInput.style.top = '48%';
-    nameInput.style.left = '78%';
-    nameInput.style.zIndex = '1';
-    nameInput.classList.add('myCanvasClass');
+    const DeleteButton = document.createElement('button');
 
-    //const publisherInput = document.createElement('input');
-    //publisherInput.placeholder = 'Издательство';
-    //publisherInput.style.position = 'absolute';
-    //publisherInput.style.top = '53%';
-    //publisherInput.style.left = '78%';
-    //publisherInput.style.zIndex = '1';
-    //publisherInput.classList.add('myCanvasClass');
 
+ 
     var selectAuthor = document.createElement("select");
-    selectAuthor.style.position = 'absolute';
-    selectAuthor.style.top = '37%';
-    selectAuthor.style.left = '78%';
-    selectAuthor.style.zIndex = '2';
-    selectAuthor.classList.add('myCanvasClass');
-
-
     var selectPublisher = document.createElement("select");
-    selectPublisher.style.position = 'absolute';
-    selectPublisher.style.top = '53%';
-    selectPublisher.style.left = '78%';
-    selectPublisher.style.zIndex = '2';
-    selectPublisher.classList.add('myCanvasClass');
-
     var selectImg = document.createElement("select");
-    selectImg.style.position = 'absolute';
-    selectImg.style.top = '56%';
-    selectImg.style.left = '78%';
-    selectImg.style.zIndex = '2';
-    selectImg.classList.add('myCanvasClass');
-
-
 
     var placeholderOptionAuthor = document.createElement("option");
-    placeholderOptionAuthor.disabled = true; // Отключаем возможность выбора этой опции
-    placeholderOptionAuthor.text = "Выберите автора"; // Текст для пустой опции
-    placeholderOptionAuthor.value = ""; // Значение пустой опции
-    // Проходимся по каждому автору и добавляем его имя в select в качестве опции
-    selectAuthor.appendChild(placeholderOptionAuthor.cloneNode(true));
-
-    allAuthors.forEach((author) => {
-        var option = document.createElement("option");
-        option.text = author.FullName;
-        option.value = author.Id;
-        selectAuthor.appendChild(option);
-    });
-
-    var placeholderOptionPublusher = document.createElement("option");
-    placeholderOptionPublusher.disabled = true; // Отключаем возможность выбора этой опции
-    placeholderOptionPublusher.text = "Выберите издательство"; // Текст для пустой опции
-    placeholderOptionPublusher.value = ""; // Значение пустой опции
-    // Проходимся по каждому автору и добавляем его имя в select в качестве опции
-    selectPublisher.appendChild(placeholderOptionPublusher.cloneNode(true));
-    allPublisher.forEach((publisher) => {
-        var option = document.createElement("option");
-        option.text = publisher.Name;
-        option.value = publisher.Id;
-        selectPublisher.appendChild(option);
-    });
-    var placeholderOptionImg = document.createElement("option");
-    placeholderOptionImg.disabled = true; // Отключаем возможность выбора этой опции
-    placeholderOptionImg.text = "Выберите Обложку"; // Текст для пустой опции
-    placeholderOptionImg.value = ""; // Значение пустой опции
-
-    selectImg.appendChild(placeholderOptionImg.cloneNode(true));
-    allBibliographicMaterial.forEach((bibliographicMaterial) => {
-        var option = document.createElement("option");
-        option.text = bibliographicMaterial.Img;
-        option.value = bibliographicMaterial.Img;
-        selectImg.appendChild(option);
-    });
-
    
-    
-    
- 
+    var placeholderOptionPublusher = document.createElement("option");
+   
+    var placeholderOptionImg = document.createElement("option");
+   
+
+
   
 
-    canvas.style.backgroundColor = 'transparent'; // Устанавливаем прозрачный фон
-    canvas.width = 450; // Установите нужную ширину
-    canvas.height = 250; // Установите нужную высоту
-  //  canvas.style.border = '1px solid black';
-    canvas.style.position = 'absolute';
-    canvas.style.top = '44%';
-    canvas.style.left = '88%';
-    canvas.style.transform = 'translate(-50%, -50%)';
-    canvas.style.zIndex = '1';
-    canvas.classList.add('myCanvasClass');
-
-    document.body.appendChild(selectAuthor);
-    document.body.appendChild(selectPublisher);
-    document.body.appendChild(selectImg);
-    document.body.appendChild(canvas);
-  /*  document.body.appendChild(authorInput);*/
-    document.body.appendChild(yearInput);
-    document.body.appendChild(nameInput);
-  /*  document.body.appendChild(publisherInput);*/
-    document.body.appendChild(submitButton);
-
-
+    CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor, selectPublisher, selectImg, placeholderOptionAuthor, placeholderOptionPublusher, placeholderOptionImg, allAuthors, allPublisher, allBibliographicMaterial, container, DeleteButton)
 
    
     const context = canvas.getContext('webgpu');
@@ -345,28 +357,15 @@ async function main(AllLibraryInfo) {
     }
 
     var BooksInfo = AllLibraryInfo.AllBibliographicmaterial[0];
-    //var AuthorInfo = AllLibraryInfo.AllAuthors[0];
-    //var PublisherInfo = AllLibraryInfo.AllPublishers[0];
-
-    // Поиск соответствующего автора по Id
+ 
     var AuthorInfo = AllLibraryInfo.AllAuthors.find(author => author.Id === BooksInfo.AuthorId);
-    // Если автор найден, используем его полное имя, иначе присваиваем пустую строку
     var author = AuthorInfo ? AuthorInfo.FullName : "";
 
-    // Поиск соответствующего издателя по Id
     var PublisherInfo = AllLibraryInfo.AllPublishers.find(publisher => publisher.Id === BooksInfo.PublisherId);
-    // Если издатель найден, используем его название, иначе присваиваем пустую строку
     var publisher = PublisherInfo ? PublisherInfo.Name : "";
-    /*  model.Name == null && model.Date == null && model.PublisherId == null && model.AuthorId == null && model.Img == null*/
     let nameUse = BooksInfo.Name;
     let dateUse = BooksInfo.Date;
- //   let imgUse = BooksInfo.Img;
     let idUse = BooksInfo.Id;
-
-    //let author = AuthorInfo.FullName;
-
-
-    //let publisher = PublisherInfo.Name;
   
 
 
@@ -494,14 +493,6 @@ async function main(AllLibraryInfo) {
             });
     }
 
-    //function getInputData() {
-        
-    //    const author = authorInput.value;
-    //    const year = yearInput.value;
-    //    const title = nameInput.value;
-    //    const publisher = publisherInput.value;
-    //    return { author, year, title, publisher };
-    //}
 
    
  
@@ -551,7 +542,12 @@ async function main(AllLibraryInfo) {
             },
         ],
     };
+    DeleteButton.addEventListener('click', function () {
+        // Удаляем элементы с классом 'myCanvasClass'
+        const elementsToRemove = document.querySelectorAll('.myCanvasClass');
+        elementsToRemove.forEach(element => element.remove());
 
+    });
     
 
     function render(time) {

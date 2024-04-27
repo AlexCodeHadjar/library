@@ -358,6 +358,8 @@ async function main(AllLibraryInfo) {
         // Вызываем вашу функцию отрисовки здесь
         await render();
     }
+
+
     document.addEventListener('click', handleClick);
     let openWindow = false;
     let click = 0;
