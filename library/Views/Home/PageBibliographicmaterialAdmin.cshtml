@@ -1,17 +1,15 @@
 ﻿@model AllLibraryModels;
 @{
     Layout = null;
-   
 }
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cotalog</title>
+    <title>Catalog</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
 
+    <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <style>
@@ -20,153 +18,206 @@
             flex-direction: column;
         }
 
+        .custom-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+            .custom-row > div {
+                margin: 20px;
+            }
+
+            .custom-row img {
+                width: 400px;
+                height: auto;
+            }
+
+            .custom-row span, .custom-row spam {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        .inputtypeText {
+            border-radius: 10px; /* Закругление углов */
+            background: linear-gradient(180deg, rgba(104, 63, 97, 0.9) 0%, rgba(55, 41, 82, 0.8) 100%);
+            color: white; /* Белый текст */
+
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Изменяем вид курсора */
+        }
+
+        .inputtype {
+            border-radius: 10px; /* Закругление углов */
+            background: linear-gradient(180deg, rgba(104, 63, 97, 0.9) 0%, rgba(55, 41, 82, 0.8) 100%);
+            color: white; /* Белый текст */
+            border: 1px solid white; /* Граница - темный фиолетовый */
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Изменяем вид курсора */
+        }
+
+            .inputtype:hover {
+                background-color: #483D8B; /* Изменяем цвет при наведении */
+            }
     </style>
 
     <div class="table-responsive custom-table-responsive">
-        <form  method="post" action="/Home/PageBibliographicmaterialAdminRedaction">
+        <form method="post" action="/Home/PageBibliographicmaterialAdminRedaction">
             @foreach (var material in Model.AllBibliographicmaterial)
             {
-                <tr scope="row">
-                    <td>
-                        <div class="d-flex align-items-start">
-                            <div>
-                                <div style="margin:40px;">
-                                    <span>Название: @material.Name</span>
-                                    <input type="text" class="form-control" name="Name">
-                                </div>
-                                <div style="margin:40px;">
-                                    <span>Автор: @material.Author.FullName</span>
-                                    <p>
-                                        <select name="AuthorId" >
-                                            <option value="">Выберите автора</option>
-                                            @foreach (var author in Model.AllAuthors)
-                                            {
-                                                <option value="@author.Id">@author.FullName</option>
-                                            }
-                                        </select>
-                                    </p>
-
-                                </div>
-
-                                <div style="margin:40px;">
-                                    <span>Издательство: @material.Publisher.Name</span>
-                                    <p>
-                                        <select name="PublisherId">
-                                            <option value="">Выберите издательство</option>
-                                            @foreach (var publisher in Model.AllPublishers)
-                                            {
-                                                <option value="@publisher.Id">@publisher.Name</option>
-                                            }
-                                        </select>
-                                    </p>
-                                </div>
-                                <div style="margin:40px;">
-                                    <span>Год издания: @material.Date</span>
-                                    <input type="text" class="form-control" name="Date">
-                                </div>
-                                <div style="margin:40px;">
-                                   
-                                    <input type="hidden" name="Id" value="@material.Id">
-                                </div>
-                            </div>
-                            <div class="ml-auto">
-                                <img src="~/img/@material.Img" alt="Изображение" style="width: 400px; height: auto;" />
-                                <div style="margin:40px;">
-                                    <span>Издательство: @material.Publisher.Name</span>
-                                    <p>
-                                        <select name="Img">
-                                            <option value="">Выберите Обложку</option>
-                                            @foreach (var books in Model.AllImgs)
-                                            {
-                                                <option value="@books.Img">@books.Img</option>
-                                            }
-                                        </select>
-                                    </p>
-                                </div>
-                            </div>
+                <div class="custom-row">
+                    <div>
+                        <div class="inputtypeText">
+                            <span>Название: @material.Name</span>
+                            <input type="text" class="form-control" name="Name">
                         </div>
-                    </td>
-                </tr>
+                        <div class="inputtypeText">
+                            <span>Автор: @material.Author.FullName</span>
+                            <p>
+                                <select name="AuthorId">
+                                    <option value="">Выберите автора</option>
+                                    @foreach (var author in Model.AllAuthors)
+                                    {
+                                        <option value="@author.Id">@author.FullName</option>
+                                    }
+                                </select>
+                            </p>
+                        </div>
+                        <div class="inputtypeText">
+                            <span>Издательство: @material.Publisher.Name</span>
+                            <p>
+                                <select name="PublisherId">
+                                    <option value="">Выберите издательство</option>
+                                    @foreach (var publisher in Model.AllPublishers)
+                                    {
+                                        <option value="@publisher.Id">@publisher.Name</option>
+                                    }
+                                </select>
+                            </p>
+                        </div >
+                        <div class="inputtypeText">
+                            <span>Год издания: @material.Date</span>
+                            <input type="text" class="form-control" name="Date">
+                        </div>
+                        <div>
+                            <input type="hidden" name="Id" value="@material.Id">
+                        </div>
+                    </div>
+                    <div class="ml-auto">
+                        <img src="~/img/@material.Img" alt="Изображение" />
+                        <div class="inputtypeText">
+                            <span>Обложка</span>
+                            <p>
+                                <select name="Img">
+                                    <option value="">Выберите обложку</option>
+                                    @foreach (var books in Model.AllImgs)
+                                    {
+                                        <option value="@books.Img">@books.Img</option>
+                                    }
+                                </select>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             }
-        
-            <input  type="submit" value=" Отправить">
+            <input class ="inputtype" type="submit" value="Отправить">
         </form>
-        <canvas></canvas>
-      @*   <script>
-            var booksData = @Html.Raw(ViewBag.JsonBooks);
 
-        </script>
-        <script type="module" src="~/js/correctPage/texture.js"></script>
-        <script type="module" src="~/js/correctPage/Ex81.js"></script> *@
         <form method="get" action="/Home/InsertPublisher">
-            <input type="submit" value="Добавить Издательство" />
+            <input  class ="inputtype" type="submit" value="Добавить Издательство" />
         </form>
         <form method="get" action="/Home/InsertAuthor">
-            <input type="submit" value="Добавить Автора" />
+            <input  class ="inputtype" type="submit" value="Добавить Автора" />
         </form>
         <form method="post" action="/Home/DeleteBibliographicmaterial">
-              @foreach (var material in Model.AllBibliographicmaterial)
+            @foreach (var material in Model.AllBibliographicmaterial)
             {
                 <input type="hidden" name="idBibliographicmaterial" value="@material.Id">
             }
-            <input type="submit" value="Удалить запись" />
+            <input  class ="inputtype" type="submit" value="Удалить запись" />
         </form>
-       
-       
 
-        <button onclick="openPublisherModal()">Изменить Издательство</button>
-
+       @*  <button type="button" onclick="openPublisherModal()">Изменить Издательство</button> *@
         <div id="publisherModal" class="modal">
-            @foreach (var material in Model.AllBibliographicmaterial)
-            {
-                <form class="modal-content" method="post" action="/Home/PageBibliographicmaterialAdminRedactionPublisher">
-                <input type="hidden" name="Id" value="@material.Publisher.Id">
-                <div class="container">
-                    <label for="namePublisher"><b>Название Издательства</b></label>
-                    <input type="text" placeholder="Название Издательства" name="Name" >
-                    <label for="contactsPublisher"><b>Контакты</b></label>
+            <div class="modal-content">
+                <span class="close" onclick="closePublisherModal()">&times;</span>
+                <form method="post" action="/Home/PageBibliographicmaterialAdminRedactionPublisher">
+                    <input type="hidden" name="Id" value="">
+                    <div class="container">
+                        <label for="namePublisher"><b>Название Издательства</b></label>
+                        <input type="text" placeholder="Название Издательства" name="Name">
+                        <label for="contactsPublisher"><b>Контакты</b></label>
                         <input type="text" placeholder="Контакты" name="Contacts">
-                    <label for="addressPublisher"><b>Адрес</b></label>
+                        <label for="addressPublisher"><b>Адрес</b></label>
                         <input type="text" placeholder="Адрес" name="Address">
-
-                    <button type="submit">Отправить</button>
-                </div>
-                <div class="container" style="background-color:#f1f1f1">
-                    <button type="button" onclick="closePublisherModal()" class="cancelbtn">Отмена</button>
-                </div>
-            </form>
-            }
+                        <button type="submit">Отправить</button>
+                    </div>
+                </form>
+            </div>
         </div>
-   
-        <button onclick="openAuthorModal()">Изменить Автора</button>
 
+        @* <button type="button" onclick="openAuthorModal()">Изменить Автора</button> *@
         <div id="authorModal" class="modal">
-              @foreach (var material in Model.AllBibliographicmaterial)
-            {
-            <form class="modal-content" method="post" action="/Home/PageBibliographicmaterialAdminRedactionAuthor">
-                <input type="hidden" name="Id" value="@material.Author.Id">
-                <div class="container">
-                    <label for="nameAuthor"><b>Имя Автора</b></label>
-                    <input type="text" placeholder="Имя Автора" name="FullName" >
-                    <label for="contactsAuthor"><b>Контакты</b></label>
+            <div class="modal-content">
+                <span class="close" onclick="closeAuthorModal()">&times;</span>
+                <form method="post" action="/Home/PageBibliographicmaterialAdminRedactionAuthor">
+                    <input type="hidden" name="Id" value="">
+                    <div class="container">
+                        <label for="nameAuthor"><b>Имя Автора</b></label>
+                        <input type="text" placeholder="Имя Автора" name="FullName">
+                        <label for="contactsAuthor"><b>Контакты</b></label>
                         <input type="text" placeholder="Контакты" name="Contacts">
-                    <label for="informationdAuthor"><b>Информация</b></label>
+                        <label for="informationAuthor"><b>Информация</b></label>
                         <input type="text" placeholder="Информация" name="Information">
-
-                    <button type="submit">Отправить</button>
-                </div>
-                <div class="container" style="background-color:#f1f1f1">
-                    <button type="button" onclick="closeAuthorModal()" class="cancelbtn">Отмена</button>
-                </div>
-            </form>
-            }
+                        <button type="submit">Отправить</button>
+                    </div>
+                </form>
+            </div>
         </div>
-       
     </div>
 
     <form method="post" action="/Home/CatalogAdmin">
-        <input type="submit" value="return" />
+        <input class="inputtype"  type="submit" value="Return" />
     </form>
+
     <script>
         function openAuthorModal() {
             document.getElementById("authorModal").style.display = "block";
@@ -181,8 +232,7 @@
                 document.getElementById("authorModal").style.display = "none";
             }
         }
-    </script>
-    <script>
+
         function openPublisherModal() {
             document.getElementById("publisherModal").style.display = "block";
         }
@@ -191,7 +241,6 @@
             document.getElementById("publisherModal").style.display = "none";
         }
 
-   
         window.onclick = function (event) {
             if (event.target === document.getElementById("publisherModal")) {
                 document.getElementById("publisherModal").style.display = "none";

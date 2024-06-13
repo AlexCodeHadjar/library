@@ -15,9 +15,10 @@ app.UseStaticFiles();
 app.MapControllerRoute(
    name: "default",
 
-pattern: "{controller=Home}/{action=CatalogAdmin}");
+//pattern: "{controller=Home}/{action=CatalogAdmin}");
+pattern: "{controller=home}/{action=catalog}");
 
-//pattern: "{controller=Registration}/{action=Authorization}");
+//pattern: "{controller=registration}/{action=authorization}");
 
 //pattern: "{controller=Registration}/{action=Regist}");
 

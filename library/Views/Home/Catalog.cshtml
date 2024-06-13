@@ -1,7 +1,5 @@
 ﻿@model AllLibraryModels
-@{
-    Layout = null;
-}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,12 +19,33 @@
             top: 0;
             background-color: white;
         }
+/*    /*      body{
+            background-color: #29003d;
+        }  */
+
+       
+
+        .inputtype {
+            border-radius: 10px; /* Закругление углов */
+            background: linear-gradient(180deg, rgba(104, 63, 97, 0.9) 0%, rgba(55, 41, 82, 0.8) 100%);
+            color: white; /* Белый текст */
+            border: 1px solid white; /* Граница - темный фиолетовый */
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Изменяем вид курсора */
+        }
+
+            .inputtype:hover {
+                background-color: #483D8B; /* Изменяем цвет при наведении */
+            }
+    
+        
     </style>
 </head>
 <body>
     <div class="content">
         <div class="container">
-            <h2 class="mb-5">Каталог</h2>
+           
             <form method="post" action="/Home/Catalog">
             <div class="table-responsive custom-table-responsive">
                     
@@ -65,7 +84,7 @@
                         @foreach (var material in Model.AllBibliographicmaterial)
                         {
 
-                                <tr scope="row" onclick="submitForm('@material.Id')">
+                                <tr scope="row" onclick="submitForm('@material.Id') ">
                                 <td>@material.Name</td>
                                 <td>@material.Author.FullName</td>
                                 <td>@material.Publisher.Name</td>
@@ -80,7 +99,7 @@
                        
                 </table>
             </div>
-                <input type="submit" value="search" />
+                <input  class = "inputtype" type="submit" value="Поиск" />
             </form>
         </div>
         <form id="myForm" method="post" action="/Home/PageBibliographicmaterial">
@@ -89,10 +108,12 @@
         @if (false)
         {
             <form method="post" action="/Registration/Next">
-                <input type="submit" value="Add" />
+                <input class="inputtype"  type="submit" value="Add" />
         </form>}
 
     </div>
+
+  
     <script src="~/js/bootstrap.min.js"></script>
     <script>
         function submitForm(materialId) {
@@ -100,5 +121,6 @@
             document.getElementById('myForm').submit();
         }
     </script>
+
 </body>
 </html>

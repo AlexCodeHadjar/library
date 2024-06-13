@@ -1,8 +1,5 @@
 ﻿@model AllLibraryModels
-@{
-    Layout = null;
-   
-}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,6 +19,20 @@
             top: 0;
             background-color: white;
         }
+
+        .inputtype {
+            border-radius: 10px; /* Закругление углов */
+            background: linear-gradient(180deg, rgba(104, 63, 97, 0.9) 0%, rgba(55, 41, 82, 0.8) 100%);
+            color: white; /* Белый текст */
+            border: 1px solid white; /* Граница - темный фиолетовый */
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Изменяем вид курсора */
+        }
+
+            .inputtype:hover {
+                background-color: #483D8B; /* Изменяем цвет при наведении */
+            }
     </style>
 </head>
 <body>
@@ -30,7 +41,7 @@
             <h2 class="mb-5">Каталог</h2>
             <form method="post" action="/Home/DeleteBibliographicmaterial">
 
-                <input type="button" value="Удалить автора" onclick="openAuthorModal()" />
+                <input class="inputtype"  type="button" value="Удалить автора" onclick="openAuthorModal()" />
             </form>
 
             <div id="authorModal" class="modal">
@@ -50,7 +61,7 @@
             </div>
             <form method="post" action="/Home/DeleteBibliographicmaterial">
 
-                <input type="button" value="Удалить издательство" onclick="openPublisherModal()" />
+                <input class="inputtype"  type="button" value="Удалить издательство" onclick="openPublisherModal()" />
             </form>
 
             <div id="publisherModal" class="modal">
@@ -124,7 +135,7 @@
 
                     </table>
                 </div>
-                <input type="submit" value="search" />
+                <input class="inputtype" type="submit" value="search" />
             </form>
         </div>
 
@@ -133,23 +144,23 @@
             var booksData = @Html.Raw(ViewBag.JsonBooks);
 
         </script>
-        <script type="module" src="~/js/StartingRender.js"></script>
+       @*  <script type="module" src="~/js/StartingRender.js"></script>
         <script type="module" src="~/js/InfoBook.js"></script>
-        <script type="module" src="~/js/JavaScript.js"></script>
+        <script type="module" src="~/js/JavaScript.js"></script> *@
 
        @*  <script type="module" src="~/js/correctPage/TextWork.js"></script>
         <script type="module" src="~/js/correctPage/texture.js" ></script> *@
       
         <form id="myForm" method="post" action="/Home/PageBibliographicmaterialAdmin">
-            <input type="hidden" id="materialId" name="materialId" value="" />
+            <input class="inputtype"  type="hidden" id="materialId" name="materialId" value="" />
         </form>
 
         <form method="get" action="/Home/CreatePageBibliographicmaterialAdmin">
-            <input type="submit" value="Add" />
+            <input class="inputtype"  type="submit" value="Add" />
         </form>
 
         <form method="post" action="/Registration/Next">
-            <input type="submit" value="return" />
+            <input class="inputtype" type="submit" value="return" />
         </form>
 
     </div>

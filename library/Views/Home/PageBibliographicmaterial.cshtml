@@ -5,12 +5,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cotalog</title>
+    <title>Catalog</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
-
 </head>
 <body>
     <style>
@@ -19,50 +17,114 @@
             flex-direction: column;
         }
 
+        .custom-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+            .custom-row > div {
+                margin: 20px;
+            }
+
+            .custom-row img {
+                width: 400px;
+                height: auto;
+            }
+
+            .custom-row span {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+        .custom-table {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .custom-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+            .custom-row > div {
+                margin: 20px;
+            }
+
+            .custom-row img {
+                width: 400px;
+                height: auto;
+            }
+
+            .custom-row span {
+                display: block;
+                margin-bottom: 10px;
+            }
+            tbody{
+            background-color: #1c0029;
+            color:white;
+            }
+
+        .inputtypeText {
+            border-radius: 10px; /* Закругление углов */
+            background: linear-gradient(180deg, rgba(104, 63, 97, 0.9) 0%, rgba(55, 41, 82, 0.8) 100%);
+            color: white; /* Белый текст */
+           
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Изменяем вид курсора */
+        }
+
+        .inputtype {
+            border-radius: 10px; /* Закругление углов */
+            background: linear-gradient(180deg, rgba(104, 63, 97, 0.9) 0%, rgba(55, 41, 82, 0.8) 100%);
+            color: white; /* Белый текст */
+            border: 1px solid white; /* Граница - темный фиолетовый */
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Изменяем вид курсора */
+        }
+
+            .inputtype:hover {
+                background-color: #483D8B; /* Изменяем цвет при наведении */
+            }
     </style>
 
     <div class="table-responsive custom-table-responsive">
         <table class="table custom-table">
-
-         
-
-
             <tbody>
                 @foreach (var material in Model.AllBibliographicmaterial)
                 {
                     <tr scope="row" onclick="submitForm('@material.Id')">
                         <td>
-                            <div class="d-flex align-items-start">
-                                <div >
-                                    <div style=margin:40px;>
-                                        <span>Название:  @material.Name</span>
-                                      
+                            <div class="custom-row">
+                                <div>
+                                    <div class="inputtypeText" style="margin:40px;">
+                                        <span >Название: @material.Name</span>
                                     </div>
-                                    <div style =margin:40px;>
-                                        <span>Автор:  @material.Author.FullName</span>
-                                        </div>
-                                    <div style =margin:40px;>
-                                        <span>Издательство:   @material.Publisher.Name </span>
-                                   </div>
-                                    <div style =margin:40px;>
-                                        <spam>Год издания:   @material.Date</spam>
+                                    <div class="inputtypeText" style="margin:40px;">
+                                        <span>Автор: @material.Author.FullName</span>
+                                    </div>
+                                    <div class="inputtypeText" style="margin:40px;">
+                                        <span>Издательство: @material.Publisher.Name</span>
+                                    </div>
+                                    <div class="inputtypeText" style="margin:40px;">
+                                        <span>Год издания: @material.Date</span>
                                     </div>
                                 </div>
                                 <div class="ml-auto">
-                                    <img src="~/img/@material.Img" alt="Изображение" style="width: 400px; height: auto;" />
+                                    <img src="~/img/@material.Img" alt="Изображение" />
                                 </div>
                             </div>
                         </td>
                     </tr>
                 }
             </tbody>
-
-
-
         </table>
     </div>
-    <form method="post"action="/Home/Catalog">
-        <input type="submit" value="return" />
+    <form method="post" action="/Home/Catalog">
+        <input class="inputtype" type="submit" value="return" />
     </form>
 </body>
 </html>
