@@ -1,102 +1,130 @@
 ﻿@model AllLibraryModels;
 @{
     Layout = null;
-
 }
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cotalog</title>
+    <title>Catalog</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/css/Style.css" rel="stylesheet" type="text/css" />
-
-</head>
-<body>
     <style>
         .custom-table {
             display: flex;
             flex-direction: column;
         }
 
-    </style>
+        .form-section {
+            display: flex;
 
+            align-items: flex-start;
+            margin: 20px;
+        }
+
+
+        .inputtypeText {
+            border-radius: 10px; /* Закругление углов */
+            background: linear-gradient(180deg, rgba(104, 63, 97, 0.9) 0%, rgba(55, 41, 82, 0.8) 100%);
+            color: white; /* Белый текст */
+
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Изменяем вид курсора */
+        }
+
+        .inputtype {
+            border-radius: 10px; /* Закругление углов */
+            background: linear-gradient(180deg, rgba(104, 63, 97, 0.9) 0%, rgba(55, 41, 82, 0.8) 100%);
+            color: white; /* Белый текст */
+            border: 1px solid white; /* Граница - темный фиолетовый */
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            font-size: 16px; /* Размер шрифта */
+            cursor: pointer; /* Изменяем вид курсора */
+        }
+
+            .inputtype:hover {
+                background-color: #483D8B; /* Изменяем цвет при наведении */
+            }
+
+            .form-section img {
+                max-width: 400px;
+                height: auto;
+                margin-left: 20px; /* Reduced margin to bring the image closer */
+            }
+
+        .form-control, .form-select {
+            max-width: 400px; /* Set a max-width for the input fields */
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
     <div class="table-responsive custom-table-responsive">
         <form method="post" action="/Home/CreatePageBibliographicmaterialAdmin" enctype="multipart/form-data">
             @if (Model.AllBibliographicmaterial.Any())
             {
-                <tr scope="row">
-                    <td>
-                        <div class="d-flex align-items-start">
-                            <div>
-                                <div style="margin:40px;">
-                                    <span>Название: </span>
-                                    <input type="text" class="form-control" name="Name">
-                                </div>
-                                <div style="margin:40px;">
-                                    <span>Автор:</span>
-                                    <p>
-                                        <select name="AuthorId">
-                                            <option value="">Выберите автора</option>
-                                            @foreach (var author in Model.AllAuthors)
-                                            {
-                                                <option value="@author.Id">@author.FullName</option>
-                                            }
-                                        </select>
-                                    </p>
-
-                                </div>
-
-                                <div style="margin:40px;">
-                                    <span>Издательство: </span>
-                                    <p>
-                                        <select name="PublisherId">
-                                            <option value="">Выберите издательство</option>
-                                            @foreach (var publisher in Model.AllPublishers)
-                                            {
-                                                <option value="@publisher.Id">@publisher.Name</option>
-                                            }
-                                        </select>
-                                    </p>
-                                </div>
-                                <div style="margin:40px;">
-                                    <span>Год издания:</span>
-                                    <input type="text" class="form-control" name="Date">
-                                </div>
-                            </div>
-                            <div class="ml-auto">
-                                <img src="~/img/pict1.jpg" alt="Изображение" style="width: 400px; height: auto;" />
-                                <div style="margin:40px;">
-                                
-                                    <p>
-                                        <select name="Img">
-                                            <option value="">Выберите Обложку</option>
-                                            @foreach (var books in Model.AllImgs)
-                                            {
-                                                <option value="@books.Img">@books.Img</option>
-                                            }
-                                        </select>
-                                    </p>
-                                </div>
-                            </div>
+                <div class="form-section">
+                    <div>
+                        <div class="input-group">
+                            <label class="inputtypeText">Название:</label>
+                            <input type="text" class="form-control inputtype" name="Name">
                         </div>
-                    </td>
-                </tr>
+                        <div class="input-group">
+                            <label class="inputtypeText">Автор:</label>
+                            <select class="form-select inputtypeText" name="AuthorId">
+                                <option value="">Выберите автора</option>
+                                @foreach (var author in Model.AllAuthors)
+                                {
+                                    <option value="@author.Id">@author.FullName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="inputtypeText">Издательство:</label>
+                            <select class="form-select inputtypeText" name="PublisherId">
+                                <option value="">Выберите издательство</option>
+                                @foreach (var publisher in Model.AllPublishers)
+                                {
+                                    <option value="@publisher.Id">@publisher.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="inputtypeText">Год издания:</label>
+                            <input type="text" class="form-control inputtype" name="Date">
+                        </div>
+                    </div>
+                    <div>
+                        <img src="~/img/pict1.jpg" alt="Изображение" />
+                        <div class="input-group">
+                            <label class="inputtypeText">Обложка:</label>
+                            <select class="form-select inputtypeText" name="Img">
+                                <option value="">Выберите Обложку</option>
+                                @foreach (var books in Model.AllImgs)
+                                {
+                                    <option value="@books.Img">@books.Img</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
             }
-            <input type="submit" value=" Отправить">
+            <input  class="inputtype" type="submit" value="Отправить">
         </form>
         <form method="get" action="/Home/InsertPublisher">
-            <input type="submit" value="Добавить Издательство" />
+            <input class="inputtype"  type="submit" value="Добавить Издательство" />
         </form>
         <form method="get" action="/Home/InsertAuthor">
-            <input type="submit" value="Добавить Автора" />
+            <input class="inputtype" type="submit" value="Добавить Автора" />
         </form>
     </div>
-
     <form method="post" action="/Home/CatalogAdmin">
-        <input type="submit" value="return" />
+        <input class="inputtype"  type="submit" value="return" />
     </form>
 </body>
 </html>
-

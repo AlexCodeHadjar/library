@@ -2,6 +2,8 @@ using Microsoft.Data.Sqlite;
 using System.Data.SQLite;
 using library;
 using DataBaseHelperSQLite;
+using System.Diagnostics;
+using System.Security.Policy;
 
 
 AllServices services = new();
@@ -15,11 +17,12 @@ app.UseStaticFiles();
 app.MapControllerRoute(
    name: "default",
 
-//pattern: "{controller=Home}/{action=CatalogAdmin}");
-pattern: "{controller=home}/{action=catalog}");
+pattern: "{controller=Home}/{action=CatalogAdmin}");
+//pattern: "{controller=home}/{action=catalog}");
 
 //pattern: "{controller=registration}/{action=authorization}");
 
 //pattern: "{controller=Registration}/{action=Regist}");
+
 
 app.Run();

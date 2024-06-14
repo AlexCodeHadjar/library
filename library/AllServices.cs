@@ -11,8 +11,8 @@ namespace library
 {
     public class AllServices
     {
-        public const string CONNECTION_STRING = "Data Source=C:\\Users\\user\\source\\repos\\library\\Catalogsdata.db";
-        //public const string CONNECTION_STRING = "Data Source=../../../../Catalogsdata.db";
+        //public const string CONNECTION_STRING = "Data Source=C:\\Users\\user\\source\\repos\\library\\Catalogsdata.db";
+        public const string CONNECTION_STRING = "Data Source=../Catalogsdata.db";
         public WebApplicationBuilder builder = WebApplication.CreateBuilder();
         public IServiceCollection Services()
         {
