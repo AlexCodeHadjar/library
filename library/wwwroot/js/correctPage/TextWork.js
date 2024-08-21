@@ -1,7 +1,5 @@
 ﻿import { mat4 } from 'https://webgpufundamentals.org/3rdparty/wgpu-matrix.module.js';
 
-
-
 const glyphWidth = 32;
 const glyphHeight = 40;
 const glyphsAcrossTexture = 16;
@@ -19,7 +17,7 @@ function genreateGlyphTextureAtlas() {
 
     let x = 0;
     let y = 0;
-    ctx.font = '18px Arial'; // Используйте шрифт Arial, который поддерживает кириллицу
+    ctx.font = '18px Arial'; 
     ctx.textBaseline = 'start';
     ctx.textAlign = 'left';
     ctx.fillStyle = 'white';
@@ -61,7 +59,6 @@ function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor,
     bottomContainer.style.alignItems = 'flex-end'; 
     bottomContainer.style.marginTop = 'auto'; 
 
-
     var elementStyles = {
         margin: '13px' 
     };
@@ -75,8 +72,6 @@ function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor,
     canvas.style.transform = 'translate(-50%, -50%)';
     canvas.style.zIndex = '1';
     canvas.classList.add('myCanvasClass');
-
-   
 
     yearInput.placeholder = 'Год Издания';
     yearInput.classList.add('myCanvasClass');
@@ -142,7 +137,6 @@ function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor,
     submitButton.textContent = 'Отправить';
     submitButton.classList.add('myCanvasClass');
     applyStyles(submitButton, elementStyles);
-
     
     bottomContainer.appendChild(selectImg);
     bottomContainer.appendChild(submitButton);
@@ -153,16 +147,10 @@ function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor,
  
     container.appendChild(selectPublisher);
     container.appendChild(bottomContainer);
-
-  
-
-   
     document.body.appendChild(DeleteButton);
     document.body.appendChild(canvas);
     document.body.appendChild(container);
 }
-
-
 function applyStyles(element, styles) {
     for (var style in styles) {
         element.style[style] = styles[style];
@@ -187,9 +175,6 @@ async function main(AllLibraryInfo) {
     const yearInput = document.createElement('input');
     const nameInput = document.createElement('input');
     const DeleteButton = document.createElement('button');
-
-
- 
     var selectAuthor = document.createElement("select");
     var selectPublisher = document.createElement("select");
     var selectImg = document.createElement("select");
@@ -200,21 +185,13 @@ async function main(AllLibraryInfo) {
    
     var placeholderOptionImg = document.createElement("option");
    
-
-
-  
-
     CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor, selectPublisher, selectImg, placeholderOptionAuthor, placeholderOptionPublusher, placeholderOptionImg, allAuthors, allPublisher, allBibliographicMaterial, container, DeleteButton)
-
-   
     const context = canvas.getContext('webgpu');
     const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
     context.configure({
         device,
         format: presentationFormat,
     });
-
-
 
     const module = device.createShaderModule({
         label: 'our hardcoded textured quad shaders',
@@ -254,9 +231,6 @@ async function main(AllLibraryInfo) {
     `,
     });
 
-
-
-
     const glyphCanvas = genreateGlyphTextureAtlas();
     // document.body.appendChild(glyphCanvas);// отображение карты всех символов 
     glyphCanvas.style.backgroundColor = '#222';
@@ -276,7 +250,6 @@ async function main(AllLibraryInfo) {
         size: maxGlyphs * vertsPerGlyph * 4,
         usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,
     });
-
 
     {
         const indices = [];
@@ -313,10 +286,10 @@ async function main(AllLibraryInfo) {
         let colorNdx = 0;
         for (let i = 0; i < s.length; ++i) {
             const c = s.charCodeAt(i);
-            if (c >= 32) { // Начало диапазона ASCII
-                let cNdx = c - 32; // Корректируем индекс символа
-                if (c >= 1040) { // Если это символ кириллицы
-                    cNdx = c - 1040 + 95; // Корректируем индекс символа для кириллицы
+            if (c >= 32) { 
+                let cNdx = c - 32; 
+                if (c >= 1040) { 
+                    cNdx = c - 1040 + 95; 
                 }
                 const glyphX = cNdx % glyphsAcrossTexture;
                 const glyphY = Math.floor(cNdx / glyphsAcrossTexture);
@@ -366,21 +339,13 @@ async function main(AllLibraryInfo) {
     let nameUse = BooksInfo.Name;
     let dateUse = BooksInfo.Date;
     let idUse = BooksInfo.Id;
-  
-
-
     const text = formatBookInfo(nameUse, dateUse,author, publisher)
     const { vertexData, numGlyphs, width, height } = generateGlyphVerticesForText(
         text, [
         [1, 1, 1, 1]
 
     ]);
-
-
     device.queue.writeBuffer(vertexBuffer, 0, vertexData);
-
-
-
     const pipeline = device.createRenderPipeline({
         label: 'hardcoded textured quad pipeline',
         layout: 'auto',
@@ -420,9 +385,6 @@ async function main(AllLibraryInfo) {
             ],
         },
     });
-
-
-
     function copySourceToTexture(device, texture, source, { flipY } = {}) {
         device.queue.copyExternalImageToTexture(
             { source, flipY, },
@@ -430,7 +392,6 @@ async function main(AllLibraryInfo) {
             { width: source.width, height: source.height },
         );
     }
-
 
     function createTextureFromSource(device, source, options = {}) {
         const texture = device.createTexture({
@@ -443,9 +404,6 @@ async function main(AllLibraryInfo) {
         copySourceToTexture(device, texture, source, options);
         return texture;
     }
-
-   
-
     submitButton.addEventListener('click', function (event) {
    
         const inputData = getInputData();
@@ -454,19 +412,15 @@ async function main(AllLibraryInfo) {
         sendDataToServer(inputData);
     });
     function getInputData() {
-        //const author = authorInput.value;
         const date = yearInput.value;
         const name = nameInput.value;
         const publisherId = selectPublisher.value;
         const authorId = selectAuthor.value;
         const img = selectImg.value;
         const id = idUse;
-
-        //const publisher = publisherInput.value;
         return { date, name, publisherId, authorId, img, id };
     }
 
-    
     function sendDataToServer(data) {
         console.log(data);
         fetch('/Home/PageBibliographicmaterialAdminRedaction', {
@@ -493,18 +447,11 @@ async function main(AllLibraryInfo) {
             });
     }
 
-
-   
- 
-
-
     const texture = createTextureFromSource(device, glyphCanvas, { mips: true });
     const sampler = device.createSampler({
         minFilter: 'linear',
         magFilter: 'linear',
     });
-
-
 
     const uniformBufferSize =
         16 * 4;
@@ -513,14 +460,9 @@ async function main(AllLibraryInfo) {
         size: uniformBufferSize,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
-
-
-
     const kMatrixOffset = 0;
     const uniformValues = new Float32Array(uniformBufferSize / 4);
     const matrix = uniformValues.subarray(kMatrixOffset, 16);
-
-
     const bindGroup = device.createBindGroup({
         layout: pipeline.getBindGroupLayout(0),
         entries: [
@@ -529,7 +471,6 @@ async function main(AllLibraryInfo) {
             { binding: 2, resource: { buffer: uniformBuffer } },
         ],
     });
-
 
     const renderPassDescriptor = {
         label: 'our basic canvas renderPass',
@@ -543,16 +484,13 @@ async function main(AllLibraryInfo) {
         ],
     };
     DeleteButton.addEventListener('click', function () {
-        // Удаляем элементы с классом 'myCanvasClass'
         const elementsToRemove = document.querySelectorAll('.myCanvasClass');
         elementsToRemove.forEach(element => element.remove());
 
     });
     
-
     function render(time) {
         time = 0;
-
         const fov = 60 * Math.PI / 180;
         const aspect = canvas.clientWidth / canvas.clientHeight;
         const zNear = 0.001;
@@ -569,8 +507,8 @@ async function main(AllLibraryInfo) {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
         const scaleX = 0.4;
-        //const scaleX =  desiredTextHeight / desiredTextWidth;
-        const scaleY = 0.6
+
+        const scaleY = 0.6;
         mat4.scale(viewProjectionMatrix, [scaleX, scaleY, 1], viewProjectionMatrix);
 
         renderPassDescriptor.colorAttachments[0].view =

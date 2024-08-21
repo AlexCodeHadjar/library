@@ -14,9 +14,8 @@
     const pass = encoder.beginRenderPass(renderPassDescriptor);
     pass.setPipeline(pipeline);
     pass.setBindGroup(0, bindGroup);
-    pass.draw(6);  // call our vertex shader 6 times
+    pass.draw(6);
     pass.end();
-
     const commandBuffer = encoder.finish();
     device.queue.submit([commandBuffer]);
 }
@@ -29,19 +28,14 @@ async function main() {
         return;
     }
 
-    // Get a WebGPU context from the canvas and configure it
     const canvas = document.createElement('canvas');
-
-    // Устанавливаем его размеры
-    canvas.width = 300; // Примерное значение ширины
-    canvas.height = 300; // Примерное значение высоты
+    canvas.width = 300; 
+    canvas.height = 300; 
     canvas.style.border = '1px solid black';
     canvas.style.position = 'absolute';
     canvas.style.top = '50%';
     canvas.style.left = '20%';
     canvas.style.transform = 'translate(-50%, -50%)';
-
-    // Добавляем canvas на страницу, например, в body
     document.body.appendChild(canvas);
     const context = canvas.getContext('webgpu');
     const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
@@ -161,18 +155,13 @@ async function main() {
         magFilter: 'linear',
     };
 
-
-
     function render() {
         renderQuad(context, device, pipeline, bindGroups, renderPassDescriptor, settings);
     }
-
-
     render();
 }
 
 function fail(msg) {
-    // eslint-disable-next-line no-alert
     alert(msg);
 }
 

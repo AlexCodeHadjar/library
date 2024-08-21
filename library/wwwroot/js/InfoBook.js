@@ -1,12 +1,8 @@
 ﻿import { mat4 } from 'https://webgpufundamentals.org/3rdparty/wgpu-matrix.module.js';
-
-
-
 const glyphWidth = 32;
 const glyphHeight = 40;
 const glyphsAcrossTexture = 16;
 function formatBookInfo(author, year, title, publisher) {
-    /* const formattedInfo = `\n Автор ${author}\n \n Год издания  ${year}\n\t Название ${title}`;*/
     const formattedInfo = `\n Автор: ${author}\n Год издания: ${year}\n Название: ${title}\n Издательство: ${publisher}`;
 
     return formattedInfo;
@@ -19,7 +15,7 @@ function genreateGlyphTextureAtlas() {
 
     let x = 0;
     let y = 0;
-    ctx.font = '18px Arial'; // Используйте шрифт Arial, который поддерживает кириллицу
+    ctx.font = '18px Arial'; 
     ctx.textBaseline = 'start';
     ctx.textAlign = 'left';
     ctx.fillStyle = 'white';

@@ -1,12 +1,9 @@
 import { mat4 } from 'https://webgpufundamentals.org/3rdparty/wgpu-matrix.module.js';
 
-
-
 const glyphWidth = 32;
 const glyphHeight = 40;
 const glyphsAcrossTexture = 16;
 function formatBookInfo(author, year, title,publisher) {
-   /* const formattedInfo = `\n Автор ${author}\n \n Год издания  ${year}\n\t Название ${title}`;*/
     const formattedInfo = `${author}\n${year}\n${title}\n${publisher}`;
  
     return formattedInfo;
@@ -19,7 +16,7 @@ function genreateGlyphTextureAtlas() {
 
     let x = 0;
     let y = 0;
-    ctx.font = '24px Arial'; // Используйте шрифт Arial, который поддерживает кириллицу
+    ctx.font = '24px Arial'; /
     ctx.textBaseline = 'start';
     ctx.textAlign = 'left';
     ctx.fillStyle = 'white';
@@ -41,14 +38,6 @@ function genreateGlyphTextureAtlas() {
         }
     }
   
-
-  
-
-
-   
-
-    // Продолжайте отображать кириллические символы
-   
     return ctx.canvas;
 }
 
@@ -60,11 +49,8 @@ async function main(AllLibraryInfo) {
         return;
     }
 
-    // Создание canvas и его настройка
     const canvas = document.createElement('canvas');
-    canvas.style.backgroundColor = 'transparent'; // Устанавливаем прозрачный фон
-    //canvas.width = 600; // Установите нужную ширину
-    //canvas.height = 200; // Установите нужную высоту
+    canvas.style.backgroundColor = 'transparent'; 
     canvas.style.border = '1px solid black';
     canvas.style.position = 'absolute';
     canvas.style.top = '65%';
@@ -79,8 +65,6 @@ async function main(AllLibraryInfo) {
         device,
         format: presentationFormat,
     });
-
-
 
     const module = device.createShaderModule({
         label: 'our hardcoded textured quad shaders',
@@ -120,11 +104,8 @@ async function main(AllLibraryInfo) {
     `,
     });
 
-
-
-
     const glyphCanvas = genreateGlyphTextureAtlas();
-   document.body.appendChild(glyphCanvas);// отображение карты всех символов 
+   document.body.appendChild(glyphCanvas);
     glyphCanvas.style.backgroundColor = '#222';
 
     const maxGlyphs = 10000;
@@ -179,10 +160,10 @@ async function main(AllLibraryInfo) {
         let colorNdx = 0;
         for (let i = 0; i < s.length; ++i) {
             const c = s.charCodeAt(i);
-            if (c >= 32) { // Начало диапазона ASCII
-                let cNdx = c - 32; // Корректируем индекс символа
-                if (c >= 1040) { // Если это символ кириллицы
-                    cNdx = c - 1040 + 95; // Корректируем индекс символа для кириллицы
+            if (c >= 32) { 
+                let cNdx = c - 32; 
+                if (c >= 1040) {
+                    cNdx = c - 1040 + 95; 
                 }
                 const glyphX = cNdx % glyphsAcrossTexture;
                 const glyphY = Math.floor(cNdx / glyphsAcrossTexture);
@@ -236,10 +217,7 @@ async function main(AllLibraryInfo) {
 
     ]);
 
-
     device.queue.writeBuffer(vertexBuffer, 0, vertexData);
-
-
 
     const pipeline = device.createRenderPipeline({
         label: 'hardcoded textured quad pipeline',
@@ -281,8 +259,6 @@ async function main(AllLibraryInfo) {
         },
     });
 
-
-
     function copySourceToTexture(device, texture, source, { flipY } = {}) {
         device.queue.copyExternalImageToTexture(
             { source, flipY, },
@@ -290,7 +266,6 @@ async function main(AllLibraryInfo) {
             { width: source.width, height: source.height },
         );
     }
-
 
     function createTextureFromSource(device, source, options = {}) {
         const texture = device.createTexture({
@@ -311,8 +286,6 @@ async function main(AllLibraryInfo) {
         magFilter: 'linear',
     });
 
-
- 
     const uniformBufferSize =
         16 * 4; 
     const uniformBuffer = device.createBuffer({
@@ -321,12 +294,9 @@ async function main(AllLibraryInfo) {
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 
-
-
     const kMatrixOffset = 0;
     const uniformValues = new Float32Array(uniformBufferSize / 4);
     const matrix = uniformValues.subarray(kMatrixOffset, 16);
-
 
     const bindGroup = device.createBindGroup({
         layout: pipeline.getBindGroupLayout(0),
@@ -336,7 +306,6 @@ async function main(AllLibraryInfo) {
             { binding: 2, resource: { buffer: uniformBuffer } },
         ],
     });
-
 
     const renderPassDescriptor = {
         label: 'our basic canvas renderPass',
@@ -349,7 +318,6 @@ async function main(AllLibraryInfo) {
             },
         ],
     };
-
 
     function render(time) {
         time = 0 ;

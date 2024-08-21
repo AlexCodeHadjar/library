@@ -14,7 +14,7 @@
     const pass = encoder.beginRenderPass(renderPassDescriptor);
     pass.setPipeline(pipeline);
     pass.setBindGroup(0, bindGroup);
-    pass.draw(6);  // call our vertex shader 6 times
+    pass.draw(6);  
     pass.end();
 
     const commandBuffer = encoder.finish();
@@ -22,20 +22,14 @@
 }
 function CreateElement(canvas) {
     
-    // Устанавливаем его размеры
-    canvas.width = 450; // Примерное значение ширины
-    canvas.height = 600; // Примерное значение высоты
+    canvas.width = 450; 
+    canvas.height = 600; 
     canvas.style.border = '1px solid black';
     canvas.style.position = 'absolute';
     canvas.style.top = '30%';
     canvas.style.left = '88%';
     canvas.style.transform = 'translate(-50%, -50%)';
     canvas.classList.add('myCanvasClass');
-
-
-
-
-    // Добавляем canvas на страницу, например, в body
     document.body.appendChild(canvas);
   
 }
@@ -47,10 +41,7 @@ async function main() {
         fail('need a browser that supports WebGPU');
         return;
     }
-   
-    // Get a WebGPU context from the canvas and configure it
     const canvas = document.createElement('canvas');
-    
 
     CreateElement( canvas);
     const context = canvas.getContext('webgpu');
@@ -170,9 +161,7 @@ async function main() {
         addressModeV: 'repeat',
         magFilter: 'linear',
     };
-    //const canvasElements = document.getElementsByClassName('myCanvasClass');
 
-  
     function render() {
         renderQuad(context, device, pipeline, bindGroups, renderPassDescriptor, settings);
     }
@@ -182,7 +171,6 @@ async function main() {
 }
 
 function fail(msg) {
-    // eslint-disable-next-line no-alert
     alert(msg);
 }
 

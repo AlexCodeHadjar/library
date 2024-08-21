@@ -1,7 +1,5 @@
 ﻿import { mat4 } from 'https://webgpufundamentals.org/3rdparty/wgpu-matrix.module.js';
 
-
-
 const glyphWidth = 32;
 const glyphHeight = 40;
 const glyphsAcrossTexture = 16;
@@ -18,7 +16,7 @@ function genreateGlyphTextureAtlas() {
 
     let x = 0;
     let y = 0;
-    ctx.font = '20px Arial'; // Используйте шрифт Arial, который поддерживает кириллицу
+    ctx.font = '20px Arial';
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'start';
     ctx.fillStyle = 'white';
@@ -44,7 +42,6 @@ function genreateGlyphTextureAtlas() {
     return ctx.canvas;
 }
 
-
 async function main(AllLibraryInfo) {
     const adapter = await navigator.gpu?.requestAdapter();
     const device = await adapter?.requestDevice();
@@ -53,14 +50,13 @@ async function main(AllLibraryInfo) {
         return;
     }
 
-    // Создание canvas и его настройка
     const canvas = document.createElement('canvas');
 
     const submitButton = document.createElement('button');
-    submitButton.textContent = 'Отправить'; // Устанавливаем текст на кнопке
-    submitButton.style.position = 'absolute'; // Устанавливаем позиционирование
-    submitButton.style.top = '35%'; // Устанавливаем отступ сверху
-    submitButton.style.left = '3%'; // Устанавливаем отс
+    submitButton.textContent = 'Отправить'; 
+    submitButton.style.position = 'absolute'; 
+    submitButton.style.top = '35%'; 
+    submitButton.style.left = '3%';
 
     const authorInput = document.createElement('input');
     authorInput.placeholder = 'Автор';
@@ -86,10 +82,9 @@ async function main(AllLibraryInfo) {
     publisherInput.style.top = '29%';
     publisherInput.style.left = '3%';
 
-
-    canvas.style.backgroundColor = 'transparent'; // Устанавливаем прозрачный фон
-    canvas.width = 350; // Установите нужную ширину
-    canvas.height = 300; // Установите нужную высоту
+    canvas.style.backgroundColor = 'transparent'; 
+    canvas.width = 350; 
+    canvas.height = 300; 
     canvas.style.border = '1px solid black';
     canvas.style.position = 'absolute';
     canvas.style.top = '20%';
@@ -109,8 +104,6 @@ async function main(AllLibraryInfo) {
         device,
         format: presentationFormat,
     });
-
-
 
     const module = device.createShaderModule({
         label: 'our hardcoded textured quad shaders',
@@ -150,13 +143,9 @@ async function main(AllLibraryInfo) {
     `,
     });
 
-
-
-
     const glyphCanvas = genreateGlyphTextureAtlas();
     // document.body.appendChild(glyphCanvas);// отображение карты всех символов 
     glyphCanvas.style.backgroundColor = '#222';
-
     const maxGlyphs = 10000;
     const floatsPerVertex = 2 + 2 + 4;
     const vertexSize = floatsPerVertex * 4;
@@ -172,7 +161,6 @@ async function main(AllLibraryInfo) {
         size: maxGlyphs * vertsPerGlyph * 4,
         usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,
     });
-
 
     {
         const indices = [];
@@ -209,10 +197,10 @@ async function main(AllLibraryInfo) {
         let colorNdx = 0;
         for (let i = 0; i < s.length; ++i) {
             const c = s.charCodeAt(i);
-            if (c >= 32) { // Начало диапазона ASCII
-                let cNdx = c - 32; // Корректируем индекс символа
-                if (c >= 1040) { // Если это символ кириллицы
-                    cNdx = c - 1040 + 95; // Корректируем индекс символа для кириллицы
+            if (c >= 32) { 
+                let cNdx = c - 32; 
+                if (c >= 1040) { 
+                    cNdx = c - 1040 + 95; 
                 }
                 const glyphX = cNdx % glyphsAcrossTexture;
                 const glyphY = Math.floor(cNdx / glyphsAcrossTexture);
@@ -268,10 +256,7 @@ async function main(AllLibraryInfo) {
 
     ]);
 
-
     device.queue.writeBuffer(vertexBuffer, 0, vertexData);
-
-
 
     const pipeline = device.createRenderPipeline({
         label: 'hardcoded textured quad pipeline',
@@ -313,8 +298,6 @@ async function main(AllLibraryInfo) {
         },
     });
 
-
-
     function copySourceToTexture(device, texture, source, { flipY } = {}) {
         device.queue.copyExternalImageToTexture(
             { source, flipY, },
@@ -322,8 +305,6 @@ async function main(AllLibraryInfo) {
             { width: source.width, height: source.height },
         );
     }
-
-
     function createTextureFromSource(device, source, options = {}) {
         const texture = device.createTexture({
             format: 'rgba8unorm',
@@ -343,7 +324,6 @@ async function main(AllLibraryInfo) {
         sendDataToServer(inputData);
     });
 
-    
     function sendDataToServer(data) {
         console.log(data);
         fetch('/Home/PageBibliographicmaterialAdminRedaction', {
@@ -370,33 +350,18 @@ async function main(AllLibraryInfo) {
             });
     }
 
-    //function getInputData() {
-        
-    //    const author = authorInput.value;
-    //    const year = yearInput.value;
-    //    const title = nameInput.value;
-    //    const publisher = publisherInput.value;
-    //    return { author, year, title, publisher };
-    //}
-
     function getInputData() {
 
-        //const author = authorInput.value;
         const date = yearInput.value;
         const name = nameInput.value;
-        //const publisher = publisherInput.value;
         return { date, name };
     }
  
-
-
     const texture = createTextureFromSource(device, glyphCanvas, { mips: true });
     const sampler = device.createSampler({
         minFilter: 'linear',
         magFilter: 'linear',
     });
-
-
 
     const uniformBufferSize =
         16 * 4;
@@ -405,8 +370,6 @@ async function main(AllLibraryInfo) {
         size: uniformBufferSize,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
-
-
 
     const kMatrixOffset = 0;
     const uniformValues = new Float32Array(uniformBufferSize / 4);
@@ -435,8 +398,6 @@ async function main(AllLibraryInfo) {
         ],
     };
 
-
-
     function render(time) {
         time = 0;
 
@@ -452,11 +413,9 @@ async function main(AllLibraryInfo) {
         const viewMatrix = mat4.lookAt(cameraPosition, target, up);
         const viewProjectionMatrix = mat4.multiply(projectionMatrix, viewMatrix);
 
-
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
         const scaleX = 0.29;
-        //const scaleX =  desiredTextHeight / desiredTextWidth;
         const scaleY = 0.5;
         mat4.scale(viewProjectionMatrix, [scaleX, scaleY, 1], viewProjectionMatrix);
 
