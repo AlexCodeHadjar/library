@@ -19,9 +19,9 @@ function genreateGlyphTextureAtlas() {
 
     let x = 0;
     let y = 0;
-    ctx.font = '20px Arial'; // Используйте шрифт Arial, который поддерживает кириллицу
-    ctx.textBaseline = 'middle';
-    ctx.textAlign = 'start';
+    ctx.font = '18px Arial'; // Используйте шрифт Arial, который поддерживает кириллицу
+    ctx.textBaseline = 'start';
+    ctx.textAlign = 'left';
     ctx.fillStyle = 'white';
 
     for (let c = 32; c <= 126; ++c) {
@@ -50,20 +50,20 @@ function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor,
     container.style.position = 'absolute';
     container.style.flexDirection = 'column';
     container.style.alignItems = 'flex-start';
-    container.style.margin = '33px'; // Пример отступа между элементами
-    container.style.top = '33%';
-    container.style.left = '75%';
+    container.style.margin = '35px'; 
+    container.style.top = '29%';
+    container.style.left = '72%';
     container.style.zIndex = '1';
 
     var bottomContainer = document.createElement('div');
     bottomContainer.style.display = 'flex';
-    bottomContainer.style.flexDirection = 'row'; // Располагаем элементы в строку
-    bottomContainer.style.alignItems = 'flex-end'; // Выравниваем элементы по нижнему краю
-    bottomContainer.style.marginTop = 'auto'; // Помещаем контейнер внизу
+    bottomContainer.style.flexDirection = 'row'; 
+    bottomContainer.style.alignItems = 'flex-end'; 
+    bottomContainer.style.marginTop = 'auto'; 
 
-    // Стили для каждого элемента с отступом
+
     var elementStyles = {
-        margin: '10px' // Растояние между элементами
+        margin: '13px' 
     };
 
     canvas.style.backgroundColor = 'transparent';
@@ -132,10 +132,10 @@ function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor,
         selectImg.appendChild(option);
     });
 
-    DeleteButton.textContent = 'X'; // Устанавливаем текст на кнопке
-    DeleteButton.style.position = 'absolute'; // Устанавливаем позиционирование
-    DeleteButton.style.top = '1%'; // Устанавливаем отступ сверху
-    DeleteButton.style.left = '77%'; // Устанавливаем отступ слева
+    DeleteButton.textContent = 'X';
+    DeleteButton.style.position = 'absolute'; 
+    DeleteButton.style.top = '1%'; 
+    DeleteButton.style.left = '77%';
     DeleteButton.style.zIndex = '1';
     DeleteButton.classList.add('myCanvasClass');
 
@@ -143,10 +143,10 @@ function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor,
     submitButton.classList.add('myCanvasClass');
     applyStyles(submitButton, elementStyles);
 
-    // Добавляем элементы в контейнер
+    
     bottomContainer.appendChild(selectImg);
     bottomContainer.appendChild(submitButton);
-    /*   container.appendChild(submitButton);*/
+   
     container.appendChild(selectAuthor);
     container.appendChild(yearInput);
     container.appendChild(nameInput);
@@ -154,7 +154,7 @@ function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor,
     container.appendChild(selectPublisher);
     container.appendChild(bottomContainer);
 
-    /*container.appendChild(selectImg);*/
+  
 
    
     document.body.appendChild(DeleteButton);
@@ -162,7 +162,7 @@ function CreateElement(canvas, submitButton, yearInput, nameInput, selectAuthor,
     document.body.appendChild(container);
 }
 
-// Функция для применения стилей к элементу
+
 function applyStyles(element, styles) {
     for (var style in styles) {
         element.style[style] = styles[style];
